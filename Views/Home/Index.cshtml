@@ -1,0 +1,21 @@
+﻿@model SumkaWeb.Models.HomeModel
+
+@{
+    ViewBag.Title = "Толока Студіо";
+}
+<div class="container">
+ <div class="row">
+ 
+
+
+        @foreach (var item in Model.Stores)
+        {
+           if (item.HtmlBanner != null)
+            {
+               @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+            }
+                 
+         }
+      
+   </div>
+   </div>

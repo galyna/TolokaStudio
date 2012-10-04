@@ -1,0 +1,17 @@
+﻿@model List<Core.Data.Entities.Product>
+<div class="container">
+<div class="row">
+    @{
+        ViewBag.Title = "Product";
+    }
+   
+    @foreach (var item in Model){
+          
+      if (item.HtmlBanner != null)
+        {
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+        }
+       
+    }
+    </div>
+</div>

@@ -1,0 +1,17 @@
+﻿@model Core.Data.Entities.Store
+@{
+    ViewBag.Title = Model.Name;
+}
+<div class="container">
+ <div class="row">
+     @Html.ActionLink("Add Product", "AddProduct", new { id = Model.Id })
+       
+    </div>
+    <div class="row">
+   
+        @foreach (var item in Model.Products)
+        {                 
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner)) 
+        }
+    </div>
+</div>

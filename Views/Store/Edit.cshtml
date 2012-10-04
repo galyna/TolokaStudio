@@ -1,0 +1,60 @@
+﻿@model Core.Data.Entities.Store
+@{
+    ViewBag.Title = "Edit Store";
+}
+<script src="@Url.Content("~/Scripts/jquery/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/tiny_mce_src.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/combinedHTML-tinymce.js")" type="text/javascript"></script>
+<div class="container">
+    <div class="row">
+        @using (Html.BeginForm())
+        {
+   
+            @Html.ValidationSummary(true)
+            <fieldset>
+                <legend>Store</legend>
+                @Html.HiddenFor(model => model.Id)
+              
+                @if (Model.HtmlBanner != null)
+                {
+                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
+                }
+                <div class="editor-field">
+                    @Html.TextArea("Store.HtmlBanner", System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner), 25, 80,
+     new Dictionary<string, object> {	
+        {"style", "width:100%"},
+         {"class", "html tinymce"}
+	 })
+                </div>
+                @foreach (var item in Model.Products)
+                {
+                    <div class="row">
+                        <div class="span24">
+                            <div class="span16">
+                                @Html.DisplayFor(modelItem => item.Name)
+                                @if (item.HtmlBanner != null)
+                                {
+                                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+                                }
+                                @Html.ActionLink("Відредагувати", "EditProduct", new { id = item.Id })
+                                @Html.ActionLink("Видалити", "DeleteProduct", new { id = item.Id })
+                            </div>
+                        </div>
+                    </div>
+                   
+                }
+                <p>
+                    @Html.ActionLink("Add Product", "AddProduct", new { id = Model.Id })
+                </p>
+                <p>
+                    <input type="submit" value="Save" />
+                </p>
+            </fieldset>
+       
+        }
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>

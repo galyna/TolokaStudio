@@ -1,0 +1,37 @@
+﻿@model SumkaWeb.Models.ProductEditModel
+@{
+    ViewBag.Title = "Edit ";
+}
+<script src="@Url.Content("~/Scripts/jquery/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/tiny_mce_src.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/combinedHTML-tinymce.js")" type="text/javascript"></script>
+<div class="container">
+    <div class="row">
+@using (Html.BeginForm())
+{
+
+        @Html.ValidationSummary(true)
+        <fieldset>
+            <legend>Product</legend>
+            @Html.HiddenFor(model => model.Product.Id)
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Product.Name)
+                @Html.ValidationMessageFor(model => model.Product.Name)
+            </div>
+            <div class="editor-field">
+                @Html.TextArea("Product.HtmlBanner", System.Web.HttpUtility.HtmlDecode(Model.Product.HtmlBanner), 25, 80,
+     new Dictionary<string, object> {	
+        {"style", "width:100%"}
+	 })
+            </div>
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+        }
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
