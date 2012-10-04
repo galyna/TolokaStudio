@@ -4,24 +4,29 @@ using System.Linq;
 using System.Web;
 using Core.Data.Entities;
 using System.ComponentModel.DataAnnotations;
-using ViewRes.Store;
+using SumkaWeb.Resources.Views;
+using SumkaWeb.Models.CombinedHTML;
+using SumkaWeb.Resources.Models.Product;
+using SumkaWeb.Resources.Views.Home;
 
 namespace SumkaWeb.Models
 {
     public class ProductCreateModel
     {
         [Required(ErrorMessageResourceName = "Required_Name",
-                ErrorMessageResourceType = typeof(Create))]
-        [Display(Name = "Name", ResourceType = typeof(Create))]
+                ErrorMessageResourceType = typeof(ProductCreate))]
+        [Display(Name = "Name", ResourceType = typeof(ProductCreate))]
         public string Name { get; set; }
         public string HtmlBanner { get; set; }
-        [Required(ErrorMessageResourceName = "Required_Description",
-            ErrorMessageResourceType = typeof(Create))]
+        [Required(ErrorMessageResourceName = "Required_Price",
+            ErrorMessageResourceType = typeof(ProductCreate))]
+        [Display(Name = "Price", ResourceType = typeof(ProductCreate))]
         public double Price { get; set; }
         [Required(ErrorMessageResourceName = "Required_Image",
-        ErrorMessageResourceType = typeof(Create))]
-        public string ImagePath { get; set; }
+        ErrorMessageResourceType = typeof(Home))]
+        public virtual string ImagePath { get; set; }
         public int StoreID { get; set; }
-
+        public string HtmlDetail { get; set; }
+        public CombinedHTMLItem CombinedHTMLItem { get; set; }
     }
 }

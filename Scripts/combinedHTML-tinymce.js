@@ -24,7 +24,7 @@ function initTinyMCE(options) {
         external_scripts_list: options.scripts,
         force_br_newlines: false,
         force_p_newlines: false,
-        auto_focus: "HtmlBanner",
+        auto_focus: "HtmlDetail",
         setup: function (ed) {
             ed.onInit.add(function (ed) {
                 //open source_editor  for resize
@@ -48,18 +48,21 @@ function initTinyMCE(options) {
     tinyMCE.Controller = options.Controller;
 }
 
-function ajaxLoad() {
+function ajaxLoad(apppath) {
+    var host = apppath;
+    var controller = "CombinedHTML/";
     $.ajax({
         type: 'GET',
-        url: 'http://localhost:50896/CombinedHTML/GetTinyMceInitSettings',
+        url: host + controller + 'GetTinyMceInitSettings',
         dataType: "json",
         success: function (data) {
             var options = {};
             options.templates = data.templates
             options.scripts = data.scripts;
-            options.cssAction = 'http://localhost:50896/CombinedHTML/GetTemplateCss';
-            options.Host = 'http://localhost:50896/';
+            options.cssAction = host + controller + 'GetTemplateCss';
+            options.Host = host;
             options.ContentRootFolder = data.rootImagesFolderPath;
+            options.Controller = controller;
             initTinyMCE(options);
         },
         error: function (error) {

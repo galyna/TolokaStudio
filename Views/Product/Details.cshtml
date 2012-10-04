@@ -1,12 +1,11 @@
-﻿@model Core.Data.Entities.Store
+﻿@model Core.Data.Entities.Product
+ 
+ <div class="container">
+<div class="row">
+  
 @{
     ViewBag.Title = "Деталі";
 }
-    @foreach (var item in Model.Products)
-    {
-
-        @Html.DisplayTextFor(modelItem => item.HtmlDetail)
-       
-    }
-@*
-
+ @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlDetail))
+    </div>
+</div>

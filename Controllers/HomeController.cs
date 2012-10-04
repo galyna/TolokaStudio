@@ -20,6 +20,7 @@ namespace SumkaWeb.Controllers
         public HomeController()
         {
             StoreRepository = new Repository<Store>();
+           // Seed();
         }
 
         private void Seed()
@@ -47,7 +48,7 @@ namespace SumkaWeb.Controllers
             AddProductsToStore(superMart, bread, cheese, waffles);
 
             // Add Employees to the Stores
-            // The Store-Employee relationship is one-to-many
+            // The Store-employee0 relationship is one-to-many
             AddEmployeesToStore(barginBasin, daisy, jack, sue);
             AddEmployeesToStore(superMart, bill, joan);
 
@@ -56,7 +57,7 @@ namespace SumkaWeb.Controllers
 
         public ActionResult Index()
         {
-            //Seed();
+           
             return View(new HomeModel() { Stores = StoreRepository.GetAll().ToList()});
         }
 

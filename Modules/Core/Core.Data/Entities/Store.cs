@@ -8,10 +8,9 @@ namespace Core.Data.Entities
         public virtual string Name { get; set; }
         public virtual string HtmlBanner { get; set; }
         public virtual string Description { get; set; }
-        public virtual string ImagePath { get; set; }
         public virtual IList<Product> Products { get; set; }
         public virtual IList<Employee> Staff { get; set; }
-      
+        public virtual string ImagePath { get; set; }
        
        
         public Store()

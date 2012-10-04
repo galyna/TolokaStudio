@@ -6,7 +6,7 @@ var ProductCreator = {
             $(" .box_main_item_text h3").html($(this).val());
         });
         var description = $("#Price").change(function () {
-            $(".box_main_item_text span").html($(this).val());
+            $(".box_main_item_text span").html($(this).val() );
         }); ;
 
         //set src

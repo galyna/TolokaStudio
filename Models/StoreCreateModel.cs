@@ -5,6 +5,8 @@ using System.Web;
 using Core.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 using ViewRes.Store;
+using SumkaWeb.Resources.Views.Home;
+using System.Web.Mvc;
 
 namespace SumkaWeb.Models
 {
@@ -14,12 +16,16 @@ namespace SumkaWeb.Models
          ErrorMessageResourceType = typeof(Create))]
         [Display(Name = "Name", ResourceType = typeof(Create))]
         public string Name { get; set; }
-        public string HtmlBanner { get; set; }
+
         [Required(ErrorMessageResourceName = "Required_Description",
-            ErrorMessageResourceType = typeof(Create))]
+         ErrorMessageResourceType = typeof(Create))]
         public string Description { get; set; }
+
         [Required(ErrorMessageResourceName = "Required_Image",
-        ErrorMessageResourceType = typeof(Create))]
-        public string ImagePath { get; set; }
+         ErrorMessageResourceType = typeof(Home))]
+        [HiddenInput(DisplayValue = false)]
+        public virtual string ImagePath { get; set; }
+
+        public string HtmlBanner { get; set; }
     }
 }

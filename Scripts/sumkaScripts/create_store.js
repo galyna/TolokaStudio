@@ -11,8 +11,8 @@
 
         //set src
         $('#templatesrc').load(function () {
-            $(" .box_main_item_img img").attr("src", $(this.contentDocument).find('#ImageUploaded').attr("src"));
-             $("#ImagePath").val( $(this.contentDocument).find('#ImageUploaded').attr("src"));
+            $(".store .box_main_item_img img").attr("src", $(this.contentDocument).find('#ImageUploaded').attr("src"));
+            $(".store #ImagePath").val($(this.contentDocument).find('#ImageUploaded').attr("src"));
         });
     }
 };

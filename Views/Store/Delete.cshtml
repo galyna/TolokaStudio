@@ -1,27 +1,30 @@
 ﻿@model Core.Data.Entities.Store
-
+@using SumkaWeb.Resources.Views.Home
 @{
-    ViewBag.Title = "Delete ";
+    ViewBag.Title = @Home.Delete;
 }
-
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
 <fieldset>
-    <legend>Store</legend>
-
-
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
+    <div class="container">
+        @using (Html.BeginForm())
+        {    
+            <fieldset>
+                <div class="row">
+                    <h2>@Home.Delete</h2>
+                    <h3>@Home.Delete_Comfirm</h3>
+                    <legend>@Home.Store</legend>
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
+                </div>
+                <br />
+                <div class="row">
+                    <input type="submit" value="@Home.Delete" />
+                </div>
+            </fieldset>     
+        }
+         <br />
+        <div class="row">
+            @Html.ActionLink(Home.BackToList, "Index")
+        </div>
     </div>
-
-    <div class="display-field">
-        @Html.DisplayFor(model => model.HtmlBanner)
     </div>
 </fieldset>
-@using (Html.BeginForm()) {
-    <p>
-        <input type="submit" value="Delete" /> |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-}

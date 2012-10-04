@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ViewRes.Store {
+namespace SumkaWeb.Resources.Models.Employee {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace ViewRes.Store {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Create {
+    public class EmployeeCreate {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Create() {
+        internal EmployeeCreate() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ViewRes.Store {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Views.Store.Create", typeof(Create).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Models.Employee.EmployeeCreate", typeof(EmployeeCreate).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,25 +61,70 @@ namespace ViewRes.Store {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Назва.
+        ///   Looks up a localized string similar to Створення автора.
         /// </summary>
-        public static string Name {
+        public static string Author_Creation {
             get {
-                return ResourceManager.GetString("Name", resourceCulture);
+                return ResourceManager.GetString("Author_Creation", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Введіть  короткий опис розділу.
+        ///   Looks up a localized string similar to Редагувати автора.
         /// </summary>
-        public static string Required_Description {
+        public static string Edit_Author {
             get {
-                return ResourceManager.GetString("Required_Description", resourceCulture);
+                return ResourceManager.GetString("Edit_Author", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Потрібно завантажити зображання.
+        ///   Looks up a localized string similar to Пошта.
+        /// </summary>
+        public static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iм&apos;я.
+        /// </summary>
+        public static string FirstName {
+            get {
+                return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прізвище.
+        /// </summary>
+        public static string LastName {
+            get {
+                return ResourceManager.GetString("LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введіть пошту.
+        /// </summary>
+        public static string Required_Email {
+            get {
+                return ResourceManager.GetString("Required_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введіть ім&apos;я.
+        /// </summary>
+        public static string Required_FirstName {
+            get {
+                return ResourceManager.GetString("Required_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Виберіть аватар.
         /// </summary>
         public static string Required_Image {
             get {
@@ -88,11 +133,11 @@ namespace ViewRes.Store {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Введіть назву розділу.
+        ///   Looks up a localized string similar to Введіть прізвище.
         /// </summary>
-        public static string Required_Name {
+        public static string Required_LastName {
             get {
-                return ResourceManager.GetString("Required_Name", resourceCulture);
+                return ResourceManager.GetString("Required_LastName", resourceCulture);
             }
         }
     }

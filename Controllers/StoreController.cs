@@ -25,14 +25,14 @@ namespace SumkaWeb.Controllers
                     " <div class='box_main_item'>" +
                     " <div class='box_main_item_img'>" +
                     "  <div class='box_main_item_img_bg'>" +
-                    "     <span>{1}</span>" +
+                    "     <span>Товари</span>" +
                     "  </div>" +
-                    " <img src='{3}' alt='img_box' />" +
+                    " <img src='{1}' alt='img_box' />" +
                     " </div>" +
                     " <div class='box_main_item_text'>" +
                     "   <h3>" +
-                    "       {1}</h3>" +
-                    "     <span>{2}</span>" +
+                    "       {2}</h3>" +
+                    "     <span>{3}</span>" +
                     "  </div>" +
                     " </div>" +
                     " </a>" +
@@ -67,7 +67,13 @@ namespace SumkaWeb.Controllers
 
         public ActionResult Create()
         {
-            return View(new StoreCreateModel());
+            return View(new StoreCreateModel()
+            {
+                Name="Назва розділу",
+                Description="Опис",
+                ImagePath = "/Content/img/Хэллоуин-1287323090.jpg",
+                HtmlBanner = string.Format(_storeTemplate, '0', "/Content/img/Хэллоуин-1287323090.jpg", "Назва розділу", "Опис"),
+            });
         }
 
         //
@@ -80,8 +86,8 @@ namespace SumkaWeb.Controllers
             {
                 try
                 {
-                    Store savedStore = StoreRepository.SaveOrUpdate(new Store() { Name = store.Name, Description = store.Description, ImagePath = store.ImagePath });
-                    var htmlBanner = string.Format(_storeTemplate, savedStore.Id, savedStore.Name, savedStore.Description, savedStore.ImagePath);
+                    Store savedStore = StoreRepository.SaveOrUpdate(new Store() { Name = store.Name, Description = store.Description, ImagePath =store.ImagePath });
+                    var htmlBanner = string.Format(_storeTemplate, savedStore.Id, store.ImagePath, savedStore.Name, savedStore.Description);
                     savedStore.HtmlBanner = Server.HtmlEncode(htmlBanner);
                     Store savedStoreWithBanner = StoreRepository.SaveOrUpdate(savedStore);
                     return RedirectToAction("Index");
@@ -95,7 +101,7 @@ namespace SumkaWeb.Controllers
             {
                 return View(store);
             }
-            
+
         }
 
         //
@@ -103,29 +109,34 @@ namespace SumkaWeb.Controllers
 
         public ActionResult Edit(int id)
         {
-            Store store = StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-
-            return View(store);
+            StoreEditModel model = StoreToEditModel(id);
+            return View(model);
         }
 
+        
         //
         // POST: /Storage/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(StoreEditModel store)
         {
-            Store store = StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            try
+            if (ModelState.IsValid)
             {
 
-                store.Name = collection["Store.Name"];
-                store.HtmlBanner = Server.HtmlEncode(collection["Store.HtmlBanner"]);
-
-                StoreRepository.SaveOrUpdate(store);
-                WebTemplateRepository.SaveOrUpdate(new WebTemplate() { Name = "Product", Html = store.HtmlBanner });
-                return RedirectToAction("Index");
+                try
+                {
+                    Store model = EditModelToStore(store);
+                   
+                    StoreRepository.SaveOrUpdate(model);
+                    WebTemplateRepository.SaveOrUpdate(new WebTemplate() { Name = "Store" + store.Name, Html = store.HtmlBanner });
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    return View(store);
+                }
             }
-            catch
+            else
             {
                 return View(store);
             }
@@ -164,9 +175,6 @@ namespace SumkaWeb.Controllers
             return RedirectToAction("Edit", "Product", new { id = id });
         }
 
-        //
-        // GET: /Storage/AddProduct/5
-
         public ActionResult AddProduct(int id)
         {
             return RedirectToAction("Create", "Product", new { id = id });
@@ -174,6 +182,20 @@ namespace SumkaWeb.Controllers
         public ActionResult DeleteProduct(int id)
         {
             return RedirectToAction("Delete", "Product", new { id = id });
+        }
+
+        public ActionResult EditEmployee(int id)
+        {
+            return RedirectToAction("Edit", "Employee", new { id = id });
+        }
+
+        public ActionResult AddEmployee(int id)
+        {
+            return RedirectToAction("Create", "Employee", new { id = id });
+        }
+        public ActionResult DeleteEmployee(int id)
+        {
+            return RedirectToAction("Delete", "Employee", new { id = id });
         }
         public ActionResult ImageUpload()
         {
@@ -204,15 +226,44 @@ namespace SumkaWeb.Controllers
                 viewModel.ImageUploaded = "<IMG id='ImageUploaded' src=" + Path.Combine(_rootImagesFolderPath, fileName) + " style='float: left;'/>";
                 viewModel.Message = string.Format("Зображення {0} було успішно завантажено.", fileName);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                // viewModel.Message = string.Format("The process failed: {0}", e.ToString());
+
                 Console.WriteLine(viewModel.Message);
                 return PartialView("ImageUpload", viewModel);
             }
 
             return PartialView(viewModel);
         }
+        private StoreEditModel StoreToEditModel(int id)
+        {
+            Store store = StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+            StoreEditModel model = new StoreEditModel()
+            {
+                Id = store.Id,
+                ImagePath = store.ImagePath,
+                Name = store.Name,
+                HtmlBanner = store.HtmlBanner,
+                Description = store.Description,
+                Products = store.Products,
+                Staff = store.Staff
+            };
+            return model;
+        }
+        private Store EditModelToStore(StoreEditModel model)
+        {
+            Store store = StoreRepository.Get(s => s.Id.Equals(model.Id)).SingleOrDefault();
+            if (store != null)
+            {
 
+                store.ImagePath = model.ImagePath;
+                store.Name = model.Name;
+                store.HtmlBanner = Server.HtmlEncode(string.Format(_storeTemplate, model.Id , model.ImagePath, model.Name, model.Description));
+                store.Description = model.Description;
+                store.Products = model.Products;
+                store.Staff = model.Staff;
+            }
+            return store;
+        }
     }
 }

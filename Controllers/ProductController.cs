@@ -18,18 +18,18 @@ namespace SumkaWeb.Controllers
         private readonly IRepository<Product> ProductsRepository;
         private const string _productTemplate = "<div class='template'>" +
                    " <div class='span8'>" +
-                   " <a href='#'>" +
+                   " <a href='/Product/Details?id={0}''>" +
                    " <div class='box_main_item'>" +
                    " <div class='box_main_item_img'>" +
                    "  <div class='box_main_item_img_bg'>" +
-                   "     <span>Замовити</span>" +
+                   "     <span>Детальніше</span>" +
                    "  </div>" +
-                   " <img src='{0}' alt='img_box' />" +
+                   " <img src='{1}' alt='img_box' />" +
                    " </div>" +
                    " <div class='box_main_item_text'>" +
                    "   <h3>" +
-                   "       {1}</h3>" +
-                   "     <span>{2}</span>" +
+                   "       {2}</h3>" +
+                   "     <span>{3}</span>" +
                    "  </div>" +
                    " </div>" +
                    " </a>" +
@@ -55,9 +55,9 @@ namespace SumkaWeb.Controllers
 
         public ActionResult Details(int id)
         {
-            Product store = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
 
-            return View(store);
+            return View(product);
         }
 
 
@@ -69,7 +69,7 @@ namespace SumkaWeb.Controllers
         {
             ProductCreateModel productCreateModel = new ProductCreateModel()
             {
-
+                HtmlBanner = string.Format(_productTemplate, '0', "/Content/img/Podushka.png", "Назва товару", "Ціна грн"),
                 StoreID = id
             };
 
@@ -82,18 +82,28 @@ namespace SumkaWeb.Controllers
         [HttpPost]
         public ActionResult Create(ProductCreateModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                Store store = StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
-                var htmlBanner = string.Format(_productTemplate, model.ImagePath, model.Name, model.Price);
-                store.AddProduct(new Product() { Name = model.Name, Price = model.Price, HtmlBanner = Server.HtmlEncode(htmlBanner) });
-                StoreRepository.SaveOrUpdate(store);
+                try
+                {
+                    Store store = StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
+                    Product product0 = new Product() { Name = model.Name, Price = model.Price };
 
-                StoreRepository.SaveOrUpdate(store);
-
-                return RedirectToAction("Index","Store");
+                    ProductsRepository.SaveOrUpdate(product0);
+                    product0.HtmlBanner = Server.HtmlEncode(string.Format(_productTemplate, product0.Id, model.ImagePath, model.Name, model.Price + " грн."));
+                    product0.HtmlDetail = Server.HtmlEncode(model.HtmlDetail);
+                    ProductsRepository.SaveOrUpdate(product0);
+                    Product product = ProductsRepository.GetAll().Where(p => p.Name == model.Name && p.Price == model.Price).SingleOrDefault();
+                    store.AddProduct(product);
+                    StoreRepository.SaveOrUpdate(store);
+                    return RedirectToAction("Index", "Store");
+                }
+                catch
+                {
+                    return View(model);
+                }
             }
-            catch
+            else
             {
                 return View(model);
             }
@@ -116,7 +126,7 @@ namespace SumkaWeb.Controllers
             try
             {
                 ProductsRepository.Delete(ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
-                return RedirectToAction("Index","Store");
+                return RedirectToAction("Index", "Store");
             }
             catch
             {
@@ -128,33 +138,62 @@ namespace SumkaWeb.Controllers
 
         public ActionResult Edit(int id)
         {
-            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            IList<WebTemplate> productTemplates = WebTemplateRepository.GetAll().ToList();
-
-            ProductEditModel productEditModel = new ProductEditModel() { Product = product, ProductTemplates = productTemplates };
-
-            return View(productEditModel);
+            ProductEditModel ProductEditModel = StoreToEditModel(id);
+            return View(ProductEditModel);
         }
+
+        
 
         //
         // POST: /Product/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(ProductEditModel productEditModel)
         {
-            try
+            if (ModelState.IsValid)
             {
-                Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-                product.Name = collection["Product.Name"];
-                product.HtmlBanner = Server.HtmlEncode(collection["Product.HtmlBanner"]);
 
-                ProductsRepository.SaveOrUpdate(product);
-                return RedirectToAction("Index");
+                try
+                {
+                    Product product = EditModelToProduct(productEditModel);
+                    ProductsRepository.SaveOrUpdate(product);
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    return View(productEditModel);
+                }
             }
-            catch
+            else
             {
-                return View();
+                return View(productEditModel);
             }
+        }
+
+        private Product EditModelToProduct(ProductEditModel productEditModel)
+        {
+            Product product = ProductsRepository.Get(s => s.Id.Equals(productEditModel.Id)).SingleOrDefault();
+            product.Name = productEditModel.Name;
+            product.Price = productEditModel.Price;
+            product.ImagePath = productEditModel.ImagePath;
+            product.HtmlBanner = Server.HtmlEncode(string.Format(_productTemplate, productEditModel.Id, productEditModel.ImagePath, productEditModel.Name, productEditModel.Price + " грн."));
+            product.HtmlDetail = Server.HtmlEncode(productEditModel.HtmlDetail);
+            return product;
+        }
+
+        private ProductEditModel StoreToEditModel(int id)
+        {
+            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+            ProductEditModel ProductEditModel = new ProductEditModel()
+            {
+                ImagePath = product.ImagePath,
+                Name = product.Name,
+                Price = product.Price,
+                HtmlBanner = HttpUtility.HtmlDecode(product.HtmlBanner),
+                HtmlDetail = HttpUtility.HtmlDecode(product.HtmlDetail),
+                Id = id
+            };
+            return ProductEditModel;
         }
         // Adds any products that we pass in to the store that we pass in
         public static void AddProductsToStore(Store store, params Product[] products)

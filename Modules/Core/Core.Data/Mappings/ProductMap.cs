@@ -18,9 +18,9 @@ namespace Core.Data.Mappings
 
             Component(x => x.Location);
             References(x => x.OwnerUser);
-
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
-            Map(x => x.HtmlDetail).CustomSqlType("nvarchar(max)");
+            Map(x => x.HtmlDetail).CustomSqlType("ntext");
+            Map(x => x.ImagePath);
         }
     }
 }

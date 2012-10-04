@@ -82,7 +82,7 @@ namespace SumkaWeb.Controllers
 
         public ActionResult GetTemplateCss()
         {
-            var file = File("~/Content/style/eleks_content.css", "text/css", Server.UrlEncode("eleks_content.css"));
+            var file = File("~/Content/style/toloka_content.css", "text/css", Server.UrlEncode("toloka_content.css"));
             return file;
         }
 

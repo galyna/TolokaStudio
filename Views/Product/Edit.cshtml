@@ -1,37 +1,69 @@
 ﻿@model SumkaWeb.Models.ProductEditModel
+@using SumkaWeb.Resources.Views.Home
+@using SumkaWeb.Resources.Views.Product
 @{
-    ViewBag.Title = "Edit ";
+    ViewBag.Title = Product.Edit_Product;
 }
-<script src="@Url.Content("~/Scripts/jquery/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/sumkaScripts/create_product.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/tiny_mce_src.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/combinedHTML-tinymce.js")" type="text/javascript"></script>
 <div class="container">
-    <div class="row">
-@using (Html.BeginForm())
-{
-
-        @Html.ValidationSummary(true)
+    @using (Html.BeginForm())
+    {
+           @Html.ValidationSummary(true)
         <fieldset>
-            <legend>Product</legend>
-            @Html.HiddenFor(model => model.Product.Id)
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Product.Name)
-                @Html.ValidationMessageFor(model => model.Product.Name)
+            <div class="row">
+                @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
+                <div class="span6">
+                    @Html.HiddenFor(model => model.StoreID)
+                      @Html.HiddenFor(model => model.Id)
+                   @Html.HiddenFor(model => model.HtmlBanner)
+                    @Html.LabelFor(model => model.Name)
+                    @Html.EditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name, null, new { @class = "required" })
+                    @Html.LabelFor(model => model.Price)
+                    @Html.EditorFor(model => model.Price, new { @class = "storecreatefield" })
+                    @Html.ValidationMessageFor(model => model.Price, null, new { @class = "required" })
+                    @Html.HiddenFor(model => model.ImagePath)
+                </div>
+                <div class="span10">
+                    <iframe id="templatesrc" name="templatesrc" src="/Store/ImageUpload" frameborder="0"
+                        style="float: left; width: 400px; height: 320px"></iframe>
+              
+                </div>
             </div>
-            <div class="editor-field">
-                @Html.TextArea("Product.HtmlBanner", System.Web.HttpUtility.HtmlDecode(Model.Product.HtmlBanner), 25, 80,
-     new Dictionary<string, object> {	
-        {"style", "width:100%"}
-	 })
+            <div class="row">
+                <div class="span24">
+               
+                        @Html.LabelFor(m => m.HtmlDetail)
+                        @Html.TextAreaFor(m => m.HtmlDetail,
+                    new Dictionary<string, object> {
+                    {"class", "html tinymce"}
+                         })
+                  
+                </div>
             </div>
-            <p>
-                <input type="submit" value="Save" />
-            </p>
+            <div class="row">
+                <div class="span24">
+                    <input type="submit" value="@Home.Save" />
+                </div>
+            </div>
         </fieldset>
-        }
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    }
+    <div>
+        @Html.ActionLink(Home.BackToList, "Index")
     </div>
 </div>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function () {
+        $('#templatesrc').load(function () {
+            ProductCreator.init();
+        });
+
+        ajaxLoad('@Request.Url.Scheme' + "://" + '@Request.Url.DnsSafeHost' + ":" + '@Request.Url.Port' + '@Request.ApplicationPath');
+
+    });
+    
+//]]>
+</script>
