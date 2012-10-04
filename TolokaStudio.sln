@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SumkaWeb", "SumkaWeb.csproj", "{BCE4C734-28A9-4785-ACDA-A509DF10651C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TolokaStudio", "TolokaStudio.csproj", "{BCE4C734-28A9-4785-ACDA-A509DF10651C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Data", "Modules\Core\Core.Data\Core.Data.csproj", "{38CB7FE2-9018-4EF2-A3BA-21A939E70718}"
 EndProject
