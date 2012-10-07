@@ -4,11 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Core.Data.Entities;
-using SumkaWeb.Models;
+using TolokaStudio.Models;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
 
-namespace SumkaWeb.Controllers
+namespace TolokaStudio.Controllers
 {
     [ValidateInput(false)]
     public class ProductController : Controller

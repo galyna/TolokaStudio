@@ -129,6 +129,9 @@
   <data name="FirstName" xml:space="preserve">
     <value>Iм'я</value>
   </data>
+  <data name="HtmlDetail" xml:space="preserve">
+    <value>Детальніше про автора</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Прізвище</value>
   </data>

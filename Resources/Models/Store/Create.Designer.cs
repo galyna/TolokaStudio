@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ViewRes.Store {
+namespace ModelRes.Store {
     using System;
     
     

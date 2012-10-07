@@ -6,11 +6,11 @@ using System.Web.Mvc;
 using Core.Data;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
-using SumkaWeb.Models;
+using TolokaStudio.Models;
 using Core.Data.Entities;
 
 
-namespace SumkaWeb.Controllers
+namespace TolokaStudio.Controllers
 {
     public class HomeController : Controller
     {

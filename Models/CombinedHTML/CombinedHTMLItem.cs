@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SumkaWeb.Models.CombinedHTML
+namespace TolokaStudio.Models.CombinedHTML
 {
     public class CombinedHTMLItem
     {

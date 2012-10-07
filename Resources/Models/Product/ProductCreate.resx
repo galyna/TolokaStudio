@@ -120,6 +120,9 @@
   <data name="Create_Product" xml:space="preserve">
     <value>Створення товару</value>
   </data>
+  <data name="HtmlDetail" xml:space="preserve">
+    <value>Деталі продукту</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Назва</value>
   </data>

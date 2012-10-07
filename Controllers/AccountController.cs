@@ -5,12 +5,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using SumkaWeb.Models;
+using TolokaStudio.Models;
 using Core.Data.Entities;
 using Core.Data.Repository;
 using Core.Data.Repository.Interfaces;
 
-namespace SumkaWeb.Controllers
+namespace TolokaStudio.Controllers
 {
     public class AccountController : Controller
     {

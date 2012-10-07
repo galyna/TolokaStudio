@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SumkaWeb.Resources.Views.Home {
+namespace ViewRes.Home {
     using System;
     
     
@@ -138,6 +138,15 @@ namespace SumkaWeb.Resources.Views.Home {
         public static string Edit_Author {
             get {
                 return ResourceManager.GetString("Edit_Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string HtmlDetail {
+            get {
+                return ResourceManager.GetString("HtmlDetail", resourceCulture);
             }
         }
         

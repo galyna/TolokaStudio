@@ -5,10 +5,12 @@ using System.Web;
 using Core.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 using ViewRes.Store;
-using SumkaWeb.Resources.Views.Home;
-using System.Web.Mvc;
 
-namespace SumkaWeb.Models
+using System.Web.Mvc;
+using ModelRes.Store;
+using ViewRes.Home;
+
+namespace TolokaStudio.Models
 {
     public class StoreCreateModel
     {

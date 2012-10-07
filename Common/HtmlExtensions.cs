@@ -3,7 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using HtmlAgilityPack;
 
-namespace SumkaWeb.Common.Extensions
+namespace TolokaStudio.Common.Extensions
 {
   public static class HtmlExtensions
   {

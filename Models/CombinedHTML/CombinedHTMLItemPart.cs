@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.EnterpriseServices;
 
-namespace SumkaWeb.Models.CombinedHTML
+namespace TolokaStudio.Models.CombinedHTML
 {
 
 

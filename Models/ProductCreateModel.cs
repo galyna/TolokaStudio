@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using Core.Data.Entities;
 using System.ComponentModel.DataAnnotations;
-using SumkaWeb.Resources.Views;
-using SumkaWeb.Models.CombinedHTML;
-using SumkaWeb.Resources.Models.Product;
-using SumkaWeb.Resources.Views.Home;
+using ModelRes.Product;
+using ViewRes.Home;
 
-namespace SumkaWeb.Models
+
+
+namespace TolokaStudio.Models
 {
     public class ProductCreateModel
     {
@@ -27,6 +27,5 @@ namespace SumkaWeb.Models
         public virtual string ImagePath { get; set; }
         public int StoreID { get; set; }
         public string HtmlDetail { get; set; }
-        public CombinedHTMLItem CombinedHTMLItem { get; set; }
     }
 }

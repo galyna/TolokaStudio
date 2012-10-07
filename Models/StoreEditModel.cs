@@ -5,7 +5,7 @@ using System.Web;
 using Core.Data.Entities;
 using System.Web.Mvc;
 
-namespace SumkaWeb.Models
+namespace TolokaStudio.Models
 {
     public class StoreEditModel:StoreCreateModel
     {

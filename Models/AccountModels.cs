@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace SumkaWeb.Models
+namespace TolokaStudio.Models
 {
 
     public class ChangePasswordModel

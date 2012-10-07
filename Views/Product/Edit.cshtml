@@ -1,6 +1,6 @@
-﻿@model SumkaWeb.Models.ProductEditModel
-@using SumkaWeb.Resources.Views.Home
-@using SumkaWeb.Resources.Views.Product
+﻿@model TolokaStudio.Models.ProductEditModel
+@using ViewRes.Home
+@using ViewRes.Product
 @{
     ViewBag.Title = Product.Edit_Product;
 }
@@ -10,14 +10,14 @@
 <div class="container">
     @using (Html.BeginForm())
     {
-           @Html.ValidationSummary(true)
+        @Html.ValidationSummary(true)
         <fieldset>
             <div class="row">
                 @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
                 <div class="span6">
                     @Html.HiddenFor(model => model.StoreID)
-                      @Html.HiddenFor(model => model.Id)
-                   @Html.HiddenFor(model => model.HtmlBanner)
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.HtmlBanner)
                     @Html.LabelFor(model => model.Name)
                     @Html.EditorFor(model => model.Name)
                     @Html.ValidationMessageFor(model => model.Name, null, new { @class = "required" })
@@ -29,18 +29,15 @@
                 <div class="span10">
                     <iframe id="templatesrc" name="templatesrc" src="/Store/ImageUpload" frameborder="0"
                         style="float: left; width: 400px; height: 320px"></iframe>
-              
                 </div>
             </div>
             <div class="row">
                 <div class="span24">
-               
-                        @Html.LabelFor(m => m.HtmlDetail)
-                        @Html.TextAreaFor(m => m.HtmlDetail,
+                    @Html.LabelFor(m => m.HtmlDetail)
+                    @Html.TextAreaFor(m => m.HtmlDetail,
                     new Dictionary<string, object> {
                     {"class", "html tinymce"}
                          })
-                  
                 </div>
             </div>
             <div class="row">

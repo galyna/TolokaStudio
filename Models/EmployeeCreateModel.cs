@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
-using SumkaWeb.Resources.Views.Home;
-using SumkaWeb.Resources.Models.Employee;
-using System.Web.Mvc;
 
-namespace SumkaWeb.Models
+using System.Web.Mvc;
+using ModelRes.Employee;
+using ViewRes.Home;
+
+namespace TolokaStudio.Models
 {
     public class EmployeeCreateModel
     {
@@ -34,6 +35,7 @@ namespace SumkaWeb.Models
         public int StoreID { get; set; }
 
         public string HtmlBanner { get; set; }
+         [Display(Name = "HtmlDetail", ResourceType = typeof(EmployeeCreate))]
         public string HtmlDetail { get; set; }
 
     }

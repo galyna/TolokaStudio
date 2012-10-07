@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SumkaWeb.Resources.Models.Employee {
+namespace ModelRes.Employee {
     using System;
     
     
@@ -93,6 +93,15 @@ namespace SumkaWeb.Resources.Models.Employee {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Детальніше про автора.
+        /// </summary>
+        public static string HtmlDetail {
+            get {
+                return ResourceManager.GetString("HtmlDetail", resourceCulture);
             }
         }
         

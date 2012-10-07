@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SumkaWeb.Resources.Views.Product {
+namespace ViewRes.Product {
     using System;
     
     
@@ -61,6 +61,15 @@ namespace SumkaWeb.Resources.Views.Product {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Створення товару.
+        /// </summary>
+        public static string Create_Product {
+            get {
+                return ResourceManager.GetString("Create_Product", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Редагувати товар.
         /// </summary>
         public static string Edit_Product {
@@ -69,6 +78,6 @@ namespace SumkaWeb.Resources.Views.Product {
             }
         }
         
-        
+      
     }
 }

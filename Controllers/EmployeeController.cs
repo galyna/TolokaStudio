@@ -6,10 +6,10 @@ using System.Web.Mvc;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Entities;
 using Core.Data.Repository;
-using SumkaWeb.Models;
+using TolokaStudio.Models;
 using System.IO;
 
-namespace SumkaWeb.Controllers
+namespace TolokaStudio.Controllers
 {
     [ValidateInput(false)]
     public class EmployeeController : Controller

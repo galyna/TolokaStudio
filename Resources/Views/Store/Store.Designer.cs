@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SumkaWeb.Resources.Views.Store {
+namespace ViewRes.Store {
     using System;
     
     

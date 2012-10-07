@@ -10,11 +10,11 @@ using System.Net;
 using Core.Data;
 using Core.Data.Entities;
 using SquishIt.Framework;
-using SumkaWeb.Models;
+using TolokaStudio.Models;
 using Core.Data.Repository;
 using Core.Data.Repository.Interfaces;
 
-namespace SumkaWeb.Controllers
+namespace TolokaStudio.Controllers
 {
     [ValidateInput(false)]
     public class CombinedHTMLController : Controller

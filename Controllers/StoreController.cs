@@ -6,11 +6,11 @@ using System.Web.Mvc;
 using Core.Data;
 using Core.Data.Entities;
 using Core.Data.Repository;
-using SumkaWeb.Models;
+using TolokaStudio.Models;
 using Core.Data.Repository.Interfaces;
 using System.IO;
 
-namespace SumkaWeb.Controllers
+namespace TolokaStudio.Controllers
 {
     [ValidateInput(false)]
     public class StoreController : Controller
@@ -71,8 +71,8 @@ namespace SumkaWeb.Controllers
             {
                 Name="Назва розділу",
                 Description="Опис",
-                ImagePath = "/Content/img/Хэллоуин-1287323090.jpg",
-                HtmlBanner = string.Format(_storeTemplate, '0', "/Content/img/Хэллоуин-1287323090.jpg", "Назва розділу", "Опис"),
+                ImagePath = "/Content/img/accessors.png",
+                HtmlBanner = string.Format(_storeTemplate, '0', "/Content/img/accessors.png", "Назва розділу", "Опис"),
             });
         }
 

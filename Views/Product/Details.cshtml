@@ -1,11 +1,6 @@
 ﻿@model Core.Data.Entities.Product
- 
- <div class="container">
-<div class="row">
-  
-@{
-    ViewBag.Title = "Деталі";
-}
- @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlDetail))
+<div class="container">
+    <div class="row">
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlDetail))
     </div>
 </div>
