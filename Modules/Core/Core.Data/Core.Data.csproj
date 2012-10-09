@@ -95,6 +95,7 @@
     <Compile Include="CascadeConvention.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\Location.cs" />
+    <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\Store.cs" />
     <Compile Include="CoreDataAutomappingConfiguration.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Entities\WebTemplate.cs" />
     <Compile Include="Mappings\EmployeeMap.cs" />
     <Compile Include="Mappings\LocationMap.cs" />
+    <Compile Include="Mappings\OrderMap.cs" />
     <Compile Include="Mappings\ProductMap.cs" />
     <Compile Include="Mappings\StoreMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />

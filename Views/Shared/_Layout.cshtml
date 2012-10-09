@@ -1,6 +1,5 @@
 ﻿@using TolokaStudio.Common.Extensions
- @using ViewRes.Home
-
+@using ViewRes.Home
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +14,8 @@
     <script type="text/javascript">
         document.body.className = "";
     </script>
+    <div class="wrap_site">
+    
     <div class="menu_wrap">
         <div class="container">
             <div class="menu_top">
@@ -26,7 +27,7 @@
                        " <li><a class='typ4' href='/Employee'>" + Home.Authors + "</a></li>" +
                        " <li><a class='typ5' href='/Order'>" + Home.Orders + "</a></li>" +
                        " <li ><a class='typ6' href='http://vk.com/public43703617'>Контакти</a></li>" +
-                       "<li class='last'><a href='" + "/Store" + "' class='typ2'>" + Home.StoresManager + "</a></li>" +
+
                    " </ul>")
                     <div class="clear">
                     </div>
@@ -35,19 +36,22 @@
         </div>
     </div>
     <!--Block Menu ends-->
-    <div class="wrap_site">
-        <div class="container">
-            <div class="row">
-                <div class="span24 offset24">
-                    @Html.Partial("_LogOnPartial")
-                </div>
-            </div>
-        </div>
-        @RenderBody()
+    <div class="container">
+                  <div class="copyright_and_min_menu_wrap">
+             <div class="row">
+                 <div class="span19">
+                    <div class="copyright">
+                       @Home.LogoText
+                    </div>
+                 </div>
+                 
+             </div>
+         </div>
+    @RenderBody()
     </div>
     <div class="footer">
         <div class="container">
-            <div class="menu_and_social_wrap">
+     
                 <div class="row">
                     <div class="span19">
                         <div class="menu_footer">
@@ -58,7 +62,7 @@
                                 " <li><a class='typ4' href='/Employee'>" + Home.Authors + "</a></li>" +
                                 " <li><a class='typ5' href='/Order'>" + Home.Orders + "</a></li>" +
                                 " <li ><a class='typ6' href='http://vk.com/public43703617'>Контакти</a></li>" +
-                                "<li class='last'><a href='" + "/Store" + "' class='typ2'>" + Home.StoresManager + "</a></li>" +
+
                             "</ul>")
                             <div class="clear">
                             </div>
@@ -67,7 +71,9 @@
                     <div class="span5">
                         <div class="social_link_wrap">
                             <div class="social_link_text">
-                                Ми ще тут:</div>
+                               <div class="copyright">
+                       Ми ще тут:
+                    </div> </div>
                             <div class="social_icons">
                                 <ul>
                                     @* <li class="facebook"><a href="#"></a></li>
@@ -79,19 +85,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+               
             </div>
-            <div class="copyright_and_min_menu_wrap">
-                <div class="row">
-                    <div class="span19">
-                        <div class="copyright">
-                            Толока Студіо
-                        </div>
-                    </div>
-                    <div class="span5">
-                    </div>
-                </div>
-            </div>
+          
         </div>
     </div>
     <!--********************

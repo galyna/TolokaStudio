@@ -24,6 +24,27 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+        <ObjectGroup Name="ApplicationServices-Deployment" Order="2" Enabled="True">
+          <Destination Path="" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=BEST\SQLEXPRESS%3bAttachDbFilename=|DataDirectory|\ASPNETDB.MDF%3bIntegrated Security=True" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\ApplicationServices-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+        <ObjectGroup Name="hibernateConn-Deployment" Order="1" Enabled="True">
+          <Destination Path="" />
+          <Object Type="dbFullSql" Enabled="False">
+            <PreSource Path="" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\hibernateConn-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+      </Objects>
+    </PublishDatabaseSettings>
+    <ExcludeApp_Data>true</ExcludeApp_Data>
+    <FilesToIncludeForPublish>AllFilesInTheProject</FilesToIncludeForPublish>
+    <DeployIisAppPath>Default Web Site/toloka.studion.com</DeployIisAppPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -104,6 +125,7 @@
     <Compile Include="Controllers\CombinedHTMLController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Global.asax.cs">
@@ -115,6 +137,8 @@
     <Compile Include="Models\CombinedHTML\CombinedHTMLItemPart.cs" />
     <Compile Include="Models\EmployeeCreateModel.cs" />
     <Compile Include="Models\EmployeeEditModel.cs" />
+    <Compile Include="Models\OrderCreateModel.cs" />
+    <Compile Include="Models\OrderEditModel.cs" />
     <Compile Include="Models\ProductCreateModel.cs" />
     <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\ProductEditModel.cs" />
@@ -130,6 +154,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EmployeeCreate.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Views\Employee\Employee.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Employee.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Views\Home\Home.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -154,33 +183,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\ASPNETDB.MDF" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Config\Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Config\Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <Content Include="Config\Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Config\Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <Content Include="Config\Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <Content Include="Config\Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Config\Content\themes\base\jquery.ui.accordion.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.all.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.autocomplete.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.base.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.button.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.core.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.datepicker.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.dialog.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.progressbar.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.resizable.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.selectable.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.slider.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.tabs.css" />
-    <Content Include="Config\Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Content\assets\css\bootstrap.css" />
     <Content Include="Content\assets\css\docs.css" />
     <Content Include="Content\assets\ico\apple-touch-icon-114-precomposed.png" />
@@ -212,14 +214,14 @@
     <Content Include="Content\assets\js\scroller_load_img.js" />
     <Content Include="Content\js\combined_.js" />
     <Content Include="Content\js\events_init.js" />
-    <Content Include="Content\js\menu_full_width.js" />
+    <EmbeddedResource Include="Content\js\menu_full_width.js" />
     <Content Include="Content\js\scroller_load_img.js" />
     <Content Include="Content\style\admin-style.css" />
     <Content Include="Content\style\animations_style.css" />
     <Content Include="Content\style\colorpicker.css" />
     <Content Include="Content\style\content.css" />
     <Content Include="Content\style\customization_style.css" />
-    <Content Include="Content\style\toloka_content.css" />
+    <EmbeddedResource Include="Content\style\toloka_content.css" />
     <Content Include="Content\style\font\BebasNeue-webfont.svg" />
     <Content Include="Content\style\font\eur__dmo.svg" />
     <Content Include="Content\style\font\eur___bo.svg" />
@@ -233,7 +235,7 @@
     <Content Include="Content\style\main_page_style.css" />
     <Content Include="Content\style\responsive.css" />
     <Content Include="Content\style\site-style.css" />
-    <Content Include="Content\style\style.css" />
+    <EmbeddedResource Include="Content\style\style.css" />
     <Content Include="Content\style\typography.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\combinedHTML-tinymce.js" />
@@ -244,7 +246,11 @@
     <Content Include="Scripts\jquery\jquery-ui-1.8.11.min.js" />
     <Content Include="Scripts\jquery\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery\jquery.validate.js" />
-    <Content Include="Scripts\jquery\jquery.validate.min.js" />
+    <EmbeddedResource Include="Resources\Views\Employee\Employee.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Employee.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Scripts\jquery\jquery.validate.min.js" />
     <Content Include="Scripts\langs\en.js" />
     <Content Include="Scripts\jquery\modernizr-1.7.js" />
     <Content Include="Scripts\jquery\modernizr-1.7.min.js" />
@@ -382,7 +388,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Config\Content\Site.css" />
     <Content Include="Scripts\jquery\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.js" />
@@ -398,7 +403,6 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
@@ -406,6 +410,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Config\" />
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -455,6 +460,11 @@
     <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Employee\Delete.cshtml" />
     <Content Include="Views\Product\ImageUpload.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
+    <Content Include="Views\Order\Delete.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\web.config" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\Store\Web.config" />
   </ItemGroup>
@@ -518,7 +528,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50896</DevelopmentServerPort>
+          <DevelopmentServerPort>55796</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

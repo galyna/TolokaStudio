@@ -6,6 +6,7 @@ using Core.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 using ModelRes.Product;
 using ViewRes.Home;
+using System.Web.Mvc;
 
 
 
@@ -27,5 +28,6 @@ namespace TolokaStudio.Models
         public virtual string ImagePath { get; set; }
         public int StoreID { get; set; }
         public string HtmlDetail { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

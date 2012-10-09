@@ -97,6 +97,15 @@ namespace ViewRes.Home {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Створити попереднє замовлення.
+        /// </summary>
+        public static string Create_Order {
+            get {
+                return ResourceManager.GetString("Create_Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Видалити.
         /// </summary>
         public static string Delete {
@@ -147,6 +156,25 @@ namespace ViewRes.Home {
         public static string HtmlDetail {
             get {
                 return ResourceManager.GetString("HtmlDetail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Толока Студіо.
+        /// </summary>
+        public static string LogoText {
+            get {
+                return ResourceManager.GetString("LogoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введіть адересу вашої пошти, номер телефону, skype та натисніть Замовити.
+        ///            Після цого автор  зконтактується з вами щодо подальшої співпраці..
+        /// </summary>
+        public static string Order_Info {
+            get {
+                return ResourceManager.GetString("Order_Info", resourceCulture);
             }
         }
         

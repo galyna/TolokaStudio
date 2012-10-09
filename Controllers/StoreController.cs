@@ -15,9 +15,12 @@ namespace TolokaStudio.Controllers
     [ValidateInput(false)]
     public class StoreController : Controller
     {
+        #region
         private readonly IRepository<Store> StoreRepository;
         private readonly IRepository<WebTemplate> WebTemplateRepository;
         private readonly IRepository<Product> ProductsRepository;
+        private const string DefaultWord = "a";
+        private const string DefaultImg = "/Content/img/imgThumbs/Fluor/Tiger.png";
         private const string _rootImagesFolderPath = "/Content/img/";
         private const string _storeTemplate = "<div class='template'>" +
                     " <div class='span8'>" +
@@ -38,7 +41,7 @@ namespace TolokaStudio.Controllers
                     " </a>" +
                     "</div>" +
                     " </div>";
-
+#endregion
         public StoreController()
         {
             StoreRepository = new Repository<Store>();
@@ -51,7 +54,6 @@ namespace TolokaStudio.Controllers
             IList<Store> stores = StoreRepository.GetAll().ToList();
             return View(stores);
         }
-
         //
         // GET: /Storage/Details/5
 
@@ -71,8 +73,8 @@ namespace TolokaStudio.Controllers
             {
                 Name="Назва розділу",
                 Description="Опис",
-                ImagePath = "/Content/img/accessors.png",
-                HtmlBanner = string.Format(_storeTemplate, '0', "/Content/img/accessors.png", "Назва розділу", "Опис"),
+                ImagePath = DefaultImg,
+                HtmlBanner = string.Format(_storeTemplate, '0', DefaultImg, "Назва розділу", "Опис"),
             });
         }
 

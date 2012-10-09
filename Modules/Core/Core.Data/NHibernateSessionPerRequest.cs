@@ -31,7 +31,7 @@ namespace Core.Data
                     .ConnectionString(c => c
                         .FromConnectionStringWithKey("hibernateConn")))
                 .Mappings(m =>
-                      m.FluentMappings.AddFromAssembly(System.Reflection.Assembly.GetExecutingAssembly()).ExportTo(@"C:\"))
+                      m.FluentMappings.AddFromAssembly(System.Reflection.Assembly.GetExecutingAssembly()) ) //.ExportTo(@"C:\"))
                 .ExposeConfiguration(c =>
                     {
                         BuildSchema(c);
@@ -45,7 +45,7 @@ namespace Core.Data
         // Drops and creates the database shema
         private static void BuildSchema(Configuration cfg)
         {
-            new SchemaExport(cfg).Create(true, false);
+            new SchemaExport(cfg).Create(true, true);
         }
 
         // Initializes the HTTP module

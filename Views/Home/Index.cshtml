@@ -1,21 +1,18 @@
 ﻿@model TolokaStudio.Models.HomeModel
-
+@using ViewRes.Home
 @{
-    ViewBag.Title = "Толока Студіо";
+    ViewBag.Title = Home.LogoText;
 }
 <div class="container">
- <div class="row">
- 
-
-
+    <div class="row">
         @foreach (var item in Model.Stores)
         {
-           if (item.HtmlBanner != null)
+            if (item.HtmlBanner != null)
             {
-               @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
             }
-                 
-         }
-      
-   </div>
-   </div>
+
+        }
+
+</div>
+</div> 

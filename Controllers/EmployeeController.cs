@@ -18,6 +18,8 @@ namespace TolokaStudio.Controllers
         private readonly IRepository<Store> StoreRepository;
         private readonly IRepository<WebTemplate> WebTemplateRepository;
         private readonly IRepository<Employee> EmployeeRepository;
+        private const string DefaulImg = "/Content/img/_C3D9074.png";
+        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/Coffe.png";
         private const string _rootImagesFolderPath = "/Content/img/";
         private const string _authorTemplate = "<div class='template'>" +
                     " <div class='span8'>" +
@@ -72,9 +74,9 @@ namespace TolokaStudio.Controllers
                 StoreID = id,
                 FirstName = "Ім'я",
                 LastName = "Прізвище",
-                ImagePath = "/Content/img/_C3D9074.jpg",
+                ImagePath = DefaulImg,
                 Email = "galaynavistovska@gmail.com",
-                HtmlBanner = string.Format(_authorTemplate, '0',  "/Content/img/_C3D9074.jpg", "Ім'я та Прізвище", "galaynavistovska@gmail.com"),
+                HtmlBanner = string.Format(_authorTemplate, '0', DefaulImg, "Ім'я та Прізвище", "galaynavistovska@gmail.com"),
             });
         }
 
@@ -92,11 +94,12 @@ namespace TolokaStudio.Controllers
                     Employee employee = CreateModelToEmployee(model);
                     EmployeeRepository.SaveOrUpdate(employee);
                     employee.HtmlBanner = Server.HtmlEncode(string.Format(_authorTemplate, employee.Id, employee.ImagePath, employee.FirstName, employee.LastName));
+                    employee.Name= employee.FirstName+"  "+employee.LastName;
                     EmployeeRepository.SaveOrUpdate(employee);
                     Store store = StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
                     store.AddEmployee(employee);
                     StoreRepository.SaveOrUpdate(store);
-                    return RedirectToAction("Index", "Store");
+                    return RedirectToAction("Edit", "Store", new { id = model.StoreID});
                 }
                 catch
                 {
@@ -109,6 +112,14 @@ namespace TolokaStudio.Controllers
             }
         }
 
+        private void SaveTemplate(EmployeeCreateModel model)
+        {
+
+            WebTemplate item = new WebTemplate();
+            item.Html = model.HtmlDetail;
+            item.Name = model.FirstName + "  " + model.LastName + "Author";
+            WebTemplateRepository.SaveOrUpdate(item);
+        }
         //
         // GET: /Employee/Edit/5
 

@@ -11,6 +11,5 @@ namespace TolokaStudio.Models
 
         public IList<Store> Stores { get; set; }
 
-      
     }
 }
