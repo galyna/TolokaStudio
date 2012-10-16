@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Core.Data.Entities;
-using Core.Data.Repository.Interfaces;
-using Core.Data.Repository;
+using TolokaStudio.Entities;
+using TolokaStudio.Repository.Interfaces;
+using TolokaStudio.Repository;
 using SumkaWeb.Models;
 
 namespace SumkaWeb.Controllers

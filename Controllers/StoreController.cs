@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Core.Data;
-using Core.Data.Entities;
-using Core.Data.Repository;
+using TolokaStudio;
+using TolokaStudio.Entities;
+using TolokaStudio.Repository;
 using TolokaStudio.Models;
-using Core.Data.Repository.Interfaces;
+using TolokaStudio.Repository.Interfaces;
 using System.IO;
 
 namespace TolokaStudio.Controllers

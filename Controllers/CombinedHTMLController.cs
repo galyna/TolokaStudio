@@ -7,12 +7,12 @@ using System.IO;
 using System;
 using System.Linq;
 using System.Net;
-using Core.Data;
-using Core.Data.Entities;
+
+using TolokaStudio.Entities;
 using SquishIt.Framework;
 using TolokaStudio.Models;
-using Core.Data.Repository;
-using Core.Data.Repository.Interfaces;
+using TolokaStudio.Repository;
+using TolokaStudio.Repository.Interfaces;
 
 namespace TolokaStudio.Controllers
 {

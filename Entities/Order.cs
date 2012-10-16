@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
-using TolokaStudio.Entities;
+using System.Text;
 
-namespace SumkaWeb.Models
+namespace TolokaStudio.Entities
 {
-    public class OrderCreateModel
+   public class Order
     {
         public virtual int Id { get; protected set; }
         public virtual Product Product { get; set; }
         public virtual Employee Employee { get; set; }
-        public virtual int ProductId { get; set; }
-        public virtual int EmployeeId { get; set; }
         public virtual string ContactEmail { get; set; }
  
     }
