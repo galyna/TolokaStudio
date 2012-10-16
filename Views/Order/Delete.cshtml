@@ -9,8 +9,14 @@
         {    
             <fieldset>
                 <div class="row">
-                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Employee.HtmlBanner))
-                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Product.HtmlBanner))
+                    @if (Model.Employee.HtmlBanner != null)
+                    {
+                        Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Employee.HtmlBanner));
+                    }
+                    @if (Model.Product.HtmlBanner != null)
+                    {
+                        Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Product.HtmlBanner));
+                    }
                 </div>
                 <br />
                 <div class="row">

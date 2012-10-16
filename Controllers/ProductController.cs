@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using TolokaStudio.Entities;
+using Core.Data.Entities;
 using TolokaStudio.Models;
-using TolokaStudio.Repository.Interfaces;
-using TolokaStudio.Repository;
+using Core.Data.Repository.Interfaces;
+using Core.Data.Repository;
 
 namespace TolokaStudio.Controllers
 {

@@ -8,11 +8,11 @@ using System;
 using System.Linq;
 using System.Net;
 
-using TolokaStudio.Entities;
+using Core.Data.Entities;
 using SquishIt.Framework;
 using TolokaStudio.Models;
-using TolokaStudio.Repository;
-using TolokaStudio.Repository.Interfaces;
+using Core.Data.Repository;
+using Core.Data.Repository.Interfaces;
 
 namespace TolokaStudio.Controllers
 {

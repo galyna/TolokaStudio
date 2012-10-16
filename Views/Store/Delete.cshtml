@@ -14,7 +14,9 @@
                     <h3>@Home.Delete_Comfirm</h3>
                     <legend>@Home.Store</legend>
                     @Html.HiddenFor(model => model.Id)
-                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
+                    @if(Model.HtmlBanner!=null){
+                        Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner));
+                    }
                 </div>
                 <br />
                 <div class="row">

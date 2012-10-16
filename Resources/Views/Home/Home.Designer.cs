@@ -39,7 +39,7 @@ namespace ViewRes.Home {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Views.Home.Home", typeof(Home).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TolokaStudio.Resources.Views.Home.Home", typeof(Home).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -39,7 +39,7 @@ namespace ModelRes.Store {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Models.Store.Create", typeof(Create).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TolokaStudio.Resources.Models.Store.Create", typeof(Create).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

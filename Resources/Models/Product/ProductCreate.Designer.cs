@@ -39,7 +39,7 @@ namespace ModelRes.Product {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Models.Product.ProductCreate", typeof(ProductCreate).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TolokaStudio.Resources.Models.Product.ProductCreate", typeof(ProductCreate).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

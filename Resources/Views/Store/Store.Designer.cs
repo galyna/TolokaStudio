@@ -39,7 +39,7 @@ namespace ViewRes.Store {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Views.Store.Store", typeof(Store).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TolokaStudio.Resources.Views.Store.Store", typeof(Store).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

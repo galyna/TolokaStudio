@@ -92,13 +92,11 @@
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CascadeConvention.cs" />
     <Compile Include="Entities\Employee.cs" />
     <Compile Include="Entities\Location.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\Store.cs" />
-    <Compile Include="CoreDataAutomappingConfiguration.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\WebTemplate.cs" />
     <Compile Include="Mappings\EmployeeMap.cs" />
@@ -108,7 +106,6 @@
     <Compile Include="Mappings\StoreMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Mappings\WebTemplateMap.cs" />
-    <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Interfaces\IRepository.cs" />
     <Compile Include="NHibernateSessionPerRequest.cs" />

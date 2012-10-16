@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SumkaWeb.Resources.Views.Employee {
+namespace TolokaStudio.Resources.Views.Employee {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SumkaWeb.Resources.Views.Employee {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SumkaWeb.Resources.Views.Employee.Employee", typeof(Employee).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TolokaStudio.Resources.Views.Employee.Employee", typeof(Employee).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

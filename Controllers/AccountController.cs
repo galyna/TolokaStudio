@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using TolokaStudio.Models;
-using TolokaStudio.Entities;
-using TolokaStudio.Repository;
-using TolokaStudio.Repository.Interfaces;
+using Core.Data.Entities;
+using Core.Data.Repository;
+using Core.Data.Repository.Interfaces;
 
 namespace TolokaStudio.Controllers
 {
