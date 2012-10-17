@@ -93,14 +93,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Employee.cs" />
-    <Compile Include="Entities\Location.cs" />
+    <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\Store.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\WebTemplate.cs" />
     <Compile Include="Mappings\EmployeeMap.cs" />
-    <Compile Include="Mappings\LocationMap.cs" />
+    <Compile Include="Mappings\RoleMap.cs" />
     <Compile Include="Mappings\OrderMap.cs" />
     <Compile Include="Mappings\ProductMap.cs" />
     <Compile Include="Mappings\StoreMap.cs" />

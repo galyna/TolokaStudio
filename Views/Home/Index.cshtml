@@ -5,14 +5,16 @@
 }
 <div class="container">
     <div class="row">
-        @foreach (var item in Model.Stores)
+        @if (Model.Stores != null)
         {
-            if (item.HtmlBanner != null)
+            foreach (var item in Model.Stores)
             {
-            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+                if (item.HtmlBanner != null)
+                {
+                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner));
+                }
+
             }
-
         }
-
+    </div>
 </div>
-</div> 

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
+using Core.Data.Entities;
 
 namespace TolokaStudio.Models
 {
@@ -63,5 +64,10 @@ namespace TolokaStudio.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class UsersModel
+    {
+        public IList<User> Users { get; set; }
     }
 }
