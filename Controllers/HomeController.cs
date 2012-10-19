@@ -25,9 +25,16 @@ namespace TolokaStudio.Controllers
 
         public ActionResult Index()
         {
-           
-               StoreRepository.SaveOrUpdate(new Store(){Name="Test"});
-               return View(new HomeModel() { Stores = StoreRepository.GetAll().ToList() });
+            if ( StoreRepository.GetAll()!=null)
+            {
+                return View(new HomeModel() { Stores = StoreRepository.GetAll().ToList() });
+            }
+            else
+            {
+            
+                return View(new HomeModel() );
+            }
+              
           
         }
 

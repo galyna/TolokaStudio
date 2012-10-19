@@ -15,7 +15,7 @@ namespace Core.Data.Mappings
                 .Table("StoreProduct")
                 .Inverse();
 
-            Component(x => x.Location);
+          
             References(x => x.OwnerEmployee);
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.HtmlDetail).CustomSqlType("ntext");

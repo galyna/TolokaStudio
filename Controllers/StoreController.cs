@@ -9,10 +9,11 @@ using Core.Data.Repository;
 using TolokaStudio.Models;
 using Core.Data.Repository.Interfaces;
 using System.IO;
+using TolokaStudio.Common;
 
 namespace TolokaStudio.Controllers
 {
-    [ValidateInput(false)]
+    
     public class StoreController : Controller
     {
         #region

@@ -26,18 +26,18 @@
     <WarningLevel>4</WarningLevel>
     <PublishDatabaseSettings>
       <Objects>
-        <ObjectGroup Name="ApplicationServices-Deployment" Order="2" Enabled="True">
+        <ObjectGroup Name="hibernateConn-Deployment" Order="1" xmlns="">
           <Destination Path="" />
-          <Object Type="dbFullSql">
-            <PreSource Path="Data Source=BEST\SQLEXPRESS%3bAttachDbFilename=|DataDirectory|\ASPNETDB.MDF%3bIntegrated Security=True" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
-            <Source Path="obj\Debug\AutoScripts\ApplicationServices-Deployment_SchemaOnly.sql" Transacted="True" />
+          <Object Type="dbFullSql" Enabled="True">
+            <PreSource Path="data source=wh-sql01%3binitial catalog=z254573_Toloka%3bintegrated security=False%3buser id=z254573_Toloka%3bconnect timeout=15%3bencrypt=False%3bpacket size=4096%3bPassword=galadriel123G" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\hibernateConn-Deployment_SchemaOnly.sql" Transacted="True" />
           </Object>
         </ObjectGroup>
-        <ObjectGroup Name="hibernateConn-Deployment" Order="1" Enabled="True">
+        <ObjectGroup Name="ApplicationServices-Deployment" Order="2" xmlns="">
           <Destination Path="" />
-          <Object Type="dbFullSql" Enabled="False">
-            <PreSource Path="" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
-            <Source Path="obj\Debug\AutoScripts\hibernateConn-Deployment_SchemaOnly.sql" Transacted="True" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=wh-sql01%3bAttachDbFilename=|DataDirectory|aspnetdb.mdf%3bIntegrated Security=True%3bUser Instance=True" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\ApplicationServices-Deployment_SchemaOnly.sql" Transacted="True" />
           </Object>
         </ObjectGroup>
       </Objects>
@@ -83,6 +83,9 @@
       <HintPath>SquishIt-0.8.6\Jurassic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHCustomProviders">
+      <HintPath>SquishIt-0.8.6\NHCustomProviders_bin\NHCustomProviders.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\NHibernate.dll</HintPath>
@@ -121,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\HtmlExtensions.cs" />
+    <Compile Include="Common\TolokaAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CombinedHTMLController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
@@ -182,10 +186,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\ASPNETDB.MDF" />
-    <Content Include="App_Data\ASPNETDB_log.ldf">
-      <DependentUpon>ASPNETDB.MDF</DependentUpon>
-    </Content>
     <Content Include="Content\assets\css\bootstrap.css" />
     <Content Include="Content\assets\css\docs.css" />
     <Content Include="Content\assets\ico\apple-touch-icon-114-precomposed.png" />
@@ -410,11 +410,10 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Config\" />
-    <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -433,6 +432,7 @@
     <Content Include="Views\CombinedHTML\ImageUpload.cshtml" />
     <Content Include="Views\Store\ImageUpload.cshtml" />
     <None Include="Content\assets\js\README.md" />
+    <Content Include="Content\assets\Web.config" />
     <None Include="Content\style\font\BebasNeue-webfont.eot" />
     <None Include="Content\style\font\BebasNeue-webfont.ttf" />
     <None Include="Content\style\font\BebasNeue-webfont.woff" />
@@ -454,11 +454,9 @@
     <None Include="Content\style\font\eur_____-webfont.eot" />
     <None Include="Content\style\font\eur_____-webfont.ttf" />
     <None Include="Content\style\font\eur_____-webfont.woff" />
-    <Content Include="Content\Web.config" />
     <Content Include="Views\CombinedHTML\CombinedHTML.Item.cshtml" />
     <Content Include="Views\Employee\Create.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
-    <Content Include="Views\Employee\web.config" />
     <Content Include="Views\Employee\Edit.cshtml" />
     <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Employee\Delete.cshtml" />
@@ -467,12 +465,14 @@
     <Content Include="Views\Order\Delete.cshtml" />
     <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Product\web.config" />
     <Content Include="Views\Order\web.config" />
+    <Content Include="Views\Home\web.config" />
+    <Content Include="Views\Employee\web.config" />
+    <Content Include="Views\CombinedHTML\web.config" />
+    <Content Include="Views\Account\Users.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
-    <Content Include="Views\Store\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Web.config" />
+    <Content Include="Views\web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\Create.cshtml" />
@@ -480,7 +480,6 @@
     <Content Include="Views\Product\Details.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
-    <Content Include="Views\Product\web.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Models\Product\ProductCreate.resx">

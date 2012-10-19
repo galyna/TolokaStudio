@@ -160,6 +160,15 @@ namespace ViewRes.Home {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Кабінет.
+        /// </summary>
+        public static string Kabinet {
+            get {
+                return ResourceManager.GetString("Kabinet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Толока Студіо.
         /// </summary>
         public static string LogoText {

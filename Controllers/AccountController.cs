@@ -9,6 +9,9 @@ using TolokaStudio.Models;
 using Core.Data.Entities;
 using Core.Data.Repository;
 using Core.Data.Repository.Interfaces;
+using System.Security.Cryptography;
+using System.Text;
+using TolokaStudio.Common;
 
 namespace TolokaStudio.Controllers
 {
@@ -20,8 +23,35 @@ namespace TolokaStudio.Controllers
         public AccountController()
         {
             UserRepository = new Repository<User>();
-        } 
+        }
+        [TolokaAuthorizeAsAdminAttribute]
+        public ActionResult Users()
+        {
+            return View(new UsersModel() { Users = UserRepository.GetAll().ToList() });
+        }
+        [TolokaAuthorizeAsAdminAttribute]
+        public ActionResult Admin(int id)
+        {
+            User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
+            if (!user.Role.IsAdmin)
+            {
+                user.Role.IsAdmin=true;
+                UserRepository.SaveOrUpdate(user);
+            }
 
+            return View("Users", new UsersModel() { Users = UserRepository.GetAll().ToList() });
+        }
+        [TolokaAuthorizeAsAdminAttribute]
+        public ActionResult Author(int id)
+        {
+            User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
+            if (!user.Role.IsAuthor)
+            {
+                user.Role.IsAuthor=true;
+                UserRepository.SaveOrUpdate(user);
+            }
+            return View("Users", new UsersModel() { Users = UserRepository.GetAll().ToList() });
+        }
         //
         // GET: /Account/LogOn
 
@@ -38,7 +68,7 @@ namespace TolokaStudio.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Membership.ValidateUser(model.UserName, model.Password))
+                if (GetUser(model.UserName, model.Password) != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
@@ -87,31 +117,44 @@ namespace TolokaStudio.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
-                MembershipCreateStatus createStatus;
-                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
 
-                if (createStatus == MembershipCreateStatus.Success)
+                if (UserRepository.Get(u => u.UserName == model.UserName).SingleOrDefault() == null)
                 {
-
-                    UserRepository.SaveOrUpdate(new User(){UserName=model.UserName,Email= model.Email});
+                    User user = new User()
+                    {
+                        UserName = model.UserName,
+                        Email = model.Email,
+                        Password = EncodePassword(model.Password)
+                    };
+                    if (model.UserName == "gal5")
+                    {
+                        user.Role.IsAdmin=true;
+                    }
+                   
+                    UserRepository.SaveOrUpdate(user);
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
+                    ModelState.AddModelError("", ErrorCodeToString(MembershipCreateStatus.DuplicateUserName));
+                    return View(model);
                 }
-            }
 
+
+            }
+            else
+            {
+                return View(model);
+            }
             // If we got this far, something failed, redisplay form
-            return View(model);
+
         }
 
         //
         // GET: /Account/ChangePassword
 
-        [Authorize]
+        [TolokaAuthorizeAsSimpleUserAttribute]
         public ActionResult ChangePassword()
         {
             return View();
@@ -120,7 +163,7 @@ namespace TolokaStudio.Controllers
         //
         // POST: /Account/ChangePassword
 
-        [Authorize]
+        [TolokaAuthorizeAsSimpleUserAttribute]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
@@ -129,15 +172,15 @@ namespace TolokaStudio.Controllers
 
                 // ChangePassword will throw an exception rather
                 // than return false in certain failure scenarios.
-                bool changePasswordSucceeded;
-                try
+                bool changePasswordSucceeded = false;
+
+                var currentUser = User.Identity.Name;
+                User user = UserRepository.Get(u => u.UserName == currentUser).SingleOrDefault();
+                if (user != null && CheckPassword(user.Password, model.OldPassword))
                 {
-                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
-                    changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
-                }
-                catch (Exception)
-                {
-                    changePasswordSucceeded = false;
+                    user.Password = EncodePassword(model.NewPassword);
+                    UserRepository.SaveOrUpdate(user);
+                    changePasswordSucceeded = true;
                 }
 
                 if (changePasswordSucceeded)
@@ -200,6 +243,64 @@ namespace TolokaStudio.Controllers
                     return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
             }
         }
+        private User GetUser(string username, string password)
+        {
+            return UserRepository.Get(u => u.UserName == username && u.Password == EncodePassword(password)).SingleOrDefault();
+
+        }
+        /// <summary>
+        /// Check the password 
+        /// </summary>
+        /// <param name="password">Password</param>
+        /// <param name="dbpassword"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        private bool CheckPassword(string password, string dbpassword)
+        {
+            string pass1 = password;
+            string pass2 = dbpassword;
+
+            pass2 = EncodePassword(dbpassword);
+
+            if (pass1 == pass2)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Encode password.
+        /// </summary>
+        /// <param name="password">Password.</param>
+        /// <returns>Encoded password.</returns>
+        private string EncodePassword(string password)
+        {
+            string passwordEncoded = password;
+
+            HMACSHA1 hash = new HMACSHA1();
+            hash.Key = HexToByte("12");
+            passwordEncoded =
+                Convert.ToBase64String(hash.ComputeHash(Encoding.Unicode.GetBytes(password)));
+
+            return passwordEncoded;
+        }
+
+        /// <summary>
+        /// Converts a hexadecimal string to a byte array. Used to convert encryption key values from the configuration
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        private byte[] HexToByte(string hexString)
+        {
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            return returnBytes;
+        }
+
         #endregion
     }
 }

@@ -7,7 +7,11 @@ using Core.Data.Entities;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
 using SumkaWeb.Models;
+<<<<<<< HEAD
 using System.Net.Mail;
+=======
+using TolokaStudio.Common;
+>>>>>>> 3ca249bfd656aaa432e0088bc0b245560c54e174
 
 namespace SumkaWeb.Controllers
 {
@@ -35,7 +39,7 @@ namespace SumkaWeb.Controllers
                    " </a>" +
                    "</div>" +
                    " </div>";
-        
+
 
         public OrderController()
         {
@@ -64,7 +68,7 @@ namespace SumkaWeb.Controllers
 
         //
         // GET: /Product/Create/5
-
+        [TolokaAuthorizeAsSimpleUserAttribute]
         public ActionResult Create(int id)
         {
             Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
@@ -74,7 +78,7 @@ namespace SumkaWeb.Controllers
             {
                 Employee = product.OwnerEmployee,
                 Product = product,
-                ProductId= product.Id,
+                ProductId = product.Id,
                 EmployeeId = product.OwnerEmployee.Id
             };
 
@@ -83,7 +87,7 @@ namespace SumkaWeb.Controllers
 
         //k
         // POST: /Product/Create
-
+        [TolokaAuthorizeAsSimpleUserAttribute]
         [HttpPost]
         public ActionResult Create(OrderCreateModel model)
         {
@@ -94,7 +98,7 @@ namespace SumkaWeb.Controllers
                     Product product = ProductsRepository.Get(s => s.Id.Equals(model.ProductId)).SingleOrDefault();
                     Employee employee = EmployeeRepository.Get(s => s.Id.Equals(model.EmployeeId)).SingleOrDefault();
 
-                    Order orcder = new Order() { Product =product, Employee = employee,ContactEmail=model.ContactEmail };
+                    Order orcder = new Order() { Product = product, Employee = employee, ContactEmail = model.ContactEmail };
                     OrdersRepository.SaveOrUpdate(orcder);
 
                     NotificateEmployee(orcder);
@@ -154,7 +158,7 @@ namespace SumkaWeb.Controllers
                 return View();
             }
         }
-        
+
 
     }
 }

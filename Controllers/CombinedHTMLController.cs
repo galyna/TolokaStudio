@@ -16,7 +16,7 @@ using Core.Data.Repository.Interfaces;
 
 namespace TolokaStudio.Controllers
 {
-    [ValidateInput(false)]
+
     public class CombinedHTMLController : Controller
     {
         #region Private firlds
@@ -100,7 +100,7 @@ namespace TolokaStudio.Controllers
            .ForceRelease()
            .Render("~/Content/js/combined_.js");
             var squishItVersion = squishIt.Substring(squishIt.IndexOf("combined_") + 9, 32);
-            scripts.Add(Path.Combine(Request.Url.Scheme + "://" + Request.Url.DnsSafeHost + ":" + Request.Url.Port + Request.ApplicationPath, "Content/js/combined_" + squishItVersion));
+            scripts.Add(Path.Combine(Request.Url.Scheme + "://" + Request.Url.DnsSafeHost + ":" + Request.Url.Port + Request.ApplicationPath, "Content/js/combined_"));
             return scripts;
         }
         #endregion
