@@ -120,22 +120,49 @@
   <data name="Confirm_new_password" xml:space="preserve">
     <value>Підтвердіть новий пароль</value>
   </data>
+  <data name="Confirm_password" xml:space="preserve">
+    <value>Підтвердіть пароль</value>
+  </data>
   <data name="Current_password" xml:space="preserve">
     <value>Поточний пароль</value>
   </data>
-  <data name="ErrorMessageResourceName" xml:space="preserve">
-    <value> {0} має бути  довжиною не манше {2} символів </value>
+  <data name="Email_address" xml:space="preserve">
+    <value>e-mail</value>
   </data>
   <data name="New_password" xml:space="preserve">
     <value>Новий пароль</value>
   </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Remember_me" xml:space="preserve">
+    <value>Запам'ятати</value>
+  </data>
   <data name="Required_current_password" xml:space="preserve">
     <value>Введіть ваш дійсний пароль</value>
+  </data>
+  <data name="Required_email_address" xml:space="preserve">
+    <value>Введіть свій e-mail</value>
   </data>
   <data name="Required_new_password" xml:space="preserve">
     <value>Введіть новий пароль</value>
   </data>
+  <data name="Required_password" xml:space="preserve">
+    <value>Введіть пароль</value>
+  </data>
+  <data name="Required_user_name" xml:space="preserve">
+    <value>Введіть свій нік</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="String_lenght_is_not_valid" xml:space="preserve">
+    <value>Пароль має бути  довжиною не манше шести символів </value>
+  </data>
   <data name="The_new_password_and_confirmation_password_do_not_match" xml:space="preserve">
     <value>Новий пароль і його підтвердження не співпадають</value>
+  </data>
+  <data name="User_name" xml:space="preserve">
+    <value>Нік</value>
   </data>
 </root>

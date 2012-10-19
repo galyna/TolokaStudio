@@ -24,11 +24,13 @@ namespace TolokaStudio.Controllers
         {
             UserRepository = new Repository<User>();
         }
+        
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Users()
         {
             return View(new UsersModel() { Users = UserRepository.GetAll().ToList() });
         }
+        
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Admin(int id)
         {
@@ -41,6 +43,7 @@ namespace TolokaStudio.Controllers
 
             return View("Users", new UsersModel() { Users = UserRepository.GetAll().ToList() });
         }
+        
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Author(int id)
         {
@@ -83,7 +86,7 @@ namespace TolokaStudio.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    ModelState.AddModelError("", "Не знайдено користувача з таким ніком та паролем");
                 }
             }
 
@@ -137,7 +140,7 @@ namespace TolokaStudio.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(MembershipCreateStatus.DuplicateUserName));
+                    ModelState.AddModelError("", "Користувач з таким ім'ям вже існує");
                     return View(model);
                 }
 
@@ -189,7 +192,7 @@ namespace TolokaStudio.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError("", "Введено недійсний поточний пароль");
                 }
             }
 
@@ -213,10 +216,10 @@ namespace TolokaStudio.Controllers
             switch (createStatus)
             {
                 case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
+                    return "Користувач з таким ніком вже існує. Вигадайте інший нік.";
 
                 case MembershipCreateStatus.DuplicateEmail:
-                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
+                    return "Введений e-mail вже зареєстровано на ім'я іншого користувача. Введіть інший e-mail.";
 
                 case MembershipCreateStatus.InvalidPassword:
                     return "The password provided is invalid. Please enter a valid password value.";

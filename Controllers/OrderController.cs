@@ -7,11 +7,8 @@ using Core.Data.Entities;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
 using SumkaWeb.Models;
-<<<<<<< HEAD
 using System.Net.Mail;
-=======
 using TolokaStudio.Common;
->>>>>>> 3ca249bfd656aaa432e0088bc0b245560c54e174
 
 namespace SumkaWeb.Controllers
 {
