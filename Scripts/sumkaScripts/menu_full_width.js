@@ -20,7 +20,7 @@ var MenuResizer = {
         wrapper.width(wrapperWidth);
 
         if (isBordered) {
-            wrapperWidth -= numMenuItems + 1; //950px+ 1px borders,
+            wrapperWidth -= numMenuItems + 10; //950px+ 1px borders,
         }
 
         if (wrapperWidth != totalMenuItemWidth) {

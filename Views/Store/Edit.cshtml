@@ -1,5 +1,5 @@
 ﻿@model  TolokaStudio.Models.StoreEditModel
- @using ViewRes.Home
+@using ViewRes.Home
 @using ViewRes.Store
 @{
     ViewBag.Title = @Store.Edit_Store;
@@ -15,9 +15,7 @@
             @Html.ValidationSummary(true)
             <fieldset>
                 @Html.HiddenFor(model => model.Id)
-         
                 <div class="row store">
-                 
                     @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
                     <div class="span6">
                         @Html.LabelFor(model => model.Name)
@@ -56,7 +54,10 @@
                    
                 }
                 <p>
-                    @Html.ActionLink(@Store.Add_Product, "AddProduct", new { id = Model.Id })
+                    @if (Model.Staff.Count > 0)
+                    {
+                        @Html.ActionLink(@Store.Add_Product, "AddProduct", new { id = Model.Id })
+                    }
                 </p>
                 <p>
                     @Html.ActionLink(@Store.Add_Employee, "AddEmployee", new { id = Model.Id })

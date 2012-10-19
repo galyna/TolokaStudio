@@ -121,27 +121,27 @@ namespace TolokaStudio.Controllers
         // POST: /Storage/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(StoreEditModel store)
+        public ActionResult Edit(StoreEditModel model)
         {
             if (ModelState.IsValid)
             {
 
                 try
                 {
-                    Store model = EditModelToStore(store);
-                   
-                    StoreRepository.SaveOrUpdate(model);
-                    WebTemplateRepository.SaveOrUpdate(new WebTemplate() { Name = "Store" + store.Name, Html = store.HtmlBanner });
+                    Store store = EditModelToStore(model);
+
+                    StoreRepository.SaveOrUpdate(store);
+                  
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    return View(store);
+                    return View(model);
                 }
             }
             else
             {
-                return View(store);
+                return View(model);
             }
         }
 
@@ -227,7 +227,7 @@ namespace TolokaStudio.Controllers
                 // Try to save image.
                 fileUpload.SaveAs(saveLocation);
                 viewModel.ImageUploaded = "<IMG id='ImageUploaded' src=" + Path.Combine(_rootImagesFolderPath, fileName) + " style='float: left;'/>";
-                viewModel.Message = string.Format("Зображення {0} було успішно завантажено.", fileName);
+                viewModel.Message = string.Format("Зображення {0} було успішно завантажено.{1}", fileName,Server.MapPath(_rootImagesFolderPath));
             }
             catch (Exception)
             {

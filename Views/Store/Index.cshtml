@@ -1,9 +1,10 @@
 ﻿@model List<Core.Data.Entities.Store>
 @using ViewRes.Home
+@using ViewRes.Store
 <div class="container">
     <div class="row">
         <p>
-            @Html.ActionLink(Home.Create, "Create")
+            @Html.ActionLink(Store.Create_Store, "Create")
         </p>
     </div>
     @foreach (var item in Model)

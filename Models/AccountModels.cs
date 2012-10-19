@@ -5,26 +5,30 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 using Core.Data.Entities;
+using ModelRes.Account;
 
 namespace TolokaStudio.Models
 {
 
     public class ChangePasswordModel
     {
-        [Required]
+        [Required(ErrorMessageResourceName = "Required_current_password",
+                ErrorMessageResourceType = typeof(Account))]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Current_password", ResourceType = typeof(Account))]
         public string OldPassword { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessageResourceName = "Required_new_password",
+                ErrorMessageResourceType = typeof(Account))]
+        [StringLength(100, ErrorMessageResourceName =  "{0} має бути  довжиною не манше {2} символів" , MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "New_password", ResourceType = typeof(Account))]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Confirm_new_password", ResourceType = typeof(Account))]
+        [Compare("NewPassword", ErrorMessageResourceName = "The_new_password_and_confirmation_password_do_not_match",
+                ErrorMessageResourceType = typeof(Account))]
         public string ConfirmPassword { get; set; }
     }
 

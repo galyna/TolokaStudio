@@ -13,7 +13,7 @@ namespace Core.Data.Mappings
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.ImagePath);
             HasManyToMany(x => x.Products)
-                .Cascade.AllDeleteOrphan()
+                .Cascade.All()
                 .Table("StoreProduct");
                 
              
