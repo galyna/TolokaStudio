@@ -7,6 +7,7 @@ using Core.Data.Entities;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
 using SumkaWeb.Models;
+using System.Net.Mail;
 
 namespace SumkaWeb.Controllers
 {
@@ -95,6 +96,10 @@ namespace SumkaWeb.Controllers
 
                     Order orcder = new Order() { Product =product, Employee = employee,ContactEmail=model.ContactEmail };
                     OrdersRepository.SaveOrUpdate(orcder);
+
+                    NotificateEmployee(orcder);
+
+
                     return RedirectToAction("Index", "Order");
                 }
                 catch
@@ -106,6 +111,23 @@ namespace SumkaWeb.Controllers
             {
                 return View(model);
             }
+        }
+
+        private static void NotificateEmployee(Order order)
+        {
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("mail.infobox.ru");
+            SmtpServer.Credentials = new System.Net.NetworkCredential("order@tolokastudio.pp.ua", "atlzatlz1");
+            SmtpServer.Port = 25;
+            //SmtpServer.EnableSsl = true;
+
+            mail.From = new MailAddress("order@tolokastudio.pp.ua");
+            mail.To.Add("verh@yandex.ru");//(order.Employee.Email);
+            mail.Subject = "new order";
+            mail.Body = "Your product " + order.Product.Name + " was ordered. Please, contact your customer."
+                + "\r\nCustomer email: " + order.ContactEmail;
+
+            SmtpServer.Send(mail);
         }
 
         //
