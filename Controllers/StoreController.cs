@@ -13,13 +13,15 @@ using TolokaStudio.Common;
 
 namespace TolokaStudio.Controllers
 {
-    
+   
     public class StoreController : Controller
     {
         #region
         private readonly IRepository<Store> StoreRepository;
         private readonly IRepository<WebTemplate> WebTemplateRepository;
         private readonly IRepository<Product> ProductsRepository;
+        private readonly IRepository<User> UserRepository;
+        private readonly IRepository<Employee> EmployeeRepository;
         private const string DefaultWord = "a";
         private const string DefaultImg = "/Content/img/imgThumbs/Fluor/Tiger.png";
         private const string _rootImagesFolderPath = "/Content/img/";
@@ -42,18 +44,23 @@ namespace TolokaStudio.Controllers
                     " </a>" +
                     "</div>" +
                     " </div>";
-#endregion
+        #endregion
         public StoreController()
         {
             StoreRepository = new Repository<Store>();
             WebTemplateRepository = new Repository<WebTemplate>();
+            UserRepository = new Repository<User>();
             ProductsRepository = new Repository<Product>();
+            EmployeeRepository = new Repository<Employee>();
         }
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Index()
         {
-            IList<Store> stores = StoreRepository.GetAll().ToList();
-            return View(stores);
+            StoreIndexModel storeIndexModel = new StoreIndexModel();
+            storeIndexModel.Stores = StoreRepository.GetAll().ToList();
+            storeIndexModel.Users = UserRepository.GetAll().ToList();
+            storeIndexModel.Employees = EmployeeRepository.GetAll().ToList(); 
+            return View(storeIndexModel);
         }
         //
         // GET: /Storage/Details/5
@@ -61,19 +68,18 @@ namespace TolokaStudio.Controllers
         public ActionResult Details(int id)
         {
             Store store = StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-
             return View(store);
         }
 
         //
         // GET: /Storage/Create
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Create()
         {
             return View(new StoreCreateModel()
             {
-                Name="Назва розділу",
-                Description="Опис",
+                Name = "Назва розділу",
+                Description = "Опис",
                 ImagePath = DefaultImg,
                 HtmlBanner = string.Format(_storeTemplate, '0', DefaultImg, "Назва розділу", "Опис"),
             });
@@ -81,7 +87,7 @@ namespace TolokaStudio.Controllers
 
         //
         // POST: /Storage/Create
-
+        [TolokaAuthorizeAsAdminAttribute]
         [HttpPost]
         public ActionResult Create(StoreCreateModel store)
         {
@@ -89,7 +95,7 @@ namespace TolokaStudio.Controllers
             {
                 try
                 {
-                    Store savedStore = StoreRepository.SaveOrUpdate(new Store() { Name = store.Name, Description = store.Description, ImagePath =store.ImagePath });
+                    Store savedStore = StoreRepository.SaveOrUpdate(new Store() { Name = store.Name, Description = store.Description, ImagePath = store.ImagePath });
                     var htmlBanner = string.Format(_storeTemplate, savedStore.Id, store.ImagePath, savedStore.Name, savedStore.Description);
                     savedStore.HtmlBanner = Server.HtmlEncode(htmlBanner);
                     Store savedStoreWithBanner = StoreRepository.SaveOrUpdate(savedStore);
@@ -109,17 +115,17 @@ namespace TolokaStudio.Controllers
 
         //
         // GET: /Storage/Edit/5
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Edit(int id)
         {
             StoreEditModel model = StoreToEditModel(id);
             return View(model);
         }
 
-        
+
         //
         // POST: /Storage/Edit/5
-
+        [TolokaAuthorizeAsAdminAttribute]
         [HttpPost]
         public ActionResult Edit(StoreEditModel model)
         {
@@ -131,7 +137,7 @@ namespace TolokaStudio.Controllers
                     Store store = EditModelToStore(model);
 
                     StoreRepository.SaveOrUpdate(store);
-                  
+
                     return RedirectToAction("Index");
                 }
                 catch
@@ -147,7 +153,7 @@ namespace TolokaStudio.Controllers
 
         //
         // GET: /Storage/Delete/5
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Delete(int id)
         {
             return View(StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
@@ -155,7 +161,7 @@ namespace TolokaStudio.Controllers
 
         //
         // POST: /Storage/Delete/5
-
+        [TolokaAuthorizeAsAdminAttribute]
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
@@ -172,34 +178,49 @@ namespace TolokaStudio.Controllers
 
         //
         // GET: /Storage/EditProduct/5
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult EditProduct(int id)
         {
             return RedirectToAction("Edit", "Product", new { id = id });
         }
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult AddProduct(int id)
         {
             return RedirectToAction("Create", "Product", new { id = id });
         }
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult DeleteProduct(int id)
         {
             return RedirectToAction("Delete", "Product", new { id = id });
         }
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult EditEmployee(int id)
         {
             return RedirectToAction("Edit", "Employee", new { id = id });
         }
-
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult AddEmployee(int id)
         {
             return RedirectToAction("Create", "Employee", new { id = id });
         }
+        [TolokaAuthorizeAsAdminAttribute]
         public ActionResult DeleteEmployee(int id)
         {
             return RedirectToAction("Delete", "Employee", new { id = id });
         }
+        [TolokaAuthorizeAsAdminAttribute]
+        public ActionResult SetAsAdmin(int id)
+        {
+            return RedirectToAction("Admin", "Account", new { id = id });
+        }
+        [TolokaAuthorizeAsAdminAttribute]
+        public ActionResult SetAsAuthor(int id)
+        {
+            return RedirectToAction("Author", "Account", new { id = id });
+        }
+
+
+
         public ActionResult ImageUpload()
         {
             return PartialView("ImageUpload", new CombinedHTMLImageUpload());
@@ -227,7 +248,7 @@ namespace TolokaStudio.Controllers
                 // Try to save image.
                 fileUpload.SaveAs(saveLocation);
                 viewModel.ImageUploaded = "<IMG id='ImageUploaded' src=" + Path.Combine(_rootImagesFolderPath, fileName) + " style='float: left;'/>";
-                viewModel.Message = string.Format("Зображення {0} було успішно завантажено.{1}", fileName,Server.MapPath(_rootImagesFolderPath));
+                viewModel.Message = string.Format("Зображення {0} було успішно завантажено.{1}", fileName, Server.MapPath(_rootImagesFolderPath));
             }
             catch (Exception)
             {
@@ -238,6 +259,8 @@ namespace TolokaStudio.Controllers
 
             return PartialView(viewModel);
         }
+
+
         private StoreEditModel StoreToEditModel(int id)
         {
             Store store = StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
@@ -248,8 +271,7 @@ namespace TolokaStudio.Controllers
                 Name = store.Name,
                 HtmlBanner = store.HtmlBanner,
                 Description = store.Description,
-                Products = store.Products,
-                Staff = store.Staff
+                Products = store.Products
             };
             return model;
         }
@@ -261,10 +283,9 @@ namespace TolokaStudio.Controllers
 
                 store.ImagePath = model.ImagePath;
                 store.Name = model.Name;
-                store.HtmlBanner = Server.HtmlEncode(string.Format(_storeTemplate, model.Id , model.ImagePath, model.Name, model.Description));
+                store.HtmlBanner = Server.HtmlEncode(string.Format(_storeTemplate, model.Id, model.ImagePath, model.Name, model.Description));
                 store.Description = model.Description;
                 store.Products = model.Products;
-                store.Staff = model.Staff;
             }
             return store;
         }

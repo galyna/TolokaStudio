@@ -181,7 +181,7 @@
   <data name="StoresManager" xml:space="preserve">
     <value>Адміністратор</value>
   </data>
-  <data name="Kabinet" xml:space="preserve">
-    <value>Кабінет</value>
+  <data name="Bascet" xml:space="preserve">
+    <value>Кошик</value>
   </data>
 </root>

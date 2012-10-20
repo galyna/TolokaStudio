@@ -1,15 +1,29 @@
-﻿@model List<Core.Data.Entities.Store>
+﻿@model TolokaStudio.Models.StoreIndexModel
 @using ViewRes.Home
 @using ViewRes.Store
 <div class="container">
+    @foreach (var item in Model.Users)
+    {
+        <div class="row">
+            <div class="span10">
+                @Html.Raw(item.UserName)
+                @if (item.Role.IsAdmin)
+                { @Html.Raw("в ролі Aдмін") }
+                @if (item.Role.IsAuthor)
+                { @Html.Raw("в ролі Автор") }
+            </div>
+            <div class="span4 offset2">
+                @Html.ActionLink("Дозволити роль Автор", "SetAsAuthor", new { id = item.Id })
+                @Html.ActionLink("Дозволити роль Aдмін", "SetAsAdmin", new { id = item.Id })
+            </div>
+        </div>
+                   
+    }
     <div class="row">
-        <p>
-            @Html.ActionLink(Store.Create_Store, "Create")
-        </p>
+        @Html.ActionLink(Store.Create_Store, "Create")
     </div>
-    @foreach (var item in Model)
+    @foreach (var item in Model.Stores)
     { 
-        <br />
         <div class="row">
             @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
             <div class="span2 offset1">
@@ -17,5 +31,15 @@
                 @Html.ActionLink(Home.Delete, "Delete", new { id = item.Id })
             </div>
         </div>
+    }
+    @foreach (var item in Model.Employees)
+    {
+        <div class="row">
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+            <div class="span4 offset1">
+                @Html.ActionLink(@Store.Edit_Employee, "EditEmployee", new { id = item.Id })
+                @Html.ActionLink(@Store.Delete_Employee, "DeleteEmployee", new { id = item.Id })
+            </div>
+        </div>                
     }
 </div>

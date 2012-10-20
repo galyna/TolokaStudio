@@ -12,12 +12,7 @@ namespace Core.Data.Mappings
             Map(x => x.Description);
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.ImagePath);
-            HasManyToMany(x => x.Products)
-                .Cascade.All()
-                .Table("StoreProduct");
-                
-             
-            HasMany(x => x.Staff)
+            HasMany(x => x.Products)
                 .Cascade.All()
                 .Inverse();
         }

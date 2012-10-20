@@ -127,22 +127,25 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Controllers\BascetController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\Account\AccountModels.cs" />
+    <Compile Include="Models\Bascet\BascetModel.cs" />
     <Compile Include="Models\CombinedHTML\CombinedHTMLImageUpload.cs" />
     <Compile Include="Models\CombinedHTML\CombinedHTMLItem.cs" />
     <Compile Include="Models\CombinedHTML\CombinedHTMLItemPart.cs" />
-    <Compile Include="Models\EmployeeCreateModel.cs" />
-    <Compile Include="Models\EmployeeEditModel.cs" />
-    <Compile Include="Models\OrderCreateModel.cs" />
-    <Compile Include="Models\OrderEditModel.cs" />
-    <Compile Include="Models\ProductCreateModel.cs" />
-    <Compile Include="Models\HomeModel.cs" />
-    <Compile Include="Models\ProductEditModel.cs" />
-    <Compile Include="Models\StoreCreateModel.cs" />
-    <Compile Include="Models\StoreEditModel.cs" />
+    <Compile Include="Models\Employee\EmployeeDetailsModel.cs" />
+    <Compile Include="Models\Employee\EmployeeEditModel.cs" />
+    <Compile Include="Models\Order\OrderCreateModel.cs" />
+    <Compile Include="Models\Order\OrderEditModel.cs" />
+    <Compile Include="Models\Product\ProductCreateModel.cs" />
+    <Compile Include="Models\Home\HomeModel.cs" />
+    <Compile Include="Models\Product\ProductEditModel.cs" />
+    <Compile Include="Models\Store\StoreCreateModel.cs" />
+    <Compile Include="Models\Store\StoreEditModel.cs" />
+    <Compile Include="Models\Store\StoreIndexModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Models\Account\Account.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -460,12 +463,10 @@
     <None Include="Content\style\font\eur_____-webfont.ttf" />
     <None Include="Content\style\font\eur_____-webfont.woff" />
     <Content Include="Views\CombinedHTML\CombinedHTML.Item.cshtml" />
-    <Content Include="Views\Employee\Create.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
     <Content Include="Views\Employee\Edit.cshtml" />
     <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Employee\Delete.cshtml" />
-    <Content Include="Views\Product\ImageUpload.cshtml" />
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Delete.cshtml" />
     <Content Include="Views\Order\Details.cshtml" />
@@ -475,9 +476,10 @@
     <Content Include="Views\Home\web.config" />
     <Content Include="Views\Employee\web.config" />
     <Content Include="Views\CombinedHTML\web.config" />
-    <Content Include="Views\Account\Users.cshtml" />
+    <Content Include="Views\Employee\EditDetails.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\web.config" />
+    <Content Include="Views\Bascet\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\Create.cshtml" />

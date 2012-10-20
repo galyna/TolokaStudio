@@ -10,7 +10,7 @@ namespace Core.Data.Entities
         public virtual int Id { get; protected set; }
         public virtual Product Product { get; set; }
         public virtual Employee Employee { get; set; }
-        public virtual string ContactEmail { get; set; }
- 
+        public virtual User User { get; set; }
+        public virtual string Comments { get; set; }
     }
 }

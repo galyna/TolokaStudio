@@ -31,40 +31,9 @@
                             style="float: left; width: 400px; height: 320px"></iframe>
                     </div>
                 </div>
-                @foreach (var item in Model.Products)
-                {
-                    <div class="row">
-                        @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
-                        <div class="span4 offset1">
-                            @Html.ActionLink(@Store.Edit_Product, "EditProduct", new { id = item.Id })
-                            @Html.ActionLink(@Store.Delete_Product, "DeleteProduct", new { id = item.Id })
-                        </div>
-                    </div>
-                   
-                }
-                @foreach (var item in Model.Staff)
-                {
-                    <div class="row">
-                        @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
-                        <div class="span4 offset1">
-                            @Html.ActionLink(@Store.Edit_Employee, "EditEmployee", new { id = item.Id })
-                            @Html.ActionLink(@Store.Delete_Employee, "DeleteEmployee", new { id = item.Id })
-                        </div>
-                    </div>
-                   
-                }
-                <p>
-                    @if (Model.Staff.Count > 0)
-                    {
-                        @Html.ActionLink(@Store.Add_Product, "AddProduct", new { id = Model.Id })
-                    }
-                </p>
-                <p>
-                    @Html.ActionLink(@Store.Add_Employee, "AddEmployee", new { id = Model.Id })
-                </p>
-                <p>
+                <div class="row">
                     <input type="submit" value="@Home.Save" />
-                </p>
+                </div>
             </fieldset>      
         }
         <div>
@@ -78,7 +47,6 @@
         $('#templatesrc').load(function () {
             StoreCreator.init();
         });
-
     });
     
 //]]>

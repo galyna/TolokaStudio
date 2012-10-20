@@ -16,11 +16,11 @@ var MenuResizer = {
         var wrapperWidth = wrapper.width();
         var windowWidth = $(window).width();
 
-        wrapperWidth = windowWidth < 987 ? windowWidth - 37 : 950;
+        wrapperWidth = windowWidth < 988 ? windowWidth - 37 : 950;
         wrapper.width(wrapperWidth);
 
         if (isBordered) {
-            wrapperWidth -= numMenuItems + 10; //950px+ 1px borders,
+            wrapperWidth -= numMenuItems + 1; //950px+ 1px borders,
         }
 
         if (wrapperWidth != totalMenuItemWidth) {

@@ -34,9 +34,8 @@ namespace TolokaStudio.Controllers
             
                 return View(new HomeModel() );
             }
-              
-          
+                    
         }
-
+      
     }
 }

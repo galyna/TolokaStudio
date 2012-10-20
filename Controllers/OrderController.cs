@@ -7,11 +7,9 @@ using Core.Data.Entities;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
 using SumkaWeb.Models;
-<<<<<<< HEAD
 using System.Net.Mail;
-=======
 using TolokaStudio.Common;
->>>>>>> 3ca249bfd656aaa432e0088bc0b245560c54e174
+
 
 namespace SumkaWeb.Controllers
 {
@@ -98,10 +96,10 @@ namespace SumkaWeb.Controllers
                     Product product = ProductsRepository.Get(s => s.Id.Equals(model.ProductId)).SingleOrDefault();
                     Employee employee = EmployeeRepository.Get(s => s.Id.Equals(model.EmployeeId)).SingleOrDefault();
 
-                    Order orcder = new Order() { Product = product, Employee = employee, ContactEmail = model.ContactEmail };
+                    Order orcder = new Order() { Product = product, Employee = employee, Comments = model.ContactEmail };
                     OrdersRepository.SaveOrUpdate(orcder);
 
-                    NotificateEmployee(orcder);
+                    
 
 
                     return RedirectToAction("Index", "Order");
@@ -126,14 +124,24 @@ namespace SumkaWeb.Controllers
             //SmtpServer.EnableSsl = true;
 
             mail.From = new MailAddress("order@tolokastudio.pp.ua");
-            mail.To.Add("verh@yandex.ru");//(order.Employee.Email);
+            mail.To.Add(order.Employee.Email);
             mail.Subject = "new order";
             mail.Body = "Your product " + order.Product.Name + " was ordered. Please, contact your customer."
-                + "\r\nCustomer email: " + order.ContactEmail;
+                + "\r\nCustomer email: " + order.Comments;
 
             SmtpServer.Send(mail);
         }
+        //
+        // GET: /Product/Create/5
+        [TolokaAuthorizeAsSimpleUserAttribute]
+        public ActionResult MakeOrder(int id,string comments)
+        {
+            Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+            order.Comments = comments;
+            NotificateEmployee(order);
 
+            return RedirectToAction("Index", "Bascet", new { message ="Про ваше замовлення повідомлено автора. Скоро з вами сконтактуються."}); ;
+        }
         //
         // GET: /Product/Delete/5
 

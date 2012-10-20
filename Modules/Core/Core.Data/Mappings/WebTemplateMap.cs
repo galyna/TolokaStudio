@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Core.Data.Entities;
+
 using FluentNHibernate.Mapping;
 
-namespace Core.Data.Mappings
+namespace Core.Data.Entities
 {
    public class WebTemplateMap: ClassMap<WebTemplate>
     {

@@ -17,6 +17,7 @@ namespace TolokaStudio.Controllers
         private readonly IRepository<WebTemplate> WebTemplateRepository;
         private readonly IRepository<Product> ProductsRepository;
         private readonly IRepository<Employee> EmployeeRepository;
+        private readonly IRepository<User> UserRepository;
         private const string DefaulImg = "/Content/img/imgThumbs/Fluor/Coffe.png";
         private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/Coffe.png";
         private const string _productBennerTemplate = "<div class='template'>" +
@@ -69,6 +70,7 @@ namespace TolokaStudio.Controllers
             WebTemplateRepository = new Repository<WebTemplate>();
             ProductsRepository = new Repository<Product>();
             EmployeeRepository = new Repository<Employee>();
+            UserRepository = new Repository<User>();
         }
 
         public ActionResult Index()
@@ -96,19 +98,17 @@ namespace TolokaStudio.Controllers
         {
             try
             {
-                return View(CreateCreateModel(id));
+                return View(CreateProductModel(id));
             }
             catch
             {
-                ProductCreateModel productCreateModel = CreateEmptyCreateModel(id);
-                return View(productCreateModel);
+                return View();
             }
         }
 
-        private ProductCreateModel CreateCreateModel(int id)
+        private ProductCreateModel CreateProductModel(int id)
         {
-            Store Store = StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            ViewBag.Employees = Store.Staff;
+            List<Store> stores = StoreRepository.GetAll().ToList();
 
             ProductCreateModel productCreateModel = new ProductCreateModel()
             {
@@ -117,40 +117,27 @@ namespace TolokaStudio.Controllers
                 ImagePath = DefaulImg,
                 Name = "Назва товару",
                 Price = 100,
-                StoreID = id,
-                EmployeeId = Store.Staff.FirstOrDefault().Id
+                EmployeeId = id,
+                Stores = stores,
+                StoreID = stores.FirstOrDefault().Id
             };
             return productCreateModel;
         }
 
-        private ProductCreateModel CreateEmptyCreateModel(int id)
-        {
-            ProductCreateModel productCreateModel = new ProductCreateModel()
-            {
-                HtmlBanner = string.Format(_productBennerTemplate, '0', DefaulImg, "Назва товару", "Ціна грн"),
-                HtmlDetail = string.Format(_productDetailTemplate, DefaulDetailImg),
-                ImagePath = DefaulImg,
-                Name = "Назва товару",
-                Price = 100,
-                StoreID = id
-            };
-            return productCreateModel;
-        }
-        //k
+
         // POST: /Product/Create
 
         [HttpPost]
         public ActionResult Create(ProductCreateModel model)
         {
-            
+
             if (ModelState.IsValid)
             {
                 try
                 {
 
                     CreateProduct(model);
-
-                    return RedirectToAction("Edit", "Store", new { id = model.StoreID });
+                    return RedirectToAction("Edit", "Employee");
                 }
                 catch
                 {
@@ -159,27 +146,33 @@ namespace TolokaStudio.Controllers
             }
             else
             {
-                model.HtmlBanner = Server.HtmlEncode(string.Format(_productBennerTemplate, 0, model.ImagePath, model.Name, model.Price + " грн."));
-                return View(model);
+                List<Store> stores = StoreRepository.GetAll().ToList();
+
+                ProductCreateModel productCreateModel = new ProductCreateModel()
+                {
+                    HtmlBanner = string.Format(_productBennerTemplate, '0', DefaulImg, "Назва товару", "Ціна грн"),
+                    HtmlDetail = string.Format(_productDetailTemplate, DefaulDetailImg),
+                    ImagePath = DefaulImg,
+                    Name = "Назва товару",
+                    Price = 100,
+                    EmployeeId = model.EmployeeId,
+                    Stores = stores,
+                    StoreID = stores.FirstOrDefault().Id
+                };
+                return View(productCreateModel);
             }
         }
 
         private void CreateProduct(ProductCreateModel model)
         {
-            Store store = StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
+
             Product product = new Product() { Name = model.Name, Price = model.Price, ImagePath = model.ImagePath, HtmlDetail = Server.HtmlEncode(model.HtmlDetail) };
-            product.OwnerEmployee = store.Staff.Where(e => e.Id == model.EmployeeId).SingleOrDefault();
-            store.AddProduct(product);
-            StoreRepository.SaveOrUpdate(store);
+            product.OwnerEmployee = EmployeeRepository.Get(e => e.Id.Equals(model.EmployeeId)).SingleOrDefault();
+            product.Store=StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
+            Product productSaved = ProductsRepository.SaveOrUpdate(product);
+            CreateHtml(productSaved);
+            ProductsRepository.SaveOrUpdate(productSaved);
 
-            //ID  Is received
-
-            ViewBag.Employees = store.Staff;
-            Product product1 = ProductsRepository.Get(p => p.Name == product.Name && p.Price == product.Price && p.ImagePath == product.ImagePath).FirstOrDefault();
-            CreateHtml(product1);
-          
-            ProductsRepository.SaveOrUpdate(product1);
-            SaveTemplate(model);
         }
 
         private void CreateHtml(Product product)

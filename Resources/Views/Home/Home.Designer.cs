@@ -88,6 +88,15 @@ namespace ViewRes.Home {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Кошик.
+        /// </summary>
+        public static string Bascet {
+            get {
+                return ResourceManager.GetString("Bascet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Створити.
         /// </summary>
         public static string Create {
@@ -156,15 +165,6 @@ namespace ViewRes.Home {
         public static string HtmlDetail {
             get {
                 return ResourceManager.GetString("HtmlDetail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Кабінет.
-        /// </summary>
-        public static string Kabinet {
-            get {
-                return ResourceManager.GetString("Kabinet", resourceCulture);
             }
         }
         

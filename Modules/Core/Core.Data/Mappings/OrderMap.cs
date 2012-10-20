@@ -14,7 +14,8 @@ namespace Core.Data.Mappings
             Id(x => x.Id);
             References(x => x.Employee);
             References(x => x.Product);
-            Map(x => x.ContactEmail);
+            References(x => x.User);
+            Map(x => x.Comments);
         }
     }
 }

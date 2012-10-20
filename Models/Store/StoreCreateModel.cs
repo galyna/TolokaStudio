@@ -27,7 +27,7 @@ namespace TolokaStudio.Models
          ErrorMessageResourceType = typeof(Home))]
         [HiddenInput(DisplayValue = false)]
         public virtual string ImagePath { get; set; }
-
+         [AllowHtml]
         public string HtmlBanner { get; set; }
     }
 }

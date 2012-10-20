@@ -10,17 +10,12 @@ namespace Core.Data.Mappings
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Price);
-            HasManyToMany(x => x.StoresStockedIn)
-                .Cascade.SaveUpdate()
-                .Table("StoreProduct")
-                .Inverse();
-
-          
+            References(x => x.Store);      
             References(x => x.OwnerEmployee);
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.HtmlDetail).CustomSqlType("ntext");
             Map(x => x.ImagePath);
-            Map(x => x.ImagePathDetail);
+
         }
     }
 }

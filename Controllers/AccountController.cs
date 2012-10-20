@@ -12,34 +12,32 @@ using Core.Data.Repository.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 using TolokaStudio.Common;
+using System.Security.Principal;
 
 namespace TolokaStudio.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IRepository<User> UserRepository;
-
+        private readonly IRepository<Employee> EmployeeRepository;
 
         public AccountController()
         {
             UserRepository = new Repository<User>();
+            EmployeeRepository = new Repository<Employee>();
         }
-        [TolokaAuthorizeAsAdminAttribute]
-        public ActionResult Users()
-        {
-            return View(new UsersModel() { Users = UserRepository.GetAll().ToList() });
-        }
+
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Admin(int id)
         {
             User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
             if (!user.Role.IsAdmin)
             {
-                user.Role.IsAdmin=true;
+                user.Role.IsAdmin = true;
                 UserRepository.SaveOrUpdate(user);
             }
 
-            return View("Users", new UsersModel() { Users = UserRepository.GetAll().ToList() });
+            return RedirectToAction("Index", "Store");
         }
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult Author(int id)
@@ -47,10 +45,15 @@ namespace TolokaStudio.Controllers
             User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
             if (!user.Role.IsAuthor)
             {
-                user.Role.IsAuthor=true;
+                user.Role.IsAuthor = true;
+                Employee employee = new Employee();
+                employee.Email = user.Email;
+                employee.FirstName = user.UserName; ;
+                Employee employeeSaved = EmployeeRepository.SaveOrUpdate(employee);
+                user.Employee = employeeSaved;
                 UserRepository.SaveOrUpdate(user);
             }
-            return View("Users", new UsersModel() { Users = UserRepository.GetAll().ToList() });
+            return RedirectToAction("Index", "Store");
         }
         //
         // GET: /Account/LogOn
@@ -74,6 +77,7 @@ namespace TolokaStudio.Controllers
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
+
                         return Redirect(returnUrl);
                     }
                     else
@@ -128,9 +132,9 @@ namespace TolokaStudio.Controllers
                     };
                     if (model.UserName == "gal5")
                     {
-                        user.Role.IsAdmin=true;
+                        user.Role.IsAdmin = true;
                     }
-                   
+
                     UserRepository.SaveOrUpdate(user);
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
@@ -245,7 +249,9 @@ namespace TolokaStudio.Controllers
         }
         private User GetUser(string username, string password)
         {
-            return UserRepository.Get(u => u.UserName == username && u.Password == EncodePassword(password)).SingleOrDefault();
+            User user = UserRepository.Get(u => u.UserName == username && u.Password == EncodePassword(password)).SingleOrDefault();
+       
+            return user;
 
         }
         /// <summary>

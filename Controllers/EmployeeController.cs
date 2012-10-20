@@ -11,13 +11,15 @@ using System.IO;
 
 namespace TolokaStudio.Controllers
 {
-    [ValidateInput(false)]
+
     public class EmployeeController : Controller
     {
 
         private readonly IRepository<Store> StoreRepository;
         private readonly IRepository<WebTemplate> WebTemplateRepository;
         private readonly IRepository<Employee> EmployeeRepository;
+        private readonly IRepository<User> UserRepository;
+        private readonly IRepository<Product> ProductsRepository;
         private const string DefaulImg = "/Content/img/_C3D9074.png";
         private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/Coffe.png";
         private const string _rootImagesFolderPath = "/Content/img/";
@@ -46,6 +48,8 @@ namespace TolokaStudio.Controllers
             StoreRepository = new Repository<Store>();
             WebTemplateRepository = new Repository<WebTemplate>();
             EmployeeRepository = new Repository<Employee>();
+            UserRepository = new Repository<User>();
+            ProductsRepository = new Repository<Product>();
         }
 
         public ActionResult Index()
@@ -64,68 +68,40 @@ namespace TolokaStudio.Controllers
             return View(employee);
         }
 
-        //
-        // GET: /Employee/Create
 
-        public ActionResult Create(int id)
+        public ActionResult EditDetails(int id)
         {
-            return View(new EmployeeCreateModel()
-            {
-                StoreID = id,
-                FirstName = "Ім'я",
-                LastName = "Прізвище",
-                ImagePath = DefaulImg,
-                Email = "galaynavistovska@gmail.com",
-                HtmlBanner = string.Format(_authorTemplate, '0', DefaulImg, "Ім'я та Прізвище", "galaynavistovska@gmail.com"),
-            });
+            string html = HttpUtility.HtmlDecode(EmployeeRepository.Get(s => s.Id==id).SingleOrDefault().HtmlDetail);
+            EmployeeDetailsModel model = new EmployeeDetailsModel();
+            model.EmployeeId = id;
+            model.HtmlDetail = html != null ? html : "";
+            return View(model);
         }
 
         //
-        // POST: /employee0/Create
+        // POST: /Employee/Edit/5
 
         [HttpPost]
-        public ActionResult Create(EmployeeCreateModel model)
+        public ActionResult EditDetails(EmployeeDetailsModel model)
         {
-            if (ModelState.IsValid)
-            {
 
-                try
-                {
-                    Employee employee = CreateModelToEmployee(model);
-                    EmployeeRepository.SaveOrUpdate(employee);
-                    employee.HtmlBanner = Server.HtmlEncode(string.Format(_authorTemplate, employee.Id, employee.ImagePath, employee.FirstName, employee.LastName));
-                    employee.Name= employee.FirstName+"  "+employee.LastName;
-                    EmployeeRepository.SaveOrUpdate(employee);
-                    Store store = StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
-                    store.AddEmployee(employee);
-                    StoreRepository.SaveOrUpdate(store);
-                    return RedirectToAction("Edit", "Store", new { id = model.StoreID});
-                }
-                catch
-                {
-                    return View(model);
-                }
+            try
+            {
+                Employee employee = EmployeeRepository.Get(s => s.Id.Equals(model.EmployeeId)).SingleOrDefault();
+                employee.HtmlDetail = Server.HtmlEncode(model.HtmlDetail);
+                EmployeeRepository.SaveOrUpdate(employee);
+              
+                return RedirectToAction("Edit");
             }
-            else
+            catch
             {
                 return View(model);
             }
+
         }
-
-        private void SaveTemplate(EmployeeCreateModel model)
+        public ActionResult Edit()
         {
-
-            WebTemplate item = new WebTemplate();
-            item.Html = model.HtmlDetail;
-            item.Name = model.FirstName + "  " + model.LastName + "Author";
-            WebTemplateRepository.SaveOrUpdate(item);
-        }
-        //
-        // GET: /Employee/Edit/5
-
-        public ActionResult Edit(int id)
-        {
-            EmployeeEditModel model = EmployeeToEditModel(id);
+            EmployeeEditModel model = EmployeeToEditModel();
 
             return View(model);
         }
@@ -142,8 +118,8 @@ namespace TolokaStudio.Controllers
                 {
                     Employee employee = EditModelToEmployee(model);
                     EmployeeRepository.SaveOrUpdate(employee);
-                    WebTemplateRepository.SaveOrUpdate(new WebTemplate() { Name = "Employee" + employee.FirstName + " " + employee.LastName, Html = employee.HtmlBanner });
-                    return RedirectToAction("Index");
+
+                    return RedirectToAction("Index", "Home");
                 }
                 catch
                 {
@@ -154,8 +130,8 @@ namespace TolokaStudio.Controllers
             {
                 return View(model);
             }
-        }
 
+        }
         //
         // GET: /Employee/Delete/5
 
@@ -185,39 +161,42 @@ namespace TolokaStudio.Controllers
         {
             Employee employee = EmployeeRepository.Get(s => s.Id.Equals(employeeEditModel.Id)).SingleOrDefault();
             employee.FirstName = employeeEditModel.FirstName;
-            employee.LastName= employeeEditModel.LastName;
+            employee.LastName = employeeEditModel.LastName;
             employee.ImagePath = employeeEditModel.ImagePath;
-            employee.HtmlBanner = Server.HtmlEncode(string.Format(_authorTemplate, employeeEditModel.Id, 
+            employee.HtmlBanner = Server.HtmlEncode(string.Format(_authorTemplate, employeeEditModel.Id,
              employeeEditModel.ImagePath, employeeEditModel.FirstName, employeeEditModel.LastName));
             employee.HtmlDetail = Server.HtmlEncode(employeeEditModel.HtmlDetail);
             return employee;
         }
 
-        private Employee CreateModelToEmployee(EmployeeCreateModel employeeCreateModel)
+
+        private EmployeeEditModel EmployeeToEditModel()
         {
-            Employee employee = new Employee()
+            Employee employee = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Employee;
+            EmployeeEditModel employeeEditModel = new EmployeeEditModel();
+            if (employee.HtmlBanner == null)
             {
-                FirstName = employeeCreateModel.FirstName,
-                LastName = employeeCreateModel.LastName,
-                ImagePath = employeeCreateModel.ImagePath,
-                HtmlDetail = Server.HtmlEncode(employeeCreateModel.HtmlDetail),
-                Email = employeeCreateModel.Email
-            };
-            return employee;
-        }
-        private EmployeeEditModel EmployeeToEditModel(int id)
-        {
-            Employee employee = EmployeeRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            EmployeeEditModel employeeEditModel = new EmployeeEditModel()
+
+                employeeEditModel.FirstName = employee.FirstName;
+                employeeEditModel.LastName = " Прізвище";
+                employeeEditModel.ImagePath = DefaulImg;
+                employeeEditModel.Email = employee.Email;
+                employeeEditModel.Id = employee.Id;
+                employeeEditModel.HtmlBanner = string.Format(_authorTemplate, employee.Id, DefaulImg, employeeEditModel.FirstName, employeeEditModel.Email);
+                employeeEditModel.Products = new List<Product>();
+            }
+            else
             {
-                ImagePath = employee.ImagePath,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                HtmlBanner = HttpUtility.HtmlDecode(employee.HtmlBanner),
-                HtmlDetail = HttpUtility.HtmlDecode(employee.HtmlDetail),
-                Email = employee.Email,
-                Id = id
-            };
+                employeeEditModel.ImagePath = employee.ImagePath;
+                employeeEditModel.FirstName = employee.FirstName;
+                employeeEditModel.LastName = employee.LastName;
+                employeeEditModel.HtmlBanner = HttpUtility.HtmlDecode(employee.HtmlBanner);
+                employeeEditModel.HtmlDetail = HttpUtility.HtmlDecode(employee.HtmlDetail);
+                employeeEditModel.Email = employee.Email;
+                employeeEditModel.Id = employee.Id;
+                employeeEditModel.Products = ProductsRepository.Get(p => p.OwnerEmployee == employee).ToList();
+
+            }
             return employeeEditModel;
         }
 

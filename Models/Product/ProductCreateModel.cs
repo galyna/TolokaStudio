@@ -18,6 +18,7 @@ namespace TolokaStudio.Models
                 ErrorMessageResourceType = typeof(ProductCreate))]
         [Display(Name = "Name", ResourceType = typeof(ProductCreate))]
         public string Name { get; set; }
+         [AllowHtml]
         public string HtmlBanner { get; set; }
         [Required(ErrorMessageResourceName = "Required_Price",
             ErrorMessageResourceType = typeof(ProductCreate))]
@@ -27,7 +28,10 @@ namespace TolokaStudio.Models
         ErrorMessageResourceType = typeof(Home))]
         public virtual string ImagePath { get; set; }
         public int StoreID { get; set; }
+         [AllowHtml]
         public string HtmlDetail { get; set; }
         public int EmployeeId { get; set; }
+         [HiddenInput(DisplayValue = false)]
+        public List<Store> Stores { get; set; }
     }
 }

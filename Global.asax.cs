@@ -9,6 +9,11 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using System.Configuration;
 using FluentNHibernate.Automapping;
+using System.Web.Security;
+using System.Security.Principal;
+using Core.Data.Repository.Interfaces;
+using Core.Data.Repository;
+using Core.Data.Entities;
 
 
 namespace TolokaStudio
@@ -43,5 +48,37 @@ namespace TolokaStudio
             RegisterRoutes(RouteTable.Routes);
         }
 
+        protected void Application_AuthenticateRequest(Object sender,
+EventArgs e)
+{
+  if (HttpContext.Current.User != null)
+  {
+    if (HttpContext.Current.User.Identity.IsAuthenticated)
+    {
+     if (HttpContext.Current.User.Identity is FormsIdentity)
+     {
+        FormsIdentity id =
+            (FormsIdentity)HttpContext.Current.User.Identity;
+        FormsAuthenticationTicket ticket = id.Ticket;
+
+        // Get the stored user-data, in this case, our roles
+        IRepository<User> UserRepository = new Repository<User>();
+        User user = UserRepository.Get(u => u.UserName == HttpContext.Current.User.Identity.Name).SingleOrDefault();
+       
+        string userData = "";
+        if (user != null && user.Role.IsAuthor)
+        {
+            userData = "Author";
+        }
+        if (user != null && user.Role.IsAdmin)
+        {
+            userData = "Admin";
+        }
+        string[] roles = userData.Split(',');
+        HttpContext.Current.User = new GenericPrincipal(id, roles);
+     }
+    }
+  }
+}
     }
 }
