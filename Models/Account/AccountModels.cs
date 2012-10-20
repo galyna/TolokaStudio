@@ -20,7 +20,7 @@ namespace TolokaStudio.Models
 
         [Required(ErrorMessageResourceName = "Required_new_password",
                 ErrorMessageResourceType = typeof(Account))]
-        [StringLength(100, ErrorMessageResourceName =  "{0} має бути  довжиною не манше {2} символів" , MinimumLength = 6)]
+        [StringLength(100)]
         [DataType(DataType.Password)]
         [Display(Name = "New_password", ResourceType = typeof(Account))]
         public string NewPassword { get; set; }
@@ -34,40 +34,50 @@ namespace TolokaStudio.Models
 
     public class LogOnModel
     {
-        [Required]
-        [Display(Name = "User name")]
+        [Required(ErrorMessageResourceName = "Required_user_name",
+                ErrorMessageResourceType = typeof(Account))]
+        [Display(Name = "User_name", ResourceType = typeof(Account))]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required_password",
+                ErrorMessageResourceType = typeof(Account))]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Password", ResourceType = typeof(Account))]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Remember_me", ResourceType = typeof(Account))]
         public bool RememberMe { get; set; }
     }
 
     public class RegisterModel
     {
-        [Required]
-        [Display(Name = "User name")]
+        [Required(ErrorMessageResourceName = "Required_user_name",
+                ErrorMessageResourceType = typeof(Account))]
+        [Display(Name = "User_name", ResourceType = typeof(Account))]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required_email_address",
+                ErrorMessageResourceType = typeof(Account))]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email address")]
+        [Display(Name = "Email_address", ResourceType = typeof(Account))]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "{0} має бути  довжиною не манше {2} символів", MinimumLength = 6)]
+        [Required(ErrorMessageResourceName = "Required_password",
+                ErrorMessageResourceType = typeof(Account))]
+        [StringLength(100)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Password", ResourceType = typeof(Account))]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirm_password", ResourceType = typeof(Account))]
+        [Compare("Password", ErrorMessageResourceName = "The_new_password_and_confirmation_password_do_not_match",
+                ErrorMessageResourceType = typeof(Account))]
         public string ConfirmPassword { get; set; }
     }
 
+    public class UsersModel
+    {
+        public IList<User> Users { get; set; }
+    }
 }

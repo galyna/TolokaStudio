@@ -218,6 +218,12 @@
     <Content Include="Content\assets\js\google-code-prettify\prettify.js" />
     <Content Include="Content\assets\js\jquery.js" />
     <Content Include="Content\assets\js\scroller_load_img.js" />
+    <Content Include="Content\img\q\1141678.png" />
+    <Content Include="Content\img\q\700274689.jpg.png" />
+    <Content Include="Content\img\q\button_ok_4699.png" />
+    <Content Include="Content\img\q\button_ok_7851.png" />
+    <Content Include="Content\img\q\images.jpg" />
+    <Content Include="Content\img\q\галочка1.png" />
     <Content Include="Content\js\combined_.js" />
     <Content Include="Content\js\events_init.js" />
     <EmbeddedResource Include="Content\js\menu_full_width.js" />
