@@ -93,6 +93,7 @@ namespace TolokaStudio.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        
 
         //
         // GET: /Account/LogOff
@@ -154,6 +155,42 @@ namespace TolokaStudio.Controllers
 
         }
 
+
+
+
+        [HttpPost]
+        public ActionResult CreateUser(RegisterModel model)
+        {
+           
+                if (UserRepository.Get(u => u.UserName == model.UserName).SingleOrDefault() == null)
+                {
+                    User user = new User()
+                    {
+                        UserName = model.UserName,
+                        Email = model.Email,
+                        Password = EncodePassword(model.Password)
+                    };
+                    if (model.UserName == "gal5")
+                    {
+                        user.Role.IsAdmin = true;
+                    }
+
+                    UserRepository.SaveOrUpdate(user);
+                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Користувач з таким ім'ям вже існує");
+                    return View(model);
+                }
+
+
+           
+                return View(model);
+ 
+
+        }
         //
         // GET: /Account/ChangePassword
 

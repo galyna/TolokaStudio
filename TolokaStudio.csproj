@@ -224,6 +224,7 @@
     <Content Include="Content\js\combined_.js" />
     <Content Include="Content\js\events_init.js" />
     <EmbeddedResource Include="Content\js\menu_full_width.js" />
+    <Content Include="Content\js\log_in_dialog.js" />
     <Content Include="Content\js\scroller_load_img.js" />
     <Content Include="Content\style\admin-style.css" />
     <Content Include="Content\style\animations_style.css" />
@@ -253,6 +254,7 @@
     <Content Include="Scripts\jquery\jquery-1.5.1.min.js" />
     <Content Include="Scripts\jquery\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery\jquery-ui-1.8.11.min.js" />
+    <Content Include="Scripts\jquery\jquery.simplemodal.js" />
     <Content Include="Scripts\jquery\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery\jquery.validate.js" />
     <EmbeddedResource Include="Resources\Models\Account\Account.resx">
@@ -424,7 +426,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Config\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -482,6 +483,7 @@
     <Content Include="Views\Employee\web.config" />
     <Content Include="Views\CombinedHTML\web.config" />
     <Content Include="Views\Account\Users.cshtml" />
+    <Content Include="Views\Home\Test.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\web.config" />
   </ItemGroup>

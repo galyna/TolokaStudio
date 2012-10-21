@@ -22,6 +22,10 @@ namespace TolokaStudio.Controllers
             StoreRepository = new Repository<Store>();
         }
 
+        public ActionResult Test()
+        {
+            return View();
+        }
 
         public ActionResult Index()
         {

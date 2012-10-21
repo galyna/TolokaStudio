@@ -45,6 +45,9 @@ namespace TolokaStudio.Models
         [Display(Name = "Password", ResourceType = typeof(Account))]
         public string Password { get; set; }
 
+      
+        public bool Email { get; set; }
+
         [Display(Name = "Remember_me", ResourceType = typeof(Account))]
         public bool RememberMe { get; set; }
     }
