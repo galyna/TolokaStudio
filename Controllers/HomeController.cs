@@ -25,16 +25,20 @@ namespace TolokaStudio.Controllers
 
         public ActionResult Index()
         {
-            if ( StoreRepository.GetAll()!=null)
+            return RedirectToAction("Index", "Product");            
+        }
+        public ActionResult Category()
+        {
+          
+            if (StoreRepository.GetAll() != null)
             {
-                return View(new HomeModel() { Stores = StoreRepository.GetAll().ToList() });
+                return View("Index", new HomeModel() { Stores = StoreRepository.GetAll().ToList() });
             }
             else
             {
-            
-                return View(new HomeModel() );
+                return View("Index", new HomeModel());
             }
-                    
+
         }
       
     }

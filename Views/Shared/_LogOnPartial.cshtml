@@ -1,5 +1,7 @@
-﻿@if(Request.IsAuthenticated) {
-    <text>Вітаємо <strong>@User.Identity.Name</strong>!
+﻿
+@if(Request.IsAuthenticated) {
+    <text>Вітаємо <strong>@User.Identity.Name</strong>
+
      @Html.ActionLink("Вийти", "LogOff", "Account") </text>
     if (User.IsInRole("Author"))
     {
@@ -9,3 +11,4 @@
 else {
      @Html.ActionLink("Увійти", "LogOn", "Account") 
 }
+
