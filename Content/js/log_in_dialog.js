@@ -49,7 +49,7 @@
                 height: 400,
                 width: 350,
                 modal: true,
-                title:"dfgdfgdfg",
+                title:"Реєстрація нового користувача",
                 buttons: {
                     "Create an account": function () {
                         var bValid = true;

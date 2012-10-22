@@ -21,18 +21,20 @@
 
 
     <div id="dialog-form" title="Create new user">
-    <p class="validateTips">All form fields are required.</p>
+    <p class="validateTips">Заповніть будь-ласка всі поля</p>
  
     <form>
     <fieldset>
-        <label for="name">Name</label>
+        <label for="name">Логін</label>
         <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
         <label for="email">Email</label>
         <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
-        <label for="password">Password</label>
+        <label for="password">Пароль</label>
         <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
+        <label for="password">Повторіть пароль</label>
+        <input type="password" name="password_confirm" id="password_confirm" value="" class="text ui-widget-content ui-corner-all" />
     </fieldset>
     </form>
 </div>
 
-<button id="create-user">Login</button>
+<button id="create-user">Реєстрація</button>
