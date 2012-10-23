@@ -26,6 +26,7 @@
 
                        " <li><a class='typ4' href='/Employee'>" + Home.Authors + "</a></li>" +
                        " <li><a class='typ5' href='/Bascet'>" + Home.Bascet + "</a></li>" +
+                                 " <li><a class='typ5' href='/Store'> Admin </a></li>" +
                        " <li ><a class='typ6' href='http://vk.com/public43703617'>Контакти</a></li>" +
 
                    " </ul>")
@@ -46,14 +47,11 @@
                     </div>
                     <div class="span6 LogOnPartial">
                         @Html.Partial("_LogOnPartial")
-                            <input type="button" onclick="LogOn();" value="window"/>
                     </div>
                 </div>
             </div>
             @RenderBody()
-             <div class="dialog">
-                                 Hi!
-                                </div>
+
         </div>
         <div class="footer">
             <div class="container">
@@ -111,8 +109,7 @@
                 MenuResizer.resize(".menu_top", ".menu_top_list", true);
 
             }
-            function LogOn() {
-     
+
         </script>
         <!--Menu full width ends-->
 </body>

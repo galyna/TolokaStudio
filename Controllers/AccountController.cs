@@ -20,6 +20,28 @@ namespace TolokaStudio.Controllers
     {
         private readonly IRepository<User> UserRepository;
         private readonly IRepository<Employee> EmployeeRepository;
+        private const string DefaulImg = "/Content/img/_C3D9074.png";
+        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/Coffe.png";
+        private const string _rootImagesFolderPath = "/Content/img/";
+        private const string _authorTemplate = "<div class='template'>" +
+                    " <div class='span8'>" +
+                    " <a href='/Employee/Details?id={0}'>" +
+                    " <div class='box_main_item'>" +
+                    " <div class='box_main_item_img'>" +
+                    "  <div class='box_main_item_img_bg'>" +
+                    "     <span>Про автора</span>" +
+                    "  </div>" +
+                    " <img src='{1}' alt='img_box' />" +
+                    " </div>" +
+                    " <div class='box_main_item_text'>" +
+                    "   <h3>" +
+                    "       {2}</h3>" +
+                    "     <span>{3}</span>" +
+                    "  </div>" +
+                    " </div>" +
+                    " </a>" +
+                    "</div>" +
+                    " </div>";
 
         public AccountController()
         {
@@ -43,16 +65,16 @@ namespace TolokaStudio.Controllers
         public ActionResult Author(int id)
         {
             User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
-            if (!user.Role.IsAuthor)
-            {
+           
                 user.Role.IsAuthor = true;
                 Employee employee = new Employee();
                 employee.Email = user.Email;
-                employee.FirstName = user.UserName; ;
+                employee.FirstName = user.UserName;
+                employee.HtmlBanner = string.Format(_authorTemplate, employee.Id, DefaulImg, user.UserName, user.Email);
                 Employee employeeSaved = EmployeeRepository.SaveOrUpdate(employee);
                 user.Employee = employeeSaved;
                 UserRepository.SaveOrUpdate(user);
-            }
+           
             return RedirectToAction("Index", "Store");
         }
         //
@@ -67,33 +89,23 @@ namespace TolokaStudio.Controllers
         // POST: /Account/LogOn
 
         [HttpPost]
-        public ActionResult LogOn(LogOnModel model, string returnUrl)
+        public ActionResult LogOn(LogOnModel model)
         {
-            if (ModelState.IsValid)
+
+            if (GetUser(model.UserName, model.Password) != null)
             {
-                if (GetUser(model.UserName, model.Password) != null)
-                {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
-                    {
+                FormsAuthentication.SetAuthCookie(model.UserName, false/* createPersistentCookie */);
 
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                }
+                return Redirect(Request.UrlReferrer.AbsoluteUri);
+
+
+
             }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            return RedirectToAction("Index", "Product");
         }
+
+
+
 
         //
         // GET: /Account/LogOff
@@ -102,59 +114,51 @@ namespace TolokaStudio.Controllers
         {
             FormsAuthentication.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Product");
         }
 
-        //
-        // GET: /Account/Register
 
-        public ActionResult Register()
-        {
-            return View();
-        }
 
-        //
-        // POST: /Account/Register
+
 
         [HttpPost]
-        public ActionResult Register(RegisterModel model)
+        public JsonResult CreateUser(UserCreate model)
         {
-            if (ModelState.IsValid)
+            User userdb = UserRepository.Get(u => u.UserName == model.Email).SingleOrDefault();
+            if (userdb == null)
             {
-
-                if (UserRepository.Get(u => u.UserName == model.UserName).SingleOrDefault() == null)
+                FormsAuthentication.SetAuthCookie(model.Email, false/* createPersistentCookie */);
+                User user = new User()
                 {
-                    User user = new User()
-                    {
-                        UserName = model.UserName,
-                        Email = model.Email,
-                        Password = EncodePassword(model.Password)
-                    };
-                    if (model.UserName == "gal5")
-                    {
-                        user.Role.IsAdmin = true;
-                    }
-
-                    UserRepository.SaveOrUpdate(user);
-                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Password = EncodePassword(model.Password)
+                };
+                UserRepository.SaveOrUpdate(user);
+                if (model.Email == "galynavistovska@gmail.com")
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(MembershipCreateStatus.DuplicateUserName));
-                    return View(model);
+                    user.Role.IsAdmin = true;
+                    return Json("\\Store\\Index");
                 }
-
-
+              
             }
-            else
+            else if (CheckPassword(userdb.Password, model.Password))
             {
-                return View(model);
-            }
-            // If we got this far, something failed, redisplay form
+                FormsAuthentication.SetAuthCookie(model.Email, false/* createPersistentCookie */);
 
+                if (userdb.Role.IsAdmin)
+                {
+
+                    return Json("\\Store\\Index");
+                }
+                if (userdb.Role.IsAuthor)
+                {
+                    return Json("\\Employee\\Edit");
+                   
+                }
+            }
+            return Json("\\Home\\Category");
         }
-
         //
         // GET: /Account/ChangePassword
 
@@ -250,7 +254,7 @@ namespace TolokaStudio.Controllers
         private User GetUser(string username, string password)
         {
             User user = UserRepository.Get(u => u.UserName == username && u.Password == EncodePassword(password)).SingleOrDefault();
-       
+
             return user;
 
         }

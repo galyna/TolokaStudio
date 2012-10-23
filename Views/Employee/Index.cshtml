@@ -2,9 +2,13 @@
 <div class="container">
     @foreach (var item in Model)
     { 
-        <br />
-        <div class="row">
-            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+       if (item.HtmlBanner != null)
+       {<div class="row">
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+           
         </div>
+       }
+             
     }
+        
 </div>

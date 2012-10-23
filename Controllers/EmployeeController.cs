@@ -8,6 +8,7 @@ using Core.Data.Entities;
 using Core.Data.Repository;
 using TolokaStudio.Models;
 using System.IO;
+using TolokaStudio.Common;
 
 namespace TolokaStudio.Controllers
 {
@@ -42,6 +43,7 @@ namespace TolokaStudio.Controllers
                     " </a>" +
                     "</div>" +
                     " </div>";
+        public Dictionary<int, string> staff { get; set; }
 
         public EmployeeController()
         {
@@ -71,7 +73,7 @@ namespace TolokaStudio.Controllers
 
         public ActionResult EditDetails(int id)
         {
-            string html = HttpUtility.HtmlDecode(EmployeeRepository.Get(s => s.Id==id).SingleOrDefault().HtmlDetail);
+            string html = HttpUtility.HtmlDecode(EmployeeRepository.Get(s => s.Id == id).SingleOrDefault().HtmlDetail);
             EmployeeDetailsModel model = new EmployeeDetailsModel();
             model.EmployeeId = id;
             model.HtmlDetail = html != null ? html : "";
@@ -90,7 +92,7 @@ namespace TolokaStudio.Controllers
                 Employee employee = EmployeeRepository.Get(s => s.Id.Equals(model.EmployeeId)).SingleOrDefault();
                 employee.HtmlDetail = Server.HtmlEncode(model.HtmlDetail);
                 EmployeeRepository.SaveOrUpdate(employee);
-              
+
                 return RedirectToAction("Edit");
             }
             catch
@@ -99,13 +101,20 @@ namespace TolokaStudio.Controllers
             }
 
         }
+        [TolokaAuthorizeAsAuthorAttribute]
         public ActionResult Edit()
         {
             EmployeeEditModel model = EmployeeToEditModel();
 
             return View(model);
         }
+        [TolokaAuthorizeAsAdminAttribute]
+        public ActionResult EditAuthor(int id)
+        {
+            EmployeeEditModel model = EmployeeToEditModel(id);
 
+            return View("Edit", model);
+        }
         //
         // POST: /Employee/Edit/5
 
@@ -139,7 +148,11 @@ namespace TolokaStudio.Controllers
         {
             return View(EmployeeRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
         }
-
+        [TolokaAuthorizeAsAuthorAttribute]
+        public ActionResult EditProduct(int id)
+        {
+            return RedirectToAction("Edit", "Product", new { id = id });
+        }
         //
         // POST: /Employee/Delete/5
 
@@ -148,15 +161,34 @@ namespace TolokaStudio.Controllers
         {
             try
             {
-                EmployeeRepository.Delete(EmployeeRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
-                return RedirectToAction("Index");
+                Employee employee = EmployeeRepository.Get(s => s.Id == id).SingleOrDefault();
+                if (employee != null)
+                {
+                    employee.HtmlBanner = null;
+                    List<Product> Products = ProductsRepository.Get(p => p.OwnerEmployee.Id == employee.Id).ToList();
+                    foreach (var item in Products)
+                    {
+                        ProductsRepository.Delete(item);
+                    }
+                    EmployeeRepository.SaveOrUpdate(employee);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
+
             }
             catch
             {
                 return View();
             }
         }
-
+        [TolokaAuthorizeAsAuthorAttribute]
+        public ActionResult DeleteProduct(int id)
+        {
+            return RedirectToAction("Delete", "Product", new { id = id });
+        }
         private Employee EditModelToEmployee(EmployeeEditModel employeeEditModel)
         {
             Employee employee = EmployeeRepository.Get(s => s.Id.Equals(employeeEditModel.Id)).SingleOrDefault();
@@ -174,6 +206,7 @@ namespace TolokaStudio.Controllers
         {
             Employee employee = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Employee;
             EmployeeEditModel employeeEditModel = new EmployeeEditModel();
+
             if (employee.HtmlBanner == null)
             {
 
@@ -194,12 +227,41 @@ namespace TolokaStudio.Controllers
                 employeeEditModel.HtmlDetail = HttpUtility.HtmlDecode(employee.HtmlDetail);
                 employeeEditModel.Email = employee.Email;
                 employeeEditModel.Id = employee.Id;
-                employeeEditModel.Products = ProductsRepository.Get(p => p.OwnerEmployee == employee).ToList();
+                employeeEditModel.Products = ProductsRepository.Get(p => p.OwnerEmployee.Id == employee.Id).ToList();
 
             }
             return employeeEditModel;
         }
 
+        private EmployeeEditModel EmployeeToEditModel(int id)
+        {
+            Employee employee = EmployeeRepository.Get(u => u.Id == id).SingleOrDefault();
+            EmployeeEditModel employeeEditModel = new EmployeeEditModel();
 
+            if (employee.HtmlBanner == null)
+            {
+
+                employeeEditModel.FirstName = employee.FirstName;
+                employeeEditModel.LastName = " Прізвище";
+                employeeEditModel.ImagePath = DefaulImg;
+                employeeEditModel.Email = employee.Email;
+                employeeEditModel.Id = employee.Id;
+                employeeEditModel.HtmlBanner = string.Format(_authorTemplate, employee.Id, DefaulImg, employeeEditModel.FirstName, employeeEditModel.Email);
+                employeeEditModel.Products = new List<Product>();
+            }
+            else
+            {
+                employeeEditModel.ImagePath = employee.ImagePath;
+                employeeEditModel.FirstName = employee.FirstName;
+                employeeEditModel.LastName = employee.LastName;
+                employeeEditModel.HtmlBanner = HttpUtility.HtmlDecode(employee.HtmlBanner);
+                employeeEditModel.HtmlDetail = HttpUtility.HtmlDecode(employee.HtmlDetail);
+                employeeEditModel.Email = employee.Email;
+                employeeEditModel.Id = employee.Id;
+                employeeEditModel.Products = ProductsRepository.Get(p => p.OwnerEmployee.Id == employee.Id).ToList();
+
+            }
+            return employeeEditModel;
+        }
     }
 }

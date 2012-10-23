@@ -34,19 +34,13 @@ namespace TolokaStudio.Models
 
     public class LogOnModel
     {
-        [Required(ErrorMessageResourceName = "Required_user_name",
-                ErrorMessageResourceType = typeof(Account))]
-        [Display(Name = "User_name", ResourceType = typeof(Account))]
+       
         public string UserName { get; set; }
 
-        [Required(ErrorMessageResourceName = "Required_password",
-                ErrorMessageResourceType = typeof(Account))]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password", ResourceType = typeof(Account))]
         public string Password { get; set; }
 
-        [Display(Name = "Remember_me", ResourceType = typeof(Account))]
-        public bool RememberMe { get; set; }
+        public string returnUrl { get; set; }
+       
     }
 
     public class RegisterModel
@@ -74,6 +68,14 @@ namespace TolokaStudio.Models
         [Compare("Password", ErrorMessageResourceName = "The_new_password_and_confirmation_password_do_not_match",
                 ErrorMessageResourceType = typeof(Account))]
         public string ConfirmPassword { get; set; }
+    }
+    public class UserCreate
+    {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+ 
     }
 
     public class UsersModel

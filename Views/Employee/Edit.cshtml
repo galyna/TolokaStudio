@@ -54,6 +54,7 @@
             </div>
             <div class="row">
                 <input type="submit" value="@Home.Save" />
+                 @Html.ActionLink("Видалити", "Delete", "Employee",new { id = Model.Id }, new { id = Model.Id })
             </div>
         </fieldset>
     }

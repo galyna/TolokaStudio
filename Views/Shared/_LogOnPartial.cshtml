@@ -1,14 +1,23 @@
 ﻿
 @if(Request.IsAuthenticated) {
-    <text>Вітаємо <strong>@User.Identity.Name</strong>
-
-     @Html.ActionLink("Вийти", "LogOff", "Account") </text>
+     
+      
+   
     if (User.IsInRole("Author"))
     {
-         @Html.ActionLink("Кабінет", "Edit", "Employee")
+         <div class='span2 offset3'> @Html.ActionLink("Кабінет", "Edit", "Employee") </div>  
     }
+    
+    if (User.IsInRole("Admin"))
+    {
+        <div class='span2 offset3'>    @Html.ActionLink("Кабінет", "Index", "Store") </div>  
+    }
+    <div class='span2 offset3'>  @Html.ActionLink("Вийти", "LogOff", "Account") </div>
+
 }
-else {
-     @Html.ActionLink("Увійти", "LogOn", "Account") 
+else
+{
+    <div class='span2 offset3'> @Html.Partial("_RegisterPartial") </div>
+    
 }
 

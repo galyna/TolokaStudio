@@ -43,6 +43,7 @@ namespace TolokaStudio.Models
         public string HtmlDetail { get; set; }
 
         public List<Product> Products { get; set; }
+
     
     }
 }

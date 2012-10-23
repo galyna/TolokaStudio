@@ -33,5 +33,11 @@ namespace TolokaStudio.Controllers
             return View("Index", bascetModel);
         }
 
+        public ActionResult Add(int id)
+        {
+            return RedirectToAction("Create", "Order", new { id = id });
+          
+        }
+       
     }
 }

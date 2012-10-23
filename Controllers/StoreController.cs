@@ -196,7 +196,7 @@ namespace TolokaStudio.Controllers
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult EditEmployee(int id)
         {
-            return RedirectToAction("Edit", "Employee", new { id = id });
+            return RedirectToAction("EditAuthor", "Employee", new { id = id });
         }
         [TolokaAuthorizeAsAdminAttribute]
         public ActionResult AddEmployee(int id)

@@ -35,11 +35,15 @@
     @foreach (var item in Model.Employees)
     {
         <div class="row">
-            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
-            <div class="span4 offset1">
+           @if (item.HtmlBanner != null)
+           {
+             @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+              <div class="span4 offset1">
                 @Html.ActionLink(@Store.Edit_Employee, "EditEmployee", new { id = item.Id })
-                @Html.ActionLink(@Store.Delete_Employee, "DeleteEmployee", new { id = item.Id })
+        
             </div>
+           }
+           
         </div>                
     }
 </div>
