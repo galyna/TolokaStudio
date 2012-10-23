@@ -36,15 +36,7 @@
         }
     }
 
-    function UserCreate(name, email, password) {
-        var u = {};
-        u.UserName = name;
-        u.Email = email;
-        u.Password = password;
-
-        return u;
-    }
-
+ 
 
     $("#dialog-form").dialog({
         autoOpen: false,

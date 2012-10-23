@@ -1,0 +1,8 @@
+﻿ @foreach (var item in ViewBag.Orders)
+    {   
+        <div class="row">
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBanner))
+        </div> 
+        
+                            
+    }

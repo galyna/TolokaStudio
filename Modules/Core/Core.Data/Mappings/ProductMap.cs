@@ -15,6 +15,8 @@ namespace Core.Data.Mappings
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.HtmlDetail).CustomSqlType("ntext");
             Map(x => x.ImagePath);
+            Map(x => x.HtmlBannerOrdered);
+            Map(x => x.Ordered);
 
         }
     }

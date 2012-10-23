@@ -1,14 +1,36 @@
 ﻿@model List<Core.Data.Entities.Product>
+<script src="/Content/js/buy.js"></script>
 <div class="container">
-<div class="row">
-
-    @foreach (var item in Model){
-          
-      if (item.HtmlBanner != null)
+    <div class="row">
+        @foreach (var item in Model)
         {
-            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+
+         
+            if(item.Ordered)
+            {
+               
+                @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBannerOrdered))
+            }
+               if( !item.Ordered)
+            {
+               
+                @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+            }
         }
-       
-    }
     </div>
 </div>
+<script type="text/javascript">
+//<![CDATA[
+
+    $(document).ready(function () {
+      
+            Buyer.init();
+       
+       
+
+
+
+
+    });
+//]]>
+</script>

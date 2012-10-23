@@ -1,24 +1,35 @@
 ﻿@model TolokaStudio.Models.BascetModel
 @using ViewRes.Home
 <div class="container">
-    @if (Model.Message != null)
+    @if (ViewBag.Messege != null)
     {
         <div class="row">
-            @Html.Raw(Model.Message)
+                <H5>
+@Html.Raw(ViewBag.Messege)
+        </H5>
+            
         </div> 
     }
     @foreach (var item in Model.Orders)
     {   
         <div class="row">
-            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBanner))
+         <div class="span9">
+
+           @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBanner))
+        </div> 
+           
+             <div class="span7">
+             <H5>
+Ви можете задати запитання автору щодо замовлення. Ми будемо вдячні якщо ви вкажете додаткові кантактні дані 
+для отримання товару поштою чи для обговорення деталей подальшої співпраці з автором.
+        </H5> 
+            @Html.TextArea(item.Id.ToString() + "item.Comments", item.Comments, new { width=300})
+        </div>
+         <div class="span5">
+             <div class='span2 offset3'>    @Html.ActionLink("Замовити", "MakeOrder", "Order", new { id = item.Id, comments = item.Comments }) </div>  
+        </div>  
         </div> 
         
-        <div class="row">
-            @Html.TextArea(item.Id.ToString() + "item.Comments", item.Comments, new Dictionary<string, object> { { "class", "text" } })
-        </div> 
-        
-        <div class="row">
-            @Html.ActionLink(Home.Create_Order, "Order", new { id = item.Id, comments = item.Comments })
-        </div>                       
+                            
     }
 </div>

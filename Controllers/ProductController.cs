@@ -19,16 +19,18 @@ namespace TolokaStudio.Controllers
         private readonly IRepository<Employee> EmployeeRepository;
         private readonly IRepository<User> UserRepository;
         private const string DefaulImgName = "Coffe.png";
+        public const string HtmlBannerOrdered = _productOrderedBennerTemplateNone;
         private const string DefaulImg = "/Content/img/imgThumbs/Fluor/" + DefaulImgName;
         private const string DefaulImgBascet = "/Content/img/q/shopping_cart_1.gif";
         private const string DefaulImgBascetChecked = "/Content/img/q/button_ok_4699.png";
         private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/"+ DefaulImgName;
-        private const string _productBennerTemplate =_productOrderedBennerTemplateNone+ "<div class='template'>" +
+        private const string _productBennerTemplate =  "<div class='template order{0}'>" +
 
                    " <div class='span8'>" +
           	" <div class='box_main_item'>"+
-            //  " <img src='{5}' />" +
-                  " <img src='{4}' />" +
+         
+
+                  " <img class='orderBtn' title='{0}' src='{4}' />" +
                   "  </div>" +
                    " <a href='/Product/Details?id={0}'>" +
                    " <div class='box_main_item'>" +
@@ -49,7 +51,7 @@ namespace TolokaStudio.Controllers
                    " </a>" +
                    "</div>" +
                    " </div>";
-        private const string _productOrderedBennerTemplateNone = "<div class='template' style='display:none;'>" +
+        private const string _productOrderedBennerTemplateNone = "<div class='template ordered{0}'  >" +
                   " <div class='span8'>" +
     " <div class='box_main_item'>" +
              " <img src='{5}' />" +
@@ -68,8 +70,7 @@ namespace TolokaStudio.Controllers
                   "   <h3>" +
                   "       {2}</h3>" +
                   "     <span>{3}</span>" +
-                   " <img src='{4}' />"+
-                  
+               
                   "  </div>" +
                   " </div>" +
                   " </a>" +
@@ -205,11 +206,12 @@ namespace TolokaStudio.Controllers
             Product product = new Product() { Name = model.Name, Price = model.Price, ImagePath = model.ImagePath, HtmlDetail = Server.HtmlEncode(model.HtmlDetail) };
             product.OwnerEmployee = EmployeeRepository.Get(e => e.Id.Equals(model.EmployeeId)).SingleOrDefault();
             product.Store=StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
-            
+          
             Product productSaved = ProductsRepository.SaveOrUpdate(product);
             product.Store.AddProduct(productSaved);
             
             CreateHtml(productSaved);
+
             ProductsRepository.SaveOrUpdate(productSaved);
 
         }
@@ -219,7 +221,7 @@ namespace TolokaStudio.Controllers
             product.HtmlBanner = Server.HtmlEncode(string.Format(_productBennerTemplate, product.Id, product.ImagePath,
                 product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
 
-          
+        
                  
        
         }
