@@ -5,7 +5,7 @@
 }
 <div class="container">
     <div class="row">
-     @if (Model.HtmlBanner != null)
+     @if (null!=Model)
        {<div class="row">
         @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
            

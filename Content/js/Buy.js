@@ -13,11 +13,14 @@ var Buyer = {
 
             dataType: "json",
             success: function (data) {
-               // window.location.reload(data);
                 if (data != null) {
-                   $(".ordered"+obj.title).show();
-                  $(".order" + obj.title).hide();
+                    window.location.reload(data.Url);
+                   
+                  
+                } else {
+                    $("#dialog-form").dialog("open");
                 }
+
             },
             failure: function () {
                 window.location.reload(true);
@@ -25,11 +28,21 @@ var Buyer = {
         });
     },
     init: function () {
-       
-        
-        $(".orderBtn")
-            .click(function () {
+    
+////        if ($(ids).length>0) {
+////        ids.each(function (i) {
+////            $(".ordered" + i).show();
+////            $(".order" + i).hide();
+////        });
+//        }
+//         for (var i = 0; i < data.id.length; i++) {
+//                            $(".ordered" + data.id[i]).show();
+//                            $(".order" + data.id[i]).hide();
+//                            
+//                        } 
+
+        $(".orderBtn").click(function () {
                 Buyer.buy(this);
-            });
+           });
     }
 };

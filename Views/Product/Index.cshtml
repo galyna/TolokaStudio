@@ -1,36 +1,20 @@
-﻿@model List<Core.Data.Entities.Product>
+﻿@model TolokaStudio.Models.ProductList
 <script src="/Content/js/buy.js"></script>
 <div class="container">
     <div class="row">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Products)
         {
 
-         
-            if(item.Ordered)
-            {
-               
-                @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBannerOrdered))
-            }
-               if( !item.Ordered)
-            {
-               
-                @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
-            }
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBannerOrderedNot));
+          
+          @Html.Hidden(item.HtmlBannerOrderedNot);
         }
     </div>
 </div>
 <script type="text/javascript">
 //<![CDATA[
-
     $(document).ready(function () {
-      
-            Buyer.init();
-       
-       
-
-
-
-
+           Buyer.init(); 
     });
 //]]>
 </script>

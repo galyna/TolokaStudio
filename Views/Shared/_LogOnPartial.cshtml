@@ -1,7 +1,7 @@
 ﻿
 @if(Request.IsAuthenticated) {
      
-      
+     <span>Привіт!   @User.Identity.Name</span> 
    
     if (User.IsInRole("Author"))
     {

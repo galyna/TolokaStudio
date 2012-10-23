@@ -145,7 +145,8 @@ namespace TolokaStudio.Controllers
             else if (CheckPassword(userdb.Password, model.Password))
             {
                 FormsAuthentication.SetAuthCookie(model.Email, false/* createPersistentCookie */);
-
+                userdb.Orders=null;
+                UserRepository.SaveOrUpdate(userdb);
                 if (userdb.Role.IsAdmin)
                 {
 

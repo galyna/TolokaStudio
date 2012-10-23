@@ -1,35 +1,52 @@
 ﻿@model TolokaStudio.Models.BascetModel
 @using ViewRes.Home
 <div class="container">
-    @if (ViewBag.Messege != null)
+    @if (Model.Message != null)
     {
         <div class="row">
-                <H5>
-@Html.Raw(ViewBag.Messege)
-        </H5>
-            
+            <h5>
+                @Html.Raw(Model.Message)
+            </h5>
         </div> 
     }
-    @foreach (var item in Model.Orders)
-    {   
+    else if (Model != null && Model.Orders != null && Model.Orders.Count > 0)
+    {
+       <div class="row">
+            <h5>
+                Відправте інформацію про замовлення Автору натиснувши 'Замовити'
+                Видаліть товар з кошика натиснувши 'Видалити'
+            </h5>
+        </div>     
+    }
+    else
+    {
+      <div class="row">
+            <h5>
+                Додайте товари в кошик через пункт меню Товари
+            </h5>
+        </div>   
+    }
+    @if (Model != null && Model.Orders != null && Model.Orders.Count > 0)
+    {
+        foreach (var item in Model.Orders)
+        {   
         <div class="row">
-         <div class="span9">
+            <div class="span9">
+                @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBannerOrderedNot))
+            </div>
+            <div class="span7">
+                @Html.TextArea(item.Id.ToString() + "item.Comments", item.Comments, new { @style = "resize: none;", @cols = 40, @rows = 20 })
+            </div>
+            <div class="span5">
+                <div class='span2 offset3'>
+                    @Html.ActionLink("Замовити", "MakeOrder", "Order", new { id = item.Id, comments = item.Comments }, null);
+                </div>
+                <div class='span2 offset3'>
+                    @Html.ActionLink("Видалити", "Delete", "Order", new { id = item.Id }, null);
+                </div>
+            </div>
+        </div> 
+        }
 
-           @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBanner))
-        </div> 
-           
-             <div class="span7">
-             <H5>
-Ви можете задати запитання автору щодо замовлення. Ми будемо вдячні якщо ви вкажете додаткові кантактні дані 
-для отримання товару поштою чи для обговорення деталей подальшої співпраці з автором.
-        </H5> 
-            @Html.TextArea(item.Id.ToString() + "item.Comments", item.Comments, new { width=300})
-        </div>
-         <div class="span5">
-             <div class='span2 offset3'>    @Html.ActionLink("Замовити", "MakeOrder", "Order", new { id = item.Id, comments = item.Comments }) </div>  
-        </div>  
-        </div> 
-        
-                            
     }
 </div>

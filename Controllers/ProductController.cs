@@ -7,10 +7,11 @@ using Core.Data.Entities;
 using TolokaStudio.Models;
 using Core.Data.Repository.Interfaces;
 using Core.Data.Repository;
+using System.Web.Security;
 
 namespace TolokaStudio.Controllers
 {
-    
+
     public class ProductController : Controller
     {
         private readonly IRepository<Store> StoreRepository;
@@ -23,12 +24,12 @@ namespace TolokaStudio.Controllers
         private const string DefaulImg = "/Content/img/imgThumbs/Fluor/" + DefaulImgName;
         private const string DefaulImgBascet = "/Content/img/q/shopping_cart_1.gif";
         private const string DefaulImgBascetChecked = "/Content/img/q/button_ok_4699.png";
-        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/"+ DefaulImgName;
-        private const string _productBennerTemplate =  "<div class='template order{0}'>" +
+        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/" + DefaulImgName;
+        private const string _productBennerTemplate = "<div class='template order{0}'>" +
 
                    " <div class='span8'>" +
-          	" <div class='box_main_item'>"+
-         
+            " <div class='box_main_item'>" +
+
 
                   " <img class='orderBtn' title='{0}' src='{4}' />" +
                   "  </div>" +
@@ -44,25 +45,25 @@ namespace TolokaStudio.Controllers
                    "   <h3>" +
                    "       {2}</h3>" +
                    "     <span>{3}</span>" +
-                  
-                 
+
+
                    "  </div>" +
                    " </div>" +
                    " </a>" +
                    "</div>" +
                    " </div>";
-        private const string _productOrderedBennerTemplateNone = "<div class='template ordered{0}'  >" +
+        private const string _productOrderedBennerTemplateNone = "<div class='template ordered{0}' style='diasplay:none;' >" +
                   " <div class='span8'>" +
     " <div class='box_main_item'>" +
              " <img src='{5}' />" +
-                  //" <img src='{4}' />" +
+            //" <img src='{4}' />" +
                   "  </div>" +
                   " <a href='/Order/Create?id={0}'>" +
                   " <div class='box_main_item'>" +
                   " <div class='box_main_item_img'>" +
                   "  <div class='box_main_item_img_bg'>" +
                   "     <span>Замовити</span>" +
-                 
+
                   "  </div>" +
                   " <img src='{1}' />" +
                   " </div>" +
@@ -70,7 +71,7 @@ namespace TolokaStudio.Controllers
                   "   <h3>" +
                   "       {2}</h3>" +
                   "     <span>{3}</span>" +
-               
+
                   "  </div>" +
                   " </div>" +
                   " </a>" +
@@ -80,7 +81,7 @@ namespace TolokaStudio.Controllers
                 " <div class='span8'>" +
   " <div class='box_main_item'>" +
            " <img src='{5}' />" +
-            //" <img src='{4}' />" +
+
                 "  </div>" +
                 " <a href='/Order/Create?id={0}'>" +
                 " <div class='box_main_item'>" +
@@ -120,21 +121,112 @@ namespace TolokaStudio.Controllers
         public ActionResult Index()
         {
             IList<Product> products = ProductsRepository.GetAll().ToList();
-            return View(products);
+            ProductList model = new ProductList();
+            model.Products = products.ToList<Product>();
+            model.ids = new int[50];
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
+                List<int> ids = new List<int>();
+                if (user != null)
+                {
+                    foreach (var item in user.Orders)
+                    {
+                        ids.Add(item.Product.Id);
+                        model.ids[item.Product.Id] = item.Product.Id;
+                    }
+
+                }
+                else
+                {
+
+
+                    int count = UserRepository.GetAll().Count();
+                    User userNew = new User();
+                    userNew.UserName = "Гість" + count;
+                    userNew.Email = "Гість" + count;
+                    FormsAuthentication.SignOut();
+                    FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
+                    UserRepository.SaveOrUpdate(userNew);
+                }
+
+
+            }
+            else
+            {
+
+                int count = UserRepository.GetAll().Count();
+                User userNew = new User();
+                userNew.UserName = "Гість" + count;
+                userNew.Email = "Гість" + count;
+                FormsAuthentication.SignOut();
+                FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
+                UserRepository.SaveOrUpdate(userNew);
+            }
+
+
+            return View(model);
         }
 
+
+        //
+        // GET: /Product/Details/5
+         [HttpPost]
+        public ActionResult Ordered()
+        {
+            List<int> ids = new List<int>();
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
+               
+                if (user != null)
+                {                   
+                    foreach (var item in user.Orders)
+                    {
+                        ids.Add(item.Product.Id);
+                    }
+
+                    return Json(new { Url = Request.UrlReferrer.AbsoluteUri, id = ids.ToArray() });
+                }
+                else
+                {
+
+                    AddUser();
+                }
+
+
+            }
+            else
+            {
+
+                AddUser();
+            }
+
+            return Json(new { Url = Request.UrlReferrer.AbsoluteUri, id = ids.ToArray() });
+        }
+
+        private void AddUser()
+        {
+            int count = UserRepository.GetAll().Count();
+            User userNew = new User();
+            userNew.UserName = "Гість" + count;
+            userNew.Email = "Гість" + count;
+            FormsAuthentication.SignOut();
+            FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
+            UserRepository.SaveOrUpdate(userNew);
+        }
         //
         // GET: /Product/Details/5
 
         public ActionResult Details(int id)
         {
-            if (id!=null)
+            if (id != null)
             {
                 Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
 
-                return View(product); 
+                return View(product);
             }
-          
+
 
             return null;
         }
@@ -159,15 +251,16 @@ namespace TolokaStudio.Controllers
         private ProductCreateModel CreateProductModel(int id)
         {
             List<Store> stores = StoreRepository.GetAll().ToList();
-           
+
             ProductCreateModel productCreateModel = new ProductCreateModel()
             {
                 HtmlBanner = string.Format(_productBennerTemplate, '0', DefaulImg, "Назва товару", "Ціна грн", DefaulImgBascet, DefaulImgBascetChecked),
                 HtmlDetail = string.Format(_productDetailTemplate, DefaulDetailImg),
+
                 ImagePath = DefaulImg,
                 Name = "Назва товару",
                 Price = 100,
-                EmployeeId = id,             
+                EmployeeId = id,
                 StoreID = stores.FirstOrDefault().Id
             };
             productCreateModel.staff = new Dictionary<int, string>();
@@ -184,20 +277,17 @@ namespace TolokaStudio.Controllers
         [HttpPost]
         public ActionResult Create(ProductCreateModel model)
         {
+            try
+            {
+                CreateProduct(model);
+                return RedirectToAction("Edit", "Employee");
+            }
+            catch
+            {
+                return View(model);
+            }
 
-      
-                try
-                {
 
-                    CreateProduct(model);
-                    return RedirectToAction("Edit", "Employee");
-                }
-                catch
-                {
-                    return View(model);
-                }
-            
-      
         }
 
         private void CreateProduct(ProductCreateModel model)
@@ -205,11 +295,11 @@ namespace TolokaStudio.Controllers
 
             Product product = new Product() { Name = model.Name, Price = model.Price, ImagePath = model.ImagePath, HtmlDetail = Server.HtmlEncode(model.HtmlDetail) };
             product.OwnerEmployee = EmployeeRepository.Get(e => e.Id.Equals(model.EmployeeId)).SingleOrDefault();
-            product.Store=StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
-          
+            product.Store = StoreRepository.Get(s => s.Id.Equals(model.StoreID)).SingleOrDefault();
+
             Product productSaved = ProductsRepository.SaveOrUpdate(product);
             product.Store.AddProduct(productSaved);
-            
+
             CreateHtml(productSaved);
 
             ProductsRepository.SaveOrUpdate(productSaved);
@@ -220,10 +310,11 @@ namespace TolokaStudio.Controllers
         {
             product.HtmlBanner = Server.HtmlEncode(string.Format(_productBennerTemplate, product.Id, product.ImagePath,
                 product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
+            product.HtmlBannerOrderedNot = Server.HtmlEncode(string.Format(_productBennerTemplate, product.Id, product.ImagePath,
+               product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
+            product.HtmlBannerOrdered = Server.HtmlEncode(string.Format(_productOrderedBennerTemplate, product.Id, product.ImagePath,
+                product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
 
-        
-                 
-       
         }
 
         private void SaveTemplate(ProductCreateModel model)
@@ -242,7 +333,19 @@ namespace TolokaStudio.Controllers
         {
             return View(ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
         }
+        public ActionResult StateBascetDeleted(int id)
+        {
 
+            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+            if (product != null)
+            {
+                product.HtmlBanner = product.HtmlBannerOrderedNot;
+                product.Ordered = false;
+                ProductsRepository.SaveOrUpdate(product);
+                return RedirectToAction("Index", "Bascet", new { message = "Ви видалили з корзини " + product.Name });
+            }
+            return null;
+        }
         //
         // POST: /Product/Delete/5
 

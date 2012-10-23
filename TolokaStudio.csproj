@@ -143,6 +143,7 @@
     <Compile Include="Models\Product\ProductCreateModel.cs" />
     <Compile Include="Models\Home\HomeModel.cs" />
     <Compile Include="Models\Product\ProductEditModel.cs" />
+    <Compile Include="Models\Product\ProductList.cs" />
     <Compile Include="Models\Store\StoreCreateModel.cs" />
     <Compile Include="Models\Store\StoreEditModel.cs" />
     <Compile Include="Models\Store\StoreIndexModel.cs" />

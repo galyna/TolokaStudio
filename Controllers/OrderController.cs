@@ -9,6 +9,7 @@ using Core.Data.Repository;
 using SumkaWeb.Models;
 using System.Net.Mail;
 using TolokaStudio.Common;
+using System.Web.Security;
 
 
 namespace SumkaWeb.Controllers
@@ -19,58 +20,7 @@ namespace SumkaWeb.Controllers
         private readonly IRepository<Product> ProductsRepository;
         private readonly IRepository<Employee> EmployeeRepository;
         private readonly IRepository<User> UserRepository;
- 
-        private const string DefaulImgBascetChecked = "/Content/img/q/button_ok_4699.png";
-        private const string _orderTemplate = "<div class='template ordered{0}' >" +
-                 " <div class='span8'>" +
-   " <div class='box_main_item'>" +
-            " <img src='{4}' />" +
-          
-                 "  </div>" +
-                 " <a href='/Order/Create?id={0}'>" +
-                 " <div class='box_main_item'>" +
-                 " <div class='box_main_item_img'>" +
-                 "  <div class='box_main_item_img_bg'>" +
-                 "     <span>Замовити</span>" +
 
-                 "  </div>" +
-                 " <img src='{1}' />" +
-                 " </div>" +
-                 " <div class='box_main_item_text'>" +
-                 "   <h3>" +
-                 "       {2}</h3>" +
-                 "     <span>{3}</span>" +
-
-                 "  </div>" +
-                 " </div>" +
-                 " </a>" +
-                 "</div>" +
-                 " </div>";
-        private const string _productOrderedBennerTemplateNone = "<div class='template ordered{0}' >" +
-                 " <div class='span8'>" +
-   " <div class='box_main_item'>" +
-            " <img src='{5}' />" +
-            //" <img src='{4}' />" +
-                 "  </div>" +
-                 " <a href='/Order/Create?id={0}'>" +
-                 " <div class='box_main_item'>" +
-                 " <div class='box_main_item_img'>" +
-                 "  <div class='box_main_item_img_bg'>" +
-                 "     <span>Замовити</span>" +
-
-                 "  </div>" +
-                 " <img src='{1}' />" +
-                 " </div>" +
-                 " <div class='box_main_item_text'>" +
-                 "   <h3>" +
-                 "       {2}</h3>" +
-                 "     <span>{3}</span>" +
-
-                 "  </div>" +
-                 " </div>" +
-                 " </a>" +
-                 "</div>" +
-                 " </div>";
 
 
         public OrderController()
@@ -99,70 +49,80 @@ namespace SumkaWeb.Controllers
 
 
 
-        [TolokaAuthorizeAsSimpleUserAttribute]
+
         [HttpPost]
         public ActionResult Create(NewOrder newOrder)
         {
-            User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
-            if (user != null)
+
+            Product product = ProductsRepository.Get(s => s.Id == newOrder.ProductId).SingleOrDefault();
+            if (product != null)
             {
-                Product product = ProductsRepository.Get(s => s.Id == newOrder.ProductId).SingleOrDefault();
-                product.Ordered = true;
-                ProductsRepository.SaveOrUpdate(product);
-                CreateHtml(product);
-                Order orcder = new Order() { Product = product, Employee = product.OwnerEmployee, Comments = "" };
-                orcder.User = user;
-                OrdersRepository.SaveOrUpdate(orcder);
-                return Json("//Product/Index");
+                User user = AddToBascet(product);
+                List<int> ids = new List<int>();
+                foreach (var item in user.Orders)
+                {
+                    ids.Add(item.Product.Id);
+                }
+                return Json(new { Url = Request.UrlReferrer.AbsoluteUri, id = ids.ToArray() });
             }
 
-            return RedirectToAction("LogOn", "Account");
+            return Json(new { Url = Request.UrlReferrer.AbsoluteUri });
         }
-        private void CreateHtml(Product product)
+
+        private User AddToBascet(Product product)
+        {
+            User user = CheckUserCanOrder(product);
+            Order order = AddOrderToBascet(user, product);
+
+            return user;
+        }
+
+        private User CheckUserCanOrder(Product product)
+        {
+            User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
+            if (user == null)
+            {
+                int count = UserRepository.GetAll().Count();
+                User userNew = new User();
+                userNew.UserName = "Гість" + count;
+                userNew.Email = "Гість" + count;
+                FormsAuthentication.SignOut();
+                FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
+                user = UserRepository.SaveOrUpdate(userNew);
+            }
+            else
+            {
+                FormsAuthentication.SignOut();
+                FormsAuthentication.SetAuthCookie(user.Email, false/* createPersistentCookie */);
+
+            }
+            return user;
+        }
+
+        private Order AddOrderToBascet(User user, Product product)
         {
 
+            Order order = new Order()
+            {
+                User = user,
+                Product = product,
+                Employee = product.OwnerEmployee,
+                Comments = "Ви можете задати запитання автору щодо замовлення. Ми будемо вдячні якщо ви вкажете додаткові кантактні дані для отримання товару поштою чи для обговорення деталей подальшої співпраці з автором."
+            };
 
-            product.HtmlBannerOrdered = Server.HtmlEncode(string.Format(_orderTemplate, product.Id, product.ImagePath,
-                  product.Name, product.Price + " грн.",  DefaulImgBascetChecked));
+            order = OrdersRepository.SaveOrUpdate(order);
 
+            user.AddOrder(order);
+            UserRepository.SaveOrUpdate(user);
 
+            return order;
         }
+
 
         public class NewOrder
         {
             public int ProductId { get; set; }
         }
-        //k
-        // POST: /Product/Create
-
-        //[HttpPost]
-        //public ActionResult Create(OrderCreateModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            Product product = ProductsRepository.Get(s => s.Id.Equals(model.ProductId)).SingleOrDefault();
-        //            Employee employee = EmployeeRepository.Get(s => s.Id.Equals(model.EmployeeId)).SingleOrDefault();
-
-        //            Order orcder = new Order() { Product = product, Employee = employee, Comments = model.ContactEmail };
-        //            OrdersRepository.SaveOrUpdate(orcder);
-
-
-
-
-        //            return RedirectToAction("Index", "Order");
-        //        }
-        //        catch
-        //        {
-        //            return View(model);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return View(model);
-        //    }
-        //}
 
         private static void NotificateEmployee(Order order)
         {
@@ -187,34 +147,48 @@ namespace SumkaWeb.Controllers
         {
             Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
             order.Comments = comments;
-            NotificateEmployee(order);
-            ViewBag.Messege= "Про ваше замовлення повідомлено автора. Скоро з вами сконтактуються.";
-            return RedirectToAction("Index", "Bascet");
+            User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
+
+            if (user != null && order != null)
+            {
+               
+
+                NotificateEmployee(order);
+                string success = "Про ваше замовлення :" + order.Product.Name
+                      + " повідомлено автора. Скоро з вами сконтактуються.";
+                user.DeleteOrder(order);
+                order.OrderDateTime = DateTime.Now.ToString();
+                user.OrdersHistory.Add(order);
+                UserRepository.SaveOrUpdate(user);
+                return RedirectToAction("Index", "Bascet", new { message = success });
+            }
+
+            return RedirectToAction("Index", "Bascet", new { message = "Повторіть замовлення" });
         }
         //
         // GET: /Product/Delete/5
 
         public ActionResult Delete(int id)
         {
-            return View(OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
-        }
-
-        //
-        // POST: /Product/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
             try
             {
-                OrdersRepository.Delete(OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
-                return RedirectToAction("Index", "Order");
+                Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+                if (order != null)
+                {
+                    Product p = order.Product;
+                    OrdersRepository.Delete(OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
+                    return RedirectToAction("StateBascetDeleted", "Product", new { id = p.Id });
+                }
+
+
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Bascet");
             }
+            return RedirectToAction("Index", "Bascet");
         }
+
 
 
     }

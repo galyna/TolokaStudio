@@ -43,7 +43,7 @@
         height: 280,
         width: 350,
         modal: true,
-        title: "Вхід",
+        title: "В Корзину",
         buttons: {
             "Увійти": function () {
                 var bValid = true;
@@ -94,9 +94,5 @@
         }
     });
 
-    $("#create-user")
-            .button()
-            .click(function () {
-                $("#dialog-form").dialog("open");
-            });
+
 });
