@@ -119,7 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\HtmlExtensions.cs" />
-    <Compile Include="Common\TolokaAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CombinedHTMLController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
@@ -225,7 +224,6 @@
     <Content Include="Content\js\combined_.js" />
     <Content Include="Content\js\events_init.js" />
     <EmbeddedResource Include="Content\js\menu_full_width.js" />
-    <Content Include="Content\js\log_in_dialog.js" />
     <Content Include="Content\js\register.js" />
     <Content Include="Content\js\scroller_load_img.js" />
     <Content Include="Content\style\admin-style.css" />
@@ -422,10 +420,6 @@
     <Content Include="Scripts\jquery\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\jquery\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Account\ChangePassword.cshtml" />
-    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
-    <Content Include="Views\Account\LogOn.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
@@ -479,15 +473,12 @@
     <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Employee\Delete.cshtml" />
     <Content Include="Views\Order\Create.cshtml" />
-    <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Product\web.config" />
     <Content Include="Views\Order\web.config" />
     <Content Include="Views\Employee\EditDetails.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="Views\Shared\_RegisterPartial.cshtml" />
     <Content Include="Views\Shared\_LogOn.cshtml" />
-    <Content Include="Views\Shared\_Bascet.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Order\OrderMaked.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\web.config" />

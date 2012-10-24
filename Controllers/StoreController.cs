@@ -53,14 +53,21 @@ namespace TolokaStudio.Controllers
             ProductsRepository = new Repository<Product>();
             EmployeeRepository = new Repository<Employee>();
         }
-        [TolokaAuthorizeAsAdminAttribute]
+      
         public ActionResult Index()
         {
-            StoreIndexModel storeIndexModel = new StoreIndexModel();
-            storeIndexModel.Stores = StoreRepository.GetAll().ToList();
-            storeIndexModel.Users = UserRepository.GetAll().ToList();
-            storeIndexModel.Employees = EmployeeRepository.GetAll().ToList(); 
-            return View(storeIndexModel);
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user.Role.IsAdmin)
+            {
+
+                StoreIndexModel storeIndexModel = new StoreIndexModel();
+                storeIndexModel.Stores = StoreRepository.GetAll().ToList();
+                storeIndexModel.Users = UserRepository.GetAll().ToList();
+                storeIndexModel.Employees = EmployeeRepository.GetAll().ToList();
+                return View(storeIndexModel); 
+            }
+            
+            return null;
         }
         //
         // GET: /Storage/Details/5
@@ -73,7 +80,7 @@ namespace TolokaStudio.Controllers
 
         //
         // GET: /Storage/Create
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult Create()
         {
             return View(new StoreCreateModel()
@@ -87,7 +94,7 @@ namespace TolokaStudio.Controllers
 
         //
         // POST: /Storage/Create
-        [TolokaAuthorizeAsAdminAttribute]
+  
         [HttpPost]
         public ActionResult Create(StoreCreateModel store)
         {
@@ -115,7 +122,7 @@ namespace TolokaStudio.Controllers
 
         //
         // GET: /Storage/Edit/5
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult Edit(int id)
         {
             StoreEditModel model = StoreToEditModel(id);
@@ -125,7 +132,7 @@ namespace TolokaStudio.Controllers
 
         //
         // POST: /Storage/Edit/5
-        [TolokaAuthorizeAsAdminAttribute]
+     
         [HttpPost]
         public ActionResult Edit(StoreEditModel model)
         {
@@ -151,17 +158,13 @@ namespace TolokaStudio.Controllers
             }
         }
 
-        //
-        // GET: /Storage/Delete/5
-        [TolokaAuthorizeAsAdminAttribute]
+
+
         public ActionResult Delete(int id)
         {
             return View(StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
         }
 
-        //
-        // POST: /Storage/Delete/5
-        [TolokaAuthorizeAsAdminAttribute]
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
@@ -176,50 +179,46 @@ namespace TolokaStudio.Controllers
             }
         }
 
-        //
-        // GET: /Storage/EditProduct/5
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult EditProduct(int id)
         {
             return RedirectToAction("Edit", "Product", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult AddProduct(int id)
         {
             return RedirectToAction("Create", "Product", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult DeleteProduct(int id)
         {
             return RedirectToAction("Delete", "Product", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult EditEmployee(int id)
         {
             return RedirectToAction("EditAuthor", "Employee", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult AddEmployee(int id)
         {
             return RedirectToAction("Create", "Employee", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult DeleteEmployee(int id)
         {
             return RedirectToAction("Delete", "Employee", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult SetAsAdmin(int id)
         {
             return RedirectToAction("Admin", "Account", new { id = id });
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult SetAsAuthor(int id)
         {
             return RedirectToAction("Author", "Account", new { id = id });
         }
-
-
 
         public ActionResult ImageUpload()
         {

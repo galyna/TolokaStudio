@@ -101,18 +101,16 @@ namespace TolokaStudio.Controllers
             }
 
         }
-        [TolokaAuthorizeAsAuthorAttribute]
+
         public ActionResult Edit()
         {
             EmployeeEditModel model = EmployeeToEditModel();
-
             return View(model);
         }
-        [TolokaAuthorizeAsAdminAttribute]
+
         public ActionResult EditAuthor(int id)
         {
             EmployeeEditModel model = EmployeeToEditModel(id);
-
             return View("Edit", model);
         }
         //
@@ -148,10 +146,15 @@ namespace TolokaStudio.Controllers
         {
             return View(EmployeeRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
         }
-        [TolokaAuthorizeAsAuthorAttribute]
+     
         public ActionResult EditProduct(int id)
         {
-            return RedirectToAction("Edit", "Product", new { id = id });
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user.Role.IsAdmin || user.Role.IsAuthor)
+            {
+                return RedirectToAction("Edit", "Product", new { id = id });  
+            }
+            return null;
         }
         //
         // POST: /Employee/Delete/5
@@ -162,41 +165,27 @@ namespace TolokaStudio.Controllers
             try
             {
                 Employee employee = EmployeeRepository.Get(s => s.Id == id).SingleOrDefault();
-                if (employee != null)
-                {
-                    employee.HtmlBanner = null;
-                    List<Product> Products = ProductsRepository.Get(p => p.OwnerEmployee.Id == employee.Id).ToList();
-                    foreach (var item in Products)
-                    {
-                        ProductsRepository.Delete(item);
-                    }
-                    EmployeeRepository.SaveOrUpdate(employee);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View();
-                }
-
+                EmployeeRepository.Delete(employee);
+                return RedirectToAction("Index");
             }
             catch
             {
                 return View();
             }
         }
-        [TolokaAuthorizeAsAuthorAttribute]
+
         public ActionResult DeleteProduct(int id)
         {
             return RedirectToAction("Delete", "Product", new { id = id });
         }
+
         private Employee EditModelToEmployee(EmployeeEditModel employeeEditModel)
         {
             Employee employee = EmployeeRepository.Get(s => s.Id.Equals(employeeEditModel.Id)).SingleOrDefault();
             employee.FirstName = employeeEditModel.FirstName;
             employee.LastName = employeeEditModel.LastName;
             employee.ImagePath = employeeEditModel.ImagePath;
-            employee.HtmlBanner = Server.HtmlEncode(string.Format(_authorTemplate, employeeEditModel.Id,
-             employeeEditModel.ImagePath, employeeEditModel.FirstName, employeeEditModel.LastName));
+            employee.HtmlBanner = Server.HtmlEncode(string.Format(_authorTemplate, employeeEditModel.Id, employeeEditModel.ImagePath, employeeEditModel.FirstName, employeeEditModel.LastName));
             employee.HtmlDetail = Server.HtmlEncode(employeeEditModel.HtmlDetail);
             return employee;
         }
@@ -210,27 +199,37 @@ namespace TolokaStudio.Controllers
             if (employee.HtmlBanner == null)
             {
 
-                employeeEditModel.FirstName = employee.FirstName;
-                employeeEditModel.LastName = " Прізвище";
-                employeeEditModel.ImagePath = DefaulImg;
-                employeeEditModel.Email = employee.Email;
-                employeeEditModel.Id = employee.Id;
-                employeeEditModel.HtmlBanner = string.Format(_authorTemplate, employee.Id, DefaulImg, employeeEditModel.FirstName, employeeEditModel.Email);
-                employeeEditModel.Products = new List<Product>();
+                CreateEditModel(employee, employeeEditModel);
             }
             else
             {
-                employeeEditModel.ImagePath = employee.ImagePath;
-                employeeEditModel.FirstName = employee.FirstName;
-                employeeEditModel.LastName = employee.LastName;
-                employeeEditModel.HtmlBanner = HttpUtility.HtmlDecode(employee.HtmlBanner);
-                employeeEditModel.HtmlDetail = HttpUtility.HtmlDecode(employee.HtmlDetail);
-                employeeEditModel.Email = employee.Email;
-                employeeEditModel.Id = employee.Id;
-                employeeEditModel.Products = ProductsRepository.Get(p => p.OwnerEmployee.Id == employee.Id).ToList();
+                EmployeeToModel(employee, employeeEditModel);
 
             }
             return employeeEditModel;
+        }
+
+        private static void CreateEditModel(Employee employee, EmployeeEditModel employeeEditModel)
+        {
+            employeeEditModel.FirstName = employee.FirstName;
+            employeeEditModel.LastName = " Прізвище";
+            employeeEditModel.ImagePath = DefaulImg;
+            employeeEditModel.Email = employee.Email;
+            employeeEditModel.Id = employee.Id;
+            employeeEditModel.HtmlBanner = string.Format(_authorTemplate, employee.Id, DefaulImg, employeeEditModel.FirstName, employeeEditModel.Email);
+            employeeEditModel.Products = new List<Product>();
+        }
+
+        private void EmployeeToModel(Employee employee, EmployeeEditModel employeeEditModel)
+        {
+            employeeEditModel.ImagePath = employee.ImagePath;
+            employeeEditModel.FirstName = employee.FirstName;
+            employeeEditModel.LastName = employee.LastName;
+            employeeEditModel.HtmlBanner = HttpUtility.HtmlDecode(employee.HtmlBanner);
+            employeeEditModel.HtmlDetail = HttpUtility.HtmlDecode(employee.HtmlDetail);
+            employeeEditModel.Email = employee.Email;
+            employeeEditModel.Id = employee.Id;
+            employeeEditModel.Products = ProductsRepository.Get(p => p.OwnerEmployee.Id == employee.Id).ToList();
         }
 
         private EmployeeEditModel EmployeeToEditModel(int id)

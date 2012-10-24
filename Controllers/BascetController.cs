@@ -22,7 +22,7 @@ namespace TolokaStudio.Controllers
             UserRepository = new Repository<User>();
         }
 
-        public ActionResult Index(string message)
+        public ActionResult Index()
         {
             BascetModel bascetModel = new BascetModel();
             var currentUser = base.ControllerContext.HttpContext.User.Identity.Name;
@@ -30,18 +30,17 @@ namespace TolokaStudio.Controllers
             {
 
                 User user = UserRepository.Get(u => u.UserName == currentUser).SingleOrDefault();
-                user.Message = message;
+
                 if (user == null)
                 {
                     return RedirectToAction("Index", "Product");
                 }
                 else
                 {
-                    bascetModel.Message = string.IsNullOrEmpty(message) ? message : user.Message; 
+
                     bascetModel.Orders = user.Orders;
                     bascetModel.User = user;
-                    bascetModel.Comments = user.Orders.Any()?user.Orders.LastOrDefault().Comments:"";
-                    bascetModel.Order = user.Orders.Any() ? user.Orders.LastOrDefault().Id : 0; 
+                    bascetModel.Comments = user.Orders.Any()?user.Orders.LastOrDefault().Comments:"";  
                     return View(bascetModel);
                 }             
             }

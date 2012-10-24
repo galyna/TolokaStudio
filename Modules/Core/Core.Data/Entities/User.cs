@@ -12,7 +12,6 @@ namespace Core.Data.Entities
         public virtual string UserName { get; set; }
         public virtual string Email { get; set; }
         public virtual string Password { get; set; }
-        public virtual string Message { get; set; }
         public virtual Role Role { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual IList<Order> Orders { get; set; }
@@ -33,13 +32,11 @@ namespace Core.Data.Entities
         public virtual Order AddOrdersHistory(Order order)
         {
             OrdersHistory.Add(order);
-            order.User = this;
             return order;
         }
         public virtual void CleanOrders()
         {
             Orders.Clear();
-
         }
         public virtual Order DeleteOrder(Order order)
         {

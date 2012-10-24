@@ -5,12 +5,10 @@
 }
 <div class="container">
     <div class="row">
-     @if (null!=Model)
-       {<div class="row">
-        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
-           
-        </div>
-       }
-       
+        @if (Model != null)
+        {<div class="row">
+           @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlDetail))
+       </div>
+        }
     </div>
 </div>

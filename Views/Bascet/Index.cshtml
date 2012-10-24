@@ -2,55 +2,44 @@
 @using ViewRes.Home
 <script src="/Content/js/Buy.js"></script>
 <div class="container">
-    @if (Model.Message != null)
-    {
-        <div class="row">
-            <h5 class="message">
-                @Html.Raw(Model.Message)
-            </h5>
-        </div> 
-    }
-    else if (Model != null && Model.Orders != null && Model.Orders.Count > 0)
-    {
-       <div class="row">
-            <h5>
-                Відправте інформацію про замовлення Автору натиснувши 'Замовити'
-                Видаліть товар з кошика натиснувши 'Видалити'
-            </h5>
-        </div>     
-    }
-    else
-    {
-      <div class="row">
-            <h5>
-                Додайте товари в кошик через пункт меню Товари
-            </h5>
-        </div>   
-    }
-    @if (Model != null && Model.Orders != null && Model.Orders.Count > 0)
-    {
-        foreach (var item in Model.Orders)
-        {   
-        <div class="row">
-            <div class="span9">
-                @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBannerOrderedNot))
-            </div>
-            <div class="span7">
-             @Html.Hidden(item.Id + "Id", item.Id)
-          Введідь  адресу вашої пошти  Введідь  адресу вашої пошти  @Html.TextArea(item.Id+"email",item.Email)
-             @Html.TextArea(item.Id + "comments", item.Comments)
-            </div>
-            <div class="span5">
-                <div class='span2 offset3'>
-             <button id="make-orde" onclick="Buyer.makeaOrder('@item.Id');">Замовити</button>
-                 
+    <div class="container">
+        @if (Model != null && Model.Orders != null && Model.Orders.Count > 0)
+        {
+             <div class="row">
+                <h5>
+                    Відправте інформацію про замовлення Автору натиснувши 'Замовити' Видаліть товар
+                    з кошика натиснувши 'Видалити'
+                </h5>
+            </div>    
+            foreach (var item in Model.Orders)
+            {   
+            <div class="row">
+                <div class="span9">
+                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBannerOrdered))
                 </div>
-                <div class='span2 offset3'>
-                    @Html.ActionLink("Видалити", "Delete", "Order", new { id = item.Id }, null)
+                <div class="span7">
+                    @Html.Hidden(item.Id + "Id", item.Id)
+                    Введідь адресу вашої пошти @Html.TextArea(item.Id + "email", item.Email,new { @style = "resize: none;", @cols = 40, @rows = 2 })
+                    @Html.TextArea(item.Id + "comments", item.Comments, new { @style = "resize: none;", @cols = 40, @rows = 17 })
                 </div>
-            </div>
-        </div> 
-        }
+                <div class="span5">
+                    <div class='span2 offset3'>
+                        <button id="make-orde" onclick="Buyer.makeaOrder('@item.Id');">
+                            Замовити</button>
+                    </div>
+                    <div class='span2 offset3'>
+                        @Html.ActionLink("Видалити", "Delete", "Order", new { id = item.Id }, null)
+                    </div>
+                </div>
+            </div> 
+            }
 
-    }
-</div>
+        }else
+        {
+            <div class="row">
+                <h5>
+                    Додайте товари в кошик через пункт меню Товари
+                </h5>
+            </div>   
+        }
+    </div>

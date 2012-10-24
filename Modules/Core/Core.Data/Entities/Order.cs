@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Core.Data.Entities
 {
+
    public class Order
     {
         public virtual int Id { get; protected set; }
@@ -12,9 +13,9 @@ namespace Core.Data.Entities
         public virtual Employee Employee { get; set; }
         public virtual User User { get; set; }
         public virtual string Comments { get; set; }
-        public virtual bool Ordered { get; set; }
-        public virtual string OrderDateTime { get; set; }
+        public virtual string ProcessDateTime { get; set; }
         public virtual string Email { get; set; }
+        public virtual string Status { get; set; }
         
     }
 }

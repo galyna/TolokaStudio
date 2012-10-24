@@ -20,6 +20,8 @@ namespace TolokaStudio.Controllers
     {
         private readonly IRepository<User> UserRepository;
         private readonly IRepository<Employee> EmployeeRepository;
+        private const string DefaulAuthorCbinet = "\\Employee\\Edit";
+        private const string DefaulAdminCbinet = "\\Store\\Index";
         private const string DefaulImg = "/Content/img/_C3D9074.png";
         private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/Coffe.png";
         private const string _rootImagesFolderPath = "/Content/img/";
@@ -49,7 +51,7 @@ namespace TolokaStudio.Controllers
             EmployeeRepository = new Repository<Employee>();
         }
 
-        [TolokaAuthorizeAsAdminAttribute]
+  
         public ActionResult Admin(int id)
         {
             User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
@@ -57,15 +59,16 @@ namespace TolokaStudio.Controllers
             {
                 user.Role.IsAdmin = true;
                 UserRepository.SaveOrUpdate(user);
+                return RedirectToAction("Index", "Home");
             }
-
-            return RedirectToAction("Index", "Store");
+            return null;            
         }
-        [TolokaAuthorizeAsAdminAttribute]
+       
         public ActionResult Author(int id)
         {
             User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
-           
+            if (!user.Role.IsAdmin)
+            {
                 user.Role.IsAuthor = true;
                 Employee employee = new Employee();
                 employee.Email = user.Email;
@@ -74,63 +77,20 @@ namespace TolokaStudio.Controllers
                 Employee employeeSaved = EmployeeRepository.SaveOrUpdate(employee);
                 user.Employee = employeeSaved;
                 UserRepository.SaveOrUpdate(user);
-           
-            return RedirectToAction("Index", "Store");
-        }
-        //
-        // GET: /Account/LogOn
 
-        public ActionResult LogOn()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Account/LogOn
-
-        [HttpPost]
-        public ActionResult LogOn(LogOnModel model)
-        {
-            User userdb = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
-            if (userdb != null)
-            {
-                userdb.Email = model.UserName;
-                userdb.UserName = model.UserName + UserRepository.GetAll().Count();
-                if (!UserRepository.GetAll().Where(u=>u.UserName==model.UserName).Any())
-                {
-                    UserRepository.SaveOrUpdate(userdb);
-                }
-                else
-                {
-                    userdb.UserName = model.UserName + UserRepository.GetAll().Count()+10;
-                }
-               
-                FormsAuthentication.SetAuthCookie(userdb.UserName, false/* createPersistentCookie */);
-                BascetModel bascetModel = new BascetModel();
-                return Json("\\Basket");
-
-
-
+                return RedirectToAction("Index", "Store");
             }
-            return RedirectToAction("Index", "Product");
+            return null; 
         }
-
-
-
-
+     
         //
         // GET: /Account/LogOff
 
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-
-            return RedirectToAction("Index", "Product");
+            return RedirectToAction("Index", "Home");
         }
-
-
-
-
 
         [HttpPost]
         public JsonResult CreateUser(UserCreate model)
@@ -149,9 +109,17 @@ namespace TolokaStudio.Controllers
                 if (model.Email == "galynavistovska@gmail.com")
                 {
                     user.Role.IsAdmin = true;
-                    return Json("\\Store\\Index");
+                    UserRepository.SaveOrUpdate(user);
+                    return Json(DefaulAdminCbinet);
                 }
-              
+                if (model.Email == "g@gmail.com")
+                {
+                    user.Role.IsAuthor= true;
+                    UserRepository.SaveOrUpdate(user);
+                    return Json(DefaulAuthorCbinet);
+                }
+
+
             }
             else if (CheckPassword(userdb.Password, model.Password))
             {
@@ -160,71 +128,17 @@ namespace TolokaStudio.Controllers
                 UserRepository.SaveOrUpdate(userdb);
                 if (userdb.Role.IsAdmin)
                 {
-
-                    return Json("\\Store\\Index");
+                    return Json(DefaulAdminCbinet);
                 }
                 if (userdb.Role.IsAuthor)
                 {
-                    return Json("\\Employee\\Edit");
-                   
+                    return Json(DefaulAuthorCbinet);                
                 }
+               
             }
-            return Json("\\Home\\Category");
+            return Json("\\");
         }
-        //
-        // GET: /Account/ChangePassword
-
-        [TolokaAuthorizeAsSimpleUserAttribute]
-        public ActionResult ChangePassword()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Account/ChangePassword
-
-        [TolokaAuthorizeAsSimpleUserAttribute]
-        [HttpPost]
-        public ActionResult ChangePassword(ChangePasswordModel model)
-        {
-            if (ModelState.IsValid)
-            {
-
-                // ChangePassword will throw an exception rather
-                // than return false in certain failure scenarios.
-                bool changePasswordSucceeded = false;
-
-                var currentUser = User.Identity.Name;
-                User user = UserRepository.Get(u => u.UserName == currentUser).SingleOrDefault();
-                if (user != null && CheckPassword(user.Password, model.OldPassword))
-                {
-                    user.Password = EncodePassword(model.NewPassword);
-                    UserRepository.SaveOrUpdate(user);
-                    changePasswordSucceeded = true;
-                }
-
-                if (changePasswordSucceeded)
-                {
-                    return RedirectToAction("ChangePasswordSuccess");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-                }
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        //
-        // GET: /Account/ChangePasswordSuccess
-
-        public ActionResult ChangePasswordSuccess()
-        {
-            return View();
-        }
-
+       
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {

@@ -41,8 +41,7 @@ var Buyer = {
             dataType: "json",
              success: function (data) {
                 if (data != null) {
-                    window.location.reload(data);
-
+                 location.href=  data;
 
                 } 
 

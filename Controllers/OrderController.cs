@@ -21,6 +21,7 @@ namespace SumkaWeb.Controllers
         private readonly IRepository<Product> ProductsRepository;
         private readonly IRepository<Employee> EmployeeRepository;
         private readonly IRepository<User> UserRepository;
+        private static string DefaultComments = "Ви можете задати запитання автору щодо замовлення. Ми будемо вдячні якщо ви вкажете додаткові кантактні дані для отримання товару поштою чи для обговорення деталей подальшої співпраці з автором.";
 
 
 
@@ -32,11 +33,6 @@ namespace SumkaWeb.Controllers
             UserRepository = new Repository<User>();
         }
 
-        public ActionResult Index()
-        {
-            IList<Order> orders = OrdersRepository.GetAll().ToList();
-            return View(orders);
-        }
 
 
         [HttpPost]
@@ -72,7 +68,7 @@ namespace SumkaWeb.Controllers
                 User = user,
                 Product = product,
                 Employee = product.OwnerEmployee,
-                Comments = "Ви можете задати запитання автору щодо замовлення. Ми будемо вдячні якщо ви вкажете додаткові кантактні дані для отримання товару поштою чи для обговорення деталей подальшої співпраці з автором."
+                Comments = DefaultComments
             };
 
             order = OrdersRepository.SaveOrUpdate(order);
@@ -98,57 +94,61 @@ namespace SumkaWeb.Controllers
 
             mail.From = new MailAddress("order@tolokastudio.pp.ua");
             mail.To.Add(order.Employee.Email);
-            mail.Subject = "new order";
-            mail.Body = "Your product " + order.Product.Name + " was ordered. Please, contact your customer."
-                + "\r\nCustomer email: " + order.Comments;
-
+            mail.Subject = "Order from " + order.Email;
+            mail.Body = @"Your product " + order.Product.Name + " was ordered. Please, contact your customer."
+                + "\\r\\n Customer email: " + order.Email+ " on "+order.ProcessDateTime;
+            if (order.Comments != DefaultComments)
+            {
+                mail.Body = mail.Body + "Customer added Comments." + order.Comments;
+            }
             SmtpServer.Send(mail);
         }
-        public class OrderMaker
+        public class OrderMakerModel
         {
             public int OrderId { get; set; }
             public string Comments { get; set; }
             public string Email { get; set; }
         }
-        // GET: /Product/Create/5
+        // GET: /Product/MakeOrder
         [HttpPost]
-        public ActionResult MakeOrder(OrderMaker model)
+        public ActionResult MakeOrder(OrderMakerModel model)
         {
             Order order = OrdersRepository.Get(s => s.Id.Equals(model.OrderId)).SingleOrDefault();
             order.Comments = model.Comments;
             User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
             string success = "Про ваше замовлення :" + order.Product.Name
                  + " повідомлено автора. Скоро з вами сконтактуються.";
+            string fail = "Нажаль спроба замовлення " + order.Product.Name
+                 + "невдала.";
             BascetModel bascetModel = new BascetModel();
 
             if (order != null && IsValid(user.Email))
             {
+                order.ProcessDateTime = DateTime.Now.ToString();
+                order.Status = "Ordered";
+                order = OrdersRepository.SaveOrUpdate(order);
                 NotificateEmployee(order);
                 user.DeleteOrder(order);
-                user.Message = success;
-                order.OrderDateTime = DateTime.Now.ToString();
                 user.OrdersHistory.Add(order);
                 UserRepository.SaveOrUpdate(user);
-                bascetModel.Message = success;
-                bascetModel.Orders = user.Orders;
-                return Json("\\Order\\OrderMaked?id=" + order.Id);
+
+
+
+                return Json("\\Order\\OrderMaked?message=" + success);
 
             }
             else
             {
-                return null;
+                return Json("\\Order\\OrderMaked?message=" + fail);
             }
         }
 
-        public ActionResult OrderMaked(int id)
+        public ActionResult OrderMaked(string message)
         {
-            string success = "Про ваше замовлення :" + OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault().Product.Name
-                   + " повідомлено автора. Скоро з вами сконтактуються.";
-
-            ViewBag.Message = success;
+            ViewBag.Message = message;
             return View();
         }
-        public bool IsValid(string emailaddress)
+        private bool IsValid(string emailaddress)
         {
             try
             {
@@ -167,14 +167,27 @@ namespace SumkaWeb.Controllers
         {
             try
             {
+                User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
                 Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-                OrdersRepository.Delete(OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
+                string success = "Успішно видалено " + order.Product.Name + " з кошика";
 
-                return RedirectToAction("Index", "Bascet", new { message = "Успішно вдалено " + order.Product.Name + " з кошика" });
+                if (order != null)
+                {
+                    order.ProcessDateTime = DateTime.Now.ToString();
+                    order.Status = "Ordered";
+                    order = OrdersRepository.SaveOrUpdate(order);
+                    user.DeleteOrder(order);
+                    UserRepository.SaveOrUpdate(user);
+                }
+                ViewBag.Message = success;
+                return View("OrderMaked");
+
             }
             catch
             {
-                return RedirectToAction("Index", "Bascet", new { message = "" });
+                ViewBag.Message = "Не вдалось видалити товар з корзини";
+                return View("OrderMaked");
+
             }
 
         }

@@ -20,18 +20,14 @@ namespace TolokaStudio.Controllers
         private readonly IRepository<Employee> EmployeeRepository;
         private readonly IRepository<User> UserRepository;
         private const string DefaulImgName = "Coffe.png";
-        public const string HtmlBannerOrdered = _productOrderedBennerTemplateNone;
         private const string DefaulImg = "/Content/img/imgThumbs/Fluor/" + DefaulImgName;
         private const string DefaulImgBascet = "/Content/img/q/shopping_cart_1.gif";
         private const string DefaulImgBascetChecked = "/Content/img/q/button_ok_4699.png";
         private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/" + DefaulImgName;
         private const string _productBennerTemplate = "<div class='template order{0}'>" +
-
                    " <div class='span8'>" +
-            " <div class='box_main_item'>" +
-
-
-                  " <img class='orderBtn' title='{0}' src='{4}' />" +
+                " <div class='box_main_item'>" +
+          " <img class='orderBtn' title='{0}' src='{4}' />" +
                   "  </div>" +
                    " <a href='/Product/Details?id={0}'>" +
                    " <div class='box_main_item'>" +
@@ -45,25 +41,45 @@ namespace TolokaStudio.Controllers
                    "   <h3>" +
                    "       {2}</h3>" +
                    "     <span>{3}</span>" +
-
-
                    "  </div>" +
                    " </div>" +
                    " </a>" +
                    "</div>" +
                    " </div>";
-        private const string _productOrderedBennerTemplateNone = "<div class='template ordered{0}' style='diasplay:none;' >" +
+
+        private const string _productBennerVisibilityNone = "<div class='template order{0}' style='diasplay:none;'>" +
+                   " <div class='span8'>" +
+                " <div class='box_main_item'>" +
+          " <img class='orderBtn' title='{0}' src='{4}' />" +
+                  "  </div>" +
+                   " <a href='/Product/Details?id={0}'>" +
+                   " <div class='box_main_item'>" +
+                   " <div class='box_main_item_img'>" +
+                   "  <div class='box_main_item_img_bg'>" +
+                   "     <span>Детальніше</span>" +
+                   "  </div>" +
+                   " <img src='{1}' />" +
+                   " </div>" +
+                   " <div class='box_main_item_text'>" +
+                   "   <h3>" +
+                   "       {2}</h3>" +
+                   "     <span>{3}</span>" +
+                   "  </div>" +
+                   " </div>" +
+                   " </a>" +
+                   "</div>" +
+                   " </div>" +
+
+                   "<div class='template ordered{0}' style='diasplay:none;' >" +
                   " <div class='span8'>" +
-    " <div class='box_main_item'>" +
+                  " <div class='box_main_item'>" +
              " <img src='{5}' />" +
-            //" <img src='{4}' />" +
                   "  </div>" +
                   " <a href='/Order/Create?id={0}'>" +
                   " <div class='box_main_item'>" +
                   " <div class='box_main_item_img'>" +
                   "  <div class='box_main_item_img_bg'>" +
                   "     <span>Замовити</span>" +
-
                   "  </div>" +
                   " <img src='{1}' />" +
                   " </div>" +
@@ -71,48 +87,42 @@ namespace TolokaStudio.Controllers
                   "   <h3>" +
                   "       {2}</h3>" +
                   "     <span>{3}</span>" +
-
                   "  </div>" +
                   " </div>" +
                   " </a>" +
                   "</div>" +
                   " </div>";
-        private const string _productOrderedBennerTemplate = "<div class='template' style='display:none;'>" +
+        private const string _productOrderedBennerTemplate = "<div class='template' >" +
                 " <div class='span8'>" +
-  " <div class='box_main_item'>" +
+                 " <div class='box_main_item'>" +
            " <img src='{5}' />" +
-
                 "  </div>" +
                 " <a href='/Order/Create?id={0}'>" +
                 " <div class='box_main_item'>" +
                 " <div class='box_main_item_img'>" +
                 "  <div class='box_main_item_img_bg'>" +
                 "     <span>Замовити</span>" +
-
                 "  </div>" +
-                " <img src='{1}' />" +
+          " <img src='{1}' />" +
                 " </div>" +
                 " <div class='box_main_item_text'>" +
                 "   <h3>" +
                 "       {2}</h3>" +
                 "     <span>{3}</span>" +
-                 " <img src='{4}' />" +
-
                 "  </div>" +
                 " </div>" +
                 " </a>" +
                 "</div>" +
                 " </div>";
-        private const string _productDetailTemplate =
-             "<div class='span24'>" +
-       " <img src='{0}' /></div>" +
 
-         " </div>";
+        private const string _productDetailTemplate =
+             "<div class='span10'>" +
+       " <img src='{0}' /></div>" +
+                  " </div>";
 
         public ProductController()
         {
             StoreRepository = new Repository<Store>();
-            WebTemplateRepository = new Repository<WebTemplate>();
             ProductsRepository = new Repository<Product>();
             EmployeeRepository = new Repository<Employee>();
             UserRepository = new Repository<User>();
@@ -126,26 +136,14 @@ namespace TolokaStudio.Controllers
             return View(model);
         }
 
-
-       
         //
         // GET: /Product/Details/5
 
         public ActionResult Details(int id)
         {
-            if (id != null)
-            {
-                Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-
-                return View(product);
-            }
-
-
-            return null;
+            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+            return View(product);
         }
-
-
-
         //
         // GET: /Product/Create/5
 
@@ -199,8 +197,6 @@ namespace TolokaStudio.Controllers
             {
                 return View(model);
             }
-
-
         }
 
         private void CreateProduct(ProductCreateModel model)
@@ -213,32 +209,22 @@ namespace TolokaStudio.Controllers
             Product productSaved = ProductsRepository.SaveOrUpdate(product);
             product.Store.AddProduct(productSaved);
 
-            CreateHtml(productSaved);
+            CreateHtml(ref productSaved);
 
             ProductsRepository.SaveOrUpdate(productSaved);
 
         }
 
-        private void CreateHtml(Product product)
+        private void CreateHtml(ref Product product)
         {
-            product.HtmlBanner = Server.HtmlEncode(string.Format(_productBennerTemplate, product.Id, product.ImagePath,
-                product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
-            product.HtmlBannerOrderedNot = Server.HtmlEncode(string.Format(_productBennerTemplate, product.Id, product.ImagePath,
-               product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
-            product.HtmlBannerOrdered = Server.HtmlEncode(string.Format(_productOrderedBennerTemplate, product.Id, product.ImagePath,
-                product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
+            var HtmlBanner = string.Format(_productBennerVisibilityNone, product.Id, product.ImagePath, product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked);
+            var HtmlBannerOrderedNot = string.Format(_productBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked);
+            var HtmlBannerOrdered = string.Format(_productOrderedBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked);
+            product.HtmlBanner = Server.HtmlEncode(HtmlBanner);
+            product.HtmlBannerOrderedNot = Server.HtmlEncode(HtmlBannerOrderedNot);
+            product.HtmlBannerOrdered = Server.HtmlEncode(HtmlBannerOrdered);
 
         }
-
-        private void SaveTemplate(ProductCreateModel model)
-        {
-
-            WebTemplate item = new WebTemplate();
-            item.Html = model.HtmlDetail;
-            item.Name = model.Name;
-            WebTemplateRepository.SaveOrUpdate(item);
-        }
-
         //
         // GET: /Product/Delete/5
 
@@ -246,19 +232,7 @@ namespace TolokaStudio.Controllers
         {
             return View(ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
         }
-        public ActionResult StateBascetDeleted(int id)
-        {
 
-            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            if (product != null)
-            {
-                product.HtmlBanner = product.HtmlBannerOrderedNot;
-                product.Ordered = false;
-                ProductsRepository.SaveOrUpdate(product);
-                return RedirectToAction("Index", "Bascet", new { message = "Ви видалили з корзини " + product.Name });
-            }
-            return null;
-        }
         //
         // POST: /Product/Delete/5
 
@@ -284,8 +258,6 @@ namespace TolokaStudio.Controllers
             return View(ProductEditModel);
         }
 
-
-
         //
         // POST: /Product/Edit/5
 
@@ -294,7 +266,6 @@ namespace TolokaStudio.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 try
                 {
                     Product product = EditModelToProduct(productEditModel);
@@ -318,8 +289,9 @@ namespace TolokaStudio.Controllers
             product.Name = productEditModel.Name;
             product.Price = productEditModel.Price;
             product.ImagePath = productEditModel.ImagePath;
-            product.HtmlBanner = Server.HtmlEncode(string.Format(_productBennerTemplate, productEditModel.Id, productEditModel.ImagePath, productEditModel.Name, productEditModel.Price + " грн.", DefaulImgBascet, DefaulImgBascetChecked));
-            product.HtmlDetail = Server.HtmlEncode(productEditModel.HtmlDetail);
+
+            CreateHtml(ref product);
+
             return product;
         }
 
@@ -337,15 +309,6 @@ namespace TolokaStudio.Controllers
             };
             return ProductEditModel;
         }
-        // Adds any products that we pass in to the store that we pass in
-        public static void AddProductsToStore(Store store, params Product[] products)
-        {
-            foreach (var product in products)
-            {
-                store.AddProduct(product);
-            }
-        }
-
     }
 }
 
