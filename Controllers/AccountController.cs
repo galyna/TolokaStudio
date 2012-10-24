@@ -112,14 +112,6 @@ namespace TolokaStudio.Controllers
                     UserRepository.SaveOrUpdate(user);
                     return Json(DefaulAdminCbinet);
                 }
-                if (model.Email == "g@gmail.com")
-                {
-                    user.Role.IsAuthor= true;
-                    UserRepository.SaveOrUpdate(user);
-                    return Json(DefaulAuthorCbinet);
-                }
-
-
             }
             else if (CheckPassword(userdb.Password, model.Password))
             {
