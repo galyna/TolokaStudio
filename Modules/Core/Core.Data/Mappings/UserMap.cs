@@ -15,6 +15,7 @@ namespace Core.Data.Mappings
             Map(x => x.UserName);
             Map(x => x.Email);
             Map(x => x.Password);
+            Map(x => x.Message);
             Component(x => x.Role);
             References(x => x.Employee);
             HasMany(x => x.Orders)

@@ -30,26 +30,28 @@ namespace TolokaStudio.Controllers
             {
 
                 User user = UserRepository.Get(u => u.UserName == currentUser).SingleOrDefault();
+                user.Message = message;
                 if (user == null)
                 {
-                    int count = UserRepository.GetAll().Count();
-                    User userNew = new User();
-                    userNew.UserName = "Гість" + count;
-                    userNew.Email = "Гість" + count;
-                    FormsAuthentication.SignOut();
-                    FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
-                    user = UserRepository.SaveOrUpdate(userNew);
-                    user.Orders = new List<Order>();
+                    return RedirectToAction("Index", "Product");
                 }
-
-                bascetModel.Message = message;
-                bascetModel.Orders = user.Orders;
-               
-                return View(bascetModel);
+                else
+                {
+                    bascetModel.Message = string.IsNullOrEmpty(message) ? message : user.Message; 
+                    bascetModel.Orders = user.Orders;
+                    bascetModel.User = user;
+                    bascetModel.Comments = user.Orders.Any()?user.Orders.LastOrDefault().Comments:"";
+                    bascetModel.Order = user.Orders.Any() ? user.Orders.LastOrDefault().Id : 0; 
+                    return View(bascetModel);
+                }             
             }
 
             return RedirectToAction("Index", "Product");
         }
+
+
+
+
 
         public ActionResult Add(int id)
         {

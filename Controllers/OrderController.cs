@@ -10,6 +10,7 @@ using SumkaWeb.Models;
 using System.Net.Mail;
 using TolokaStudio.Common;
 using System.Web.Security;
+using TolokaStudio.Models;
 
 
 namespace SumkaWeb.Controllers
@@ -37,18 +38,6 @@ namespace SumkaWeb.Controllers
             return View(orders);
         }
 
-        //
-        // GET: /Product/Details/5
-
-        public ActionResult Details(int id)
-        {
-            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-
-            return View(product);
-        }
-
-
-
 
         [HttpPost]
         public ActionResult Create(NewOrder newOrder)
@@ -57,7 +46,12 @@ namespace SumkaWeb.Controllers
             Product product = ProductsRepository.Get(s => s.Id == newOrder.ProductId).SingleOrDefault();
             if (product != null)
             {
-                User user = AddToBascet(product);
+                User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
+                if (user == null)
+                {
+                    return null;
+                }
+                Order order = AddOrderToBascet(user, product);
                 List<int> ids = new List<int>();
                 foreach (var item in user.Orders)
                 {
@@ -69,41 +63,12 @@ namespace SumkaWeb.Controllers
             return Json(new { Url = Request.UrlReferrer.AbsoluteUri });
         }
 
-        private User AddToBascet(Product product)
-        {
-            User user = CheckUserCanOrder(product);
-            Order order = AddOrderToBascet(user, product);
-
-            return user;
-        }
-
-        private User CheckUserCanOrder(Product product)
-        {
-            User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
-            if (user == null)
-            {
-                int count = UserRepository.GetAll().Count();
-                User userNew = new User();
-                userNew.UserName = "Гість" + count;
-                userNew.Email = "Гість" + count;
-                FormsAuthentication.SignOut();
-                FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
-                user = UserRepository.SaveOrUpdate(userNew);
-            }
-            else
-            {
-                FormsAuthentication.SignOut();
-                FormsAuthentication.SetAuthCookie(user.Email, false/* createPersistentCookie */);
-
-            }
-            return user;
-        }
-
         private Order AddOrderToBascet(User user, Product product)
         {
 
             Order order = new Order()
             {
+                Email = !string.IsNullOrEmpty(user.Email) ? user.Email : "galynavistovska@gmail.com",
                 User = user,
                 Product = product,
                 Employee = product.OwnerEmployee,
@@ -117,7 +82,6 @@ namespace SumkaWeb.Controllers
 
             return order;
         }
-
 
         public class NewOrder
         {
@@ -140,30 +104,61 @@ namespace SumkaWeb.Controllers
 
             SmtpServer.Send(mail);
         }
-        //
-        // GET: /Product/Create/5
-
-        public ActionResult MakeOrder(int id, string comments)
+        public class OrderMaker
         {
-            Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            order.Comments = comments;
+            public int OrderId { get; set; }
+            public string Comments { get; set; }
+            public string Email { get; set; }
+        }
+        // GET: /Product/Create/5
+        [HttpPost]
+        public ActionResult MakeOrder(OrderMaker model)
+        {
+            Order order = OrdersRepository.Get(s => s.Id.Equals(model.OrderId)).SingleOrDefault();
+            order.Comments = model.Comments;
             User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
+            string success = "Про ваше замовлення :" + order.Product.Name
+                 + " повідомлено автора. Скоро з вами сконтактуються.";
+            BascetModel bascetModel = new BascetModel();
 
-            if (user != null && order != null)
+            if (order != null && IsValid(user.Email))
             {
-               
-
                 NotificateEmployee(order);
-                string success = "Про ваше замовлення :" + order.Product.Name
-                      + " повідомлено автора. Скоро з вами сконтактуються.";
                 user.DeleteOrder(order);
+                user.Message = success;
                 order.OrderDateTime = DateTime.Now.ToString();
                 user.OrdersHistory.Add(order);
                 UserRepository.SaveOrUpdate(user);
-                return RedirectToAction("Index", "Bascet", new { message = success });
-            }
+                bascetModel.Message = success;
+                bascetModel.Orders = user.Orders;
+                return Json("\\Order\\OrderMaked?id=" + order.Id);
 
-            return RedirectToAction("Index", "Bascet", new { message = "Повторіть замовлення" });
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public ActionResult OrderMaked(int id)
+        {
+            string success = "Про ваше замовлення :" + OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault().Product.Name
+                   + " повідомлено автора. Скоро з вами сконтактуються.";
+
+            ViewBag.Message = success;
+            return View();
+        }
+        public bool IsValid(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
         //
         // GET: /Product/Delete/5
@@ -173,20 +168,15 @@ namespace SumkaWeb.Controllers
             try
             {
                 Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-                if (order != null)
-                {
-                    Product p = order.Product;
-                    OrdersRepository.Delete(OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
-                    return RedirectToAction("StateBascetDeleted", "Product", new { id = p.Id });
-                }
+                OrdersRepository.Delete(OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
 
-
+                return RedirectToAction("Index", "Bascet", new { message = "Успішно вдалено " + order.Product.Name + " з кошика" });
             }
             catch
             {
-                return RedirectToAction("Index", "Bascet");
+                return RedirectToAction("Index", "Bascet", new { message = "" });
             }
-            return RedirectToAction("Index", "Bascet");
+
         }
 
 

@@ -1,11 +1,10 @@
 ﻿@model TolokaStudio.Models.BascetModel
 @using ViewRes.Home
-<script src="/Content/js/Buy.js"></script>
 <div class="container">
     @if (Model.Message != null)
     {
         <div class="row">
-            <h5 class="message">
+            <h5>
                 @Html.Raw(Model.Message)
             </h5>
         </div> 
@@ -36,14 +35,14 @@
                 @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBannerOrderedNot))
             </div>
             <div class="span7">
-             @Html.Hidden(item.Id + "Id", item.Id)
-          Введідь  адресу вашої пошти  Введідь  адресу вашої пошти  @Html.TextArea(item.Id+"email",item.Email)
-             @Html.TextArea(item.Id + "comments", item.Comments)
+        Введідь  адресу вашої пошти  Введідь  адресу вашої пошти  @Html.TextAreaFor(i=>i.User.Email)
+              @Html.TextAreaFor(i=>i.Comments)
             </div>
             <div class="span5">
                 <div class='span2 offset3'>
-             <button id="make-orde" onclick="Buyer.makeaOrder('@item.Id');">Замовити</button>
-                 
+             
+                     
+                       @Html.ActionLink("Замовити", "MakeOrder", "Order", new { id = item.Id, comments = Model.Comments, email = Model.User.Email }, null)
                 </div>
                 <div class='span2 offset3'>
                     @Html.ActionLink("Видалити", "Delete", "Order", new { id = item.Id }, null)

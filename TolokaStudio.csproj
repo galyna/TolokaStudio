@@ -402,7 +402,6 @@
     <Content Include="Scripts\utils\form_utils.js" />
     <Content Include="Scripts\utils\mctabs.js" />
     <Content Include="Scripts\utils\validate.js" />
-    <Content Include="Views\Product\Contract.htm" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -480,18 +479,16 @@
     <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Employee\Delete.cshtml" />
     <Content Include="Views\Order\Create.cshtml" />
-    <Content Include="Views\Order\Delete.cshtml" />
-    <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Product\web.config" />
     <Content Include="Views\Order\web.config" />
     <Content Include="Views\Employee\EditDetails.cshtml" />
-    <Content Include="Views\Account\Users.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="Views\Shared\_RegisterPartial.cshtml" />
     <Content Include="Views\Shared\_LogOn.cshtml" />
     <Content Include="Views\Shared\_Bascet.cshtml" />
-    <Content Include="Views\Product\Bascet.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Order\OrderMaked.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="Views\Bascet\Index.cshtml" />

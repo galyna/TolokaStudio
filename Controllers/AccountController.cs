@@ -91,12 +91,23 @@ namespace TolokaStudio.Controllers
         [HttpPost]
         public ActionResult LogOn(LogOnModel model)
         {
-
-            if (GetUser(model.UserName, model.Password) != null)
+            User userdb = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (userdb != null)
             {
-                FormsAuthentication.SetAuthCookie(model.UserName, false/* createPersistentCookie */);
-
-                return Redirect(Request.UrlReferrer.AbsoluteUri);
+                userdb.Email = model.UserName;
+                userdb.UserName = model.UserName + UserRepository.GetAll().Count();
+                if (!UserRepository.GetAll().Where(u=>u.UserName==model.UserName).Any())
+                {
+                    UserRepository.SaveOrUpdate(userdb);
+                }
+                else
+                {
+                    userdb.UserName = model.UserName + UserRepository.GetAll().Count()+10;
+                }
+               
+                FormsAuthentication.SetAuthCookie(userdb.UserName, false/* createPersistentCookie */);
+                BascetModel bascetModel = new BascetModel();
+                return Json("\\Basket");
 
 
 

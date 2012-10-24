@@ -12,6 +12,7 @@ namespace Core.Data.Mappings
         public OrderMap()
         {
             Id(x => x.Id);
+            Map(x => x.Email);
             References(x => x.Employee);
             References(x => x.Product);
             References(x => x.User);

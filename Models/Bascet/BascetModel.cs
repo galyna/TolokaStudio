@@ -11,5 +11,16 @@ namespace TolokaStudio.Models
         public IList<Order> Orders { get; set; }
         public string Comments { get; set; }
         public string Message { get; set; }
+        public int Order { get; set; }
+        public User User { get; set; }
+    }
+    public class BascetOrder
+    {
+        public IList<Order> Orders { get; set; }
+        public string Comments { get; set; }
+        public string Message { get; set; }
+        public Order Order { get; set; }
+        public User User { get; set; }
+
     }
 }

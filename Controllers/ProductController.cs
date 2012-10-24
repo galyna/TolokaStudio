@@ -123,98 +123,11 @@ namespace TolokaStudio.Controllers
             IList<Product> products = ProductsRepository.GetAll().ToList();
             ProductList model = new ProductList();
             model.Products = products.ToList<Product>();
-            model.ids = new int[50];
-            if (User.Identity.IsAuthenticated)
-            {
-                User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
-                List<int> ids = new List<int>();
-                if (user != null)
-                {
-                    foreach (var item in user.Orders)
-                    {
-                        ids.Add(item.Product.Id);
-                        model.ids[item.Product.Id] = item.Product.Id;
-                    }
-
-                }
-                else
-                {
-
-
-                    int count = UserRepository.GetAll().Count();
-                    User userNew = new User();
-                    userNew.UserName = "Гість" + count;
-                    userNew.Email = "Гість" + count;
-                    FormsAuthentication.SignOut();
-                    FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
-                    UserRepository.SaveOrUpdate(userNew);
-                }
-
-
-            }
-            else
-            {
-
-                int count = UserRepository.GetAll().Count();
-                User userNew = new User();
-                userNew.UserName = "Гість" + count;
-                userNew.Email = "Гість" + count;
-                FormsAuthentication.SignOut();
-                FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
-                UserRepository.SaveOrUpdate(userNew);
-            }
-
-
             return View(model);
         }
 
 
-        //
-        // GET: /Product/Details/5
-         [HttpPost]
-        public ActionResult Ordered()
-        {
-            List<int> ids = new List<int>();
-            if (User.Identity.IsAuthenticated)
-            {
-                User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
-               
-                if (user != null)
-                {                   
-                    foreach (var item in user.Orders)
-                    {
-                        ids.Add(item.Product.Id);
-                    }
-
-                    return Json(new { Url = Request.UrlReferrer.AbsoluteUri, id = ids.ToArray() });
-                }
-                else
-                {
-
-                    AddUser();
-                }
-
-
-            }
-            else
-            {
-
-                AddUser();
-            }
-
-            return Json(new { Url = Request.UrlReferrer.AbsoluteUri, id = ids.ToArray() });
-        }
-
-        private void AddUser()
-        {
-            int count = UserRepository.GetAll().Count();
-            User userNew = new User();
-            userNew.UserName = "Гість" + count;
-            userNew.Email = "Гість" + count;
-            FormsAuthentication.SignOut();
-            FormsAuthentication.SetAuthCookie(userNew.Email, false/* createPersistentCookie */);
-            UserRepository.SaveOrUpdate(userNew);
-        }
+       
         //
         // GET: /Product/Details/5
 

@@ -15,10 +15,10 @@ var Buyer = {
             success: function (data) {
                 if (data != null) {
                     window.location.reload(data.Url);
-                   
-                  
+
+
                 } else {
-                    $("#dialog-form").dialog("open");
+                    window.location.reload(true);
                 }
 
             },
@@ -27,22 +27,35 @@ var Buyer = {
             }
         });
     },
+    makeaOrder: function (id) {
+        var order = {
+            OrderId: id,
+            Comments: $("textarea[name=" + id + "comments]").val(),
+            Email: $("textarea[name=" + id + "email]").val()
+        };
+
+        $.ajax({
+            type: "post",
+            url: "/Order/MakeOrder",
+            data: order,
+            dataType: "json",
+             success: function (data) {
+                if (data != null) {
+                    window.location.reload(data);
+
+
+                } 
+
+            }
+        });
+    },
+  
     init: function () {
-    
-////        if ($(ids).length>0) {
-////        ids.each(function (i) {
-////            $(".ordered" + i).show();
-////            $(".order" + i).hide();
-////        });
-//        }
-//         for (var i = 0; i < data.id.length; i++) {
-//                            $(".ordered" + data.id[i]).show();
-//                            $(".order" + data.id[i]).hide();
-//                            
-//                        } 
 
         $(".orderBtn").click(function () {
-                Buyer.buy(this);
-           });
+            Buyer.buy(this);
+        });
     }
+
+
 };
