@@ -1,16 +1,12 @@
 ﻿
-var Buyer = {
+var Author = {
 
-    buy: function (obj) {
-        var order = {
-            ProductId: obj.alt
-        };
+    upload: function (obj) {
+
 
         $.ajax({
-            type: "post",
-            url: "/Order/Create",
-            data: order,
-            dataType: "json",
+            type: "get",
+            url: "/Store/ImageUpload",
             success: function (data) {
                 if (data != null) {
                     window.location.reload(data.Url);

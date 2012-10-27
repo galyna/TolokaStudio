@@ -14,6 +14,10 @@ namespace Core.Data.Mappings
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.HtmlDetail).CustomSqlType("ntext");
             Map(x => x.ImagePath);
+            Map(x => x.HtmlBannerEdit).CustomSqlType("nvarchar(max)");
+            HasMany(x => x.Products)
+                .Cascade.AllDeleteOrphan()
+                .Inverse();
     
         }
     }

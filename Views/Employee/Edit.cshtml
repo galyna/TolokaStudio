@@ -1,17 +1,37 @@
 ﻿@model TolokaStudio.Models.EmployeeEditModel
 @using ViewRes.Home
 @using ViewRes.Store
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+    <style>
+        body { font-size: 62.5%; }
+        label, input { display:block; }
+        input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; }
+        h1 { font-size: 1.2em; margin: .6em 0; }
+        div#users-contain { width: 350px; margin: 20px 0; }
+        div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+        div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+    </style>
+
+
+<script src="@Url.Content("~/Content/js/employee_edit.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/sumkaScripts/create_employee.js")" type="text/javascript"></script>
 <div class="container">
     @using (Html.BeginForm())
     {
         @Html.ValidationSummary(true)
         <fieldset>
-            <div class="row">
-                @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBanner))
-                <div class="span6">
+            <div class="row employeeHtmlBanner">
+                <div class="span8">
+                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.HtmlBannerEdit))
+                </div>
+              
+                <div class="span8">
                     @Html.LabelFor(model => model.FirstName)
                     @Html.EditorFor(model => model.FirstName)
                     @Html.ValidationMessageFor(model => model.FirstName, null, new { @class = "required" })
@@ -23,49 +43,41 @@
                     @Html.ValidationMessageFor(model => model.Email, null, new { @class = "required" })
                     @Html.HiddenFor(model => model.ImagePath)
                     @Html.HiddenFor(model => model.Id)
+                   
                 </div>
-                <div class="span10">
+                 <div class="span8">
                     <iframe id="templatesrc" name="templatesrc" src="/Store/ImageUpload" frameborder="0"
                         style="float: left; width: 400px; height: 320px"></iframe>
                     @Html.ValidationMessageFor(model => model.ImagePath, null, new { @class = "required" })
                 </div>
-            </div>
-            <div class="row">
-                @Html.ActionLink(@Store.Add_Product, "Create", "Product", new { id = Model.Id }, null)
-            </div>
-            <div class="row">
-                @if (Model.Products != null)
-                {
-                    foreach (var item in Model.Products)
+                </div>
+            
+                <div class="row">
+                  
+                    <br />
+                    @if (Model.Products != null)
                     {
-                    <div class="row">
-                        @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
-                        <div class="span4 offset1">
-                            @Html.ActionLink(@Store.Edit_Product, "EditProduct", new { id = item.Id })
-                            @Html.ActionLink(@Store.Delete_Product, "DeleteProduct", new { id = item.Id })
-                        </div>
-                    </div>
+                        foreach (var item in Model.Products)
+                        {
+                     
+                            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBannerEdit))
+                      
                    
+                        }
                     }
-                }
-            </div>
-            <div class="row">
-                @Html.ActionLink("Редагувати сторінку профілю", "EditDetails", new { id = Model.Id })
-            </div>
-            <div class="row">
-                <input type="submit" value="@Home.Save" />
-                 @Html.ActionLink("Видалити", "Delete", "Employee",new { id = Model.Id }, new { id = Model.Id })
-            </div>
+                </div>
+                 <div class="row">
+                   <input type="submit" value="@Home.Save" />
+                </div>
         </fieldset>
     }
 </div>
 <script type="text/javascript">
 //<![CDATA[
     $(document).ready(function () {
-        $('#templatesrc').load(function () {
-            EmployeeCreator.init();
-        });
+     $('#templatesrc').load(function () {       
+            Employee.init();       
     });
-    
+    });
 //]]>
 </script>

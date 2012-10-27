@@ -1,14 +1,12 @@
 ﻿@model List<Core.Data.Entities.Employee>
 <div class="container">
-    @foreach (var item in Model)
-    { 
-       if (item.HtmlBanner != null)
-       {<div class="row">
-        @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
-           
-        </div>
-       }
-             
-    }
-        
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            if (item.HtmlBanner != null)
+            {
+            @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
+            }
+        }
+    </div>
 </div>

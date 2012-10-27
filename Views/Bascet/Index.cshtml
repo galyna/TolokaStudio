@@ -5,10 +5,10 @@
     <div class="container">
         @if (Model != null && Model.Orders != null && Model.Orders.Count > 0)
         {
-             <div class="row">
+            <div class="row">
                 <h5>
-                    Відправте інформацію про замовлення Автору натиснувши 'Замовити' Видаліть товар
-                    з кошика натиснувши 'Видалити'
+                    Замовте або видаліть товар з кошика скориставшись галочкою чи хрестиком.<br />
+                    Перед замовленням перевірте чи вірно адреса вашої пошти для зворотнього звязку.
                 </h5>
             </div>    
             foreach (var item in Model.Orders)
@@ -17,24 +17,18 @@
                 <div class="span9">
                     @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Product.HtmlBannerOrdered))
                 </div>
-                <div class="span7">
-                    @Html.Hidden(item.Id + "Id", item.Id)
-                    Введідь адресу вашої пошти @Html.TextArea(item.Id + "email", item.Email,new { @style = "resize: none;", @cols = 40, @rows = 2 })
-                    @Html.TextArea(item.Id + "comments", item.Comments, new { @style = "resize: none;", @cols = 40, @rows = 17 })
+                <div class="span14 orderBascet">
+                    @Html.Hidden("orderId"+item.Id , item.Id)
+                 
+                    @Html.TextArea(item.Id + "email", item.Email, new { @style = "resize: none;", @cols = 40, @rows = 2, @class = item.Id + "email" })
+                    @Html.TextArea(item.Id + "comments", item.Comments, new { @style = "resize: none;", @cols = 40, @rows = 17, @class = item.Id + "comments" })
                 </div>
-                <div class="span5">
-                    <div class='span2 offset3'>
-                        <button id="make-orde" onclick="Buyer.makeaOrder('@item.Id');">
-                            Замовити</button>
-                    </div>
-                    <div class='span2 offset3'>
-                        @Html.ActionLink("Видалити", "Delete", "Order", new { id = item.Id }, null)
-                    </div>
-                </div>
+          
             </div> 
             }
 
-        }else
+        }
+        else
         {
             <div class="row">
                 <h5>
@@ -43,3 +37,11 @@
             </div>   
         }
     </div>
+    <script src="/Content/js/buy.js"></script>
+    <script type="text/javascript">
+//<![CDATA[
+        $(document).ready(function () {
+            Buyer.init();
+        });
+//]]>
+    </script>

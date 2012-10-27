@@ -18,7 +18,7 @@ namespace Core.Data.Mappings
             Map(x => x.ProcessDateTime);
             References(x => x.Employee);
             References(x => x.Product);
-            References(x => x.User);
+            References(x => x.User).Cascade.Merge();
 
         }
     }

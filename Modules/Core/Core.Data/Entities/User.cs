@@ -23,6 +23,7 @@ namespace Core.Data.Entities
             Orders= new List<Order>();
             OrdersHistory = new List<Order>();
         }
+    
         public virtual Order AddOrder(Order order)
         {
           Orders.Add(order);

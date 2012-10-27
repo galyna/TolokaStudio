@@ -13,7 +13,7 @@ using TolokaStudio.Common;
 
 namespace TolokaStudio.Controllers
 {
-   
+
     public class StoreController : Controller
     {
         #region
@@ -44,6 +44,25 @@ namespace TolokaStudio.Controllers
                     " </a>" +
                     "</div>" +
                     " </div>";
+        private const string _storeEdit = "<div class='template'>" +
+                   " <div class='span8'>" +
+                   " <a href='/Store/Edit?id={0}'>" +
+                   " <div class='box_main_item'>" +
+                   " <div class='box_main_item_img'>" +
+                   "  <div class='box_main_item_img_bg'>" +
+                   "     <span>Редагувати</span>" +
+                   "  </div>" +
+                   " <img src='{1}' alt='img_box' />" +
+                   " </div>" +
+                   " <div class='box_main_item_text'>" +
+                   "   <h3>" +
+                   "       {2}</h3>" +
+                   "     <span>{3}</span>" +
+                   "  </div>" +
+                   " </div>" +
+                   " </a>" +
+                   "</div>" +
+                   " </div>";
         #endregion
         public StoreController()
         {
@@ -53,20 +72,20 @@ namespace TolokaStudio.Controllers
             ProductsRepository = new Repository<Product>();
             EmployeeRepository = new Repository<Employee>();
         }
-      
+
         public ActionResult Index()
         {
             User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
-            if (user.Role.IsAdmin)
+            if (user != null && user.Role.IsAdmin)
             {
 
                 StoreIndexModel storeIndexModel = new StoreIndexModel();
                 storeIndexModel.Stores = StoreRepository.GetAll().ToList();
                 storeIndexModel.Users = UserRepository.GetAll().ToList();
                 storeIndexModel.Employees = EmployeeRepository.GetAll().ToList();
-                return View(storeIndexModel); 
+                return View(storeIndexModel);
             }
-            
+
             return null;
         }
         //
@@ -83,22 +102,31 @@ namespace TolokaStudio.Controllers
 
         public ActionResult Create()
         {
-            return View(new StoreCreateModel()
+
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin)
             {
-                Name = "Назва розділу",
-                Description = "Опис",
-                ImagePath = DefaultImg,
-                HtmlBanner = string.Format(_storeTemplate, '0', DefaultImg, "Назва розділу", "Опис"),
-            });
+                return View(new StoreCreateModel()
+                {
+                    Name = "Назва розділу",
+                    Description = "Опис",
+                    ImagePath = DefaultImg,
+                    HtmlBanner = string.Format(_storeTemplate, '0', DefaultImg, "Назва розділу", "Опис"),
+                });
+            }
+
+            return null;
+
         }
 
         //
         // POST: /Storage/Create
-  
+
         [HttpPost]
         public ActionResult Create(StoreCreateModel store)
         {
-            if (ModelState.IsValid)
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (ModelState.IsValid && user != null && user.Role.IsAdmin)
             {
                 try
                 {
@@ -110,12 +138,12 @@ namespace TolokaStudio.Controllers
                 }
                 catch
                 {
-                    return View(store);
+                    return null;
                 }
             }
             else
             {
-                return View(store);
+                return null;
             }
 
         }
@@ -125,18 +153,25 @@ namespace TolokaStudio.Controllers
 
         public ActionResult Edit(int id)
         {
-            StoreEditModel model = StoreToEditModel(id);
-            return View(model);
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin)
+            {
+                StoreEditModel model = StoreToEditModel(id);
+                return View(model);
+            }
+
+            return null;
         }
 
 
         //
         // POST: /Storage/Edit/5
-     
+
         [HttpPost]
         public ActionResult Edit(StoreEditModel model)
         {
-            if (ModelState.IsValid)
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (ModelState.IsValid && user != null && user.Role.IsAdmin)
             {
 
                 try
@@ -149,33 +184,49 @@ namespace TolokaStudio.Controllers
                 }
                 catch
                 {
-                    return View(model);
+                    return null;
                 }
             }
             else
             {
-                return View(model);
+                return null;
             }
+
         }
 
 
 
         public ActionResult Delete(int id)
         {
-            return View(StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin)
+            {
+                return View(StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
+
+            }
+
+            return null;
         }
 
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
-            try
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin)
             {
-                StoreRepository.Delete(StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
-                return RedirectToAction("Index");
+                try
+                {
+                    StoreRepository.Delete(StoreRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    return null;
+                }
             }
-            catch
+            else
             {
-                return View();
+                return null;
             }
         }
 
@@ -197,7 +248,7 @@ namespace TolokaStudio.Controllers
 
         public ActionResult EditEmployee(int id)
         {
-            return RedirectToAction("EditAuthor", "Employee", new { id = id });
+            return RedirectToAction("Edit", "Employee", new { id = id });
         }
 
         public ActionResult AddEmployee(int id)
@@ -209,15 +260,53 @@ namespace TolokaStudio.Controllers
         {
             return RedirectToAction("Delete", "Employee", new { id = id });
         }
+               public ActionResult Admin(int id)
+        {
 
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin)
+            {
+                if (!user.Role.IsAdmin)
+                {
+                    user.Role.IsAdmin = true;
+                    UserRepository.SaveOrUpdate(user);
+
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return null;
+
+        }
         public ActionResult SetAsAdmin(int id)
         {
-            return RedirectToAction("Admin", "Account", new { id = id });
+
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin && id !=null)
+            {
+                User userAdmin = UserRepository.Get(u => u.Id == id).SingleOrDefault();
+                userAdmin.Role.IsAdmin = true;
+                UserRepository.SaveOrUpdate(userAdmin);
+                return RedirectToAction("Index");
+            }
+
+            return null;
+           
         }
 
         public ActionResult SetAsAuthor(int id)
         {
-            return RedirectToAction("Author", "Account", new { id = id });
+            
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin)
+            {
+
+                return RedirectToAction("Create", "Employee", new { userId = id });
+
+            }
+
+            return null;
         }
 
         public ActionResult ImageUpload()

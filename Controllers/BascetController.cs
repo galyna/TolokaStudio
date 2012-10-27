@@ -50,13 +50,5 @@ namespace TolokaStudio.Controllers
 
 
 
-
-
-        public ActionResult Add(int id)
-        {
-            return RedirectToAction("Create", "Order", new { id = id });
-
-        }
-
     }
 }

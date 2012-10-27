@@ -139,7 +139,6 @@
     <Compile Include="Models\Employee\EmployeeEditModel.cs" />
     <Compile Include="Models\Order\OrderCreateModel.cs" />
     <Compile Include="Models\Order\OrderEditModel.cs" />
-    <Compile Include="Models\Product\ProductCreateModel.cs" />
     <Compile Include="Models\Home\HomeModel.cs" />
     <Compile Include="Models\Product\ProductEditModel.cs" />
     <Compile Include="Models\Product\ProductList.cs" />
@@ -218,10 +217,18 @@
     <Content Include="Content\assets\js\google-code-prettify\prettify.js" />
     <Content Include="Content\assets\js\jquery.js" />
     <Content Include="Content\assets\js\scroller_load_img.js" />
-    <Content Include="Content\img\q\button_ok_4699.png" />
+    <Content Include="Content\img\q\add.png" />
+    <Content Include="Content\img\q\delete.png" />
+    <Content Include="Content\img\q\edit.png" />
+    <Content Include="Content\img\q\image_upload.png" />
+    <Content Include="Content\img\q\order.png" />
+    <Content Include="Content\img\q\save.png" />
     <Content Include="Content\img\q\shopping_cart_1.gif" />
+    <Content Include="Content\js\admin.js" />
+    <Content Include="Content\js\author.js" />
     <Content Include="Content\js\Buy.js" />
     <Content Include="Content\js\combined_.js" />
+    <Content Include="Content\js\employee_edit.js" />
     <Content Include="Content\js\events_init.js" />
     <EmbeddedResource Include="Content\js\menu_full_width.js" />
     <Content Include="Content\js\register.js" />
@@ -300,7 +307,6 @@
     <Content Include="Scripts\plugins\template\langs\en_dlg.js" />
     <Content Include="Scripts\plugins\template\langs\template_editor.js" />
     <Content Include="Scripts\plugins\template\template.htm" />
-    <Content Include="Scripts\sumkaScripts\create_employee.js" />
     <Content Include="Scripts\sumkaScripts\create_product.js" />
     <Content Include="Scripts\sumkaScripts\create_store.js" />
     <Content Include="Scripts\sumkaScripts\dialog_window.js" />
@@ -485,7 +491,6 @@
     <Content Include="Views\Bascet\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\Create.cshtml" />
     <Content Include="Views\Product\Delete.cshtml" />
     <Content Include="Views\Product\Details.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />

@@ -36,7 +36,9 @@ namespace TolokaStudio.Models
         public virtual string Email { get; set; }
         [HiddenInput(DisplayValue = false)]
 
-
+        [AllowHtml]
+        public string HtmlBannerEdit { get; set; }
+        [AllowHtml]
         public string HtmlBanner { get; set; }
 
         [Display(Name = "HtmlDetail", ResourceType = typeof(EmployeeCreate))]

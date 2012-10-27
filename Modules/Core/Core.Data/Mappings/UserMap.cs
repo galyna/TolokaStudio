@@ -16,7 +16,7 @@ namespace Core.Data.Mappings
             Map(x => x.Email);
             Map(x => x.Password);;
             Component(x => x.Role);
-            References(x => x.Employee);
+            References(x => x.Employee) ;
             HasMany(x => x.Orders)
                 .Cascade.All()
                 .Inverse();

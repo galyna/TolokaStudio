@@ -67,7 +67,7 @@ namespace SumkaWeb.Controllers
                 Email = !string.IsNullOrEmpty(user.Email) ? user.Email : "galynavistovska@gmail.com",
                 User = user,
                 Product = product,
-                Employee = product.OwnerEmployee,
+                Employee = product.Employee,
                 Comments = DefaultComments
             };
 
@@ -96,7 +96,7 @@ namespace SumkaWeb.Controllers
             mail.To.Add(order.Employee.Email);
             mail.Subject = "Order from " + order.Email;
             mail.Body = @"Your product " + order.Product.Name + " was ordered. Please, contact your customer."
-                + "\\r\\n Customer email: " + order.Email+ " on "+order.ProcessDateTime;
+                + "\\r\\n Customer email: " + order.Email + " on " + order.ProcessDateTime;
             if (order.Comments != DefaultComments)
             {
                 mail.Body = mail.Body + "Customer added Comments." + order.Comments;
@@ -114,7 +114,7 @@ namespace SumkaWeb.Controllers
         public ActionResult MakeOrder(OrderMakerModel model)
         {
             Order order = OrdersRepository.Get(s => s.Id.Equals(model.OrderId)).SingleOrDefault();
-            order.Comments = model.Comments;
+            order = UpdateOrder(model, order);
             User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
             string success = "Про ваше замовлення :" + order.Product.Name
                  + " повідомлено автора. Скоро з вами сконтактуються.";
@@ -124,23 +124,39 @@ namespace SumkaWeb.Controllers
 
             if (order != null && IsValid(user.Email))
             {
-                order.ProcessDateTime = DateTime.Now.ToString();
-                order.Status = "Ordered";
-                order = OrdersRepository.SaveOrUpdate(order);
-                NotificateEmployee(order);
-                user.DeleteOrder(order);
-                user.OrdersHistory.Add(order);
-                UserRepository.SaveOrUpdate(user);
-
-
-
+                order = NottifyOnProcassOrder(order, user);
                 return Json("\\Order\\OrderMaked?message=" + success);
-
             }
             else
             {
                 return Json("\\Order\\OrderMaked?message=" + fail);
             }
+        }
+
+        private Order NottifyOnProcassOrder(Order order, User user)
+        {
+            order.ProcessDateTime = DateTime.Now.ToString();
+            order.Status = "Ordered";
+            order = OrdersRepository.SaveOrUpdate(order);
+            NotificateEmployee(order);
+            user.DeleteOrder(order);
+            user.OrdersHistory.Add(order);
+            UserRepository.SaveOrUpdate(user);
+            return order;
+        }
+
+        private Order UpdateOrder(OrderMakerModel model, Order order)
+        {
+            if (string.IsNullOrEmpty(model.Comments))
+            {
+                order.Comments = model.Comments;
+            }
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                order.Email = model.Comments;
+            }
+            order = OrdersRepository.SaveOrUpdate(order);
+            return order;
         }
 
         public ActionResult OrderMaked(string message)
@@ -169,24 +185,17 @@ namespace SumkaWeb.Controllers
             {
                 User user = UserRepository.Get(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault();
                 Order order = OrdersRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
+                user.DeleteOrder(order);
+                UserRepository.SaveOrUpdate(user);
                 string success = "Успішно видалено " + order.Product.Name + " з кошика";
+                OrdersRepository.Delete(order);
 
-                if (order != null)
-                {
-                    order.ProcessDateTime = DateTime.Now.ToString();
-                    order.Status = "Ordered";
-                    order = OrdersRepository.SaveOrUpdate(order);
-                    user.DeleteOrder(order);
-                    UserRepository.SaveOrUpdate(user);
-                }
-                ViewBag.Message = success;
-                return View("OrderMaked");
+                return Json("\\Bascet\\", JsonRequestBehavior.AllowGet);
 
             }
             catch
             {
-                ViewBag.Message = "Не вдалось видалити товар з корзини";
-                return View("OrderMaked");
+                return Json("\\Order\\OrderMaked?message=", "Не вдалось видалити товар з корзини", JsonRequestBehavior.AllowGet);
 
             }
 

@@ -1,16 +1,12 @@
 ﻿
-var Buyer = {
+var Admin = {
 
-    buy: function (obj) {
-        var order = {
-            ProductId: obj.alt
-        };
+    upload: function (obj) {
+
 
         $.ajax({
-            type: "post",
-            url: "/Order/Create",
-            data: order,
-            dataType: "json",
+            type: "get",
+            url: "/Store/Create",
             success: function (data) {
                 if (data != null) {
                     window.location.reload(data.Url);
@@ -71,16 +67,5 @@ var Buyer = {
 
     init: function () {
 
-        $(".orderBtn").click(function () {
-            Buyer.buy(this);
-        });
-        $(".deleteBtn").click(function () {
-            Buyer.deleteFromBascet(this);
-        });
-        $(".makeOrder").click(function () {
-            Buyer.makeOrderBtn(this);
-        });
     }
-
-
 };

@@ -22,67 +22,12 @@ namespace TolokaStudio.Controllers
         private readonly IRepository<Employee> EmployeeRepository;
         private const string DefaulAuthorCbinet = "\\Employee\\Edit";
         private const string DefaulAdminCbinet = "\\Store\\Index";
-        private const string DefaulImg = "/Content/img/_C3D9074.png";
-        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/Coffe.png";
-        private const string _rootImagesFolderPath = "/Content/img/";
-        private const string _authorTemplate = "<div class='template'>" +
-                    " <div class='span8'>" +
-                    " <a href='/Employee/Details?id={0}'>" +
-                    " <div class='box_main_item'>" +
-                    " <div class='box_main_item_img'>" +
-                    "  <div class='box_main_item_img_bg'>" +
-                    "     <span>Про автора</span>" +
-                    "  </div>" +
-                    " <img src='{1}' alt='img_box' />" +
-                    " </div>" +
-                    " <div class='box_main_item_text'>" +
-                    "   <h3>" +
-                    "       {2}</h3>" +
-                    "     <span>{3}</span>" +
-                    "  </div>" +
-                    " </div>" +
-                    " </a>" +
-                    "</div>" +
-                    " </div>";
-
+       
         public AccountController()
         {
             UserRepository = new Repository<User>();
-            EmployeeRepository = new Repository<Employee>();
         }
 
-  
-        public ActionResult Admin(int id)
-        {
-            User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
-            if (!user.Role.IsAdmin)
-            {
-                user.Role.IsAdmin = true;
-                UserRepository.SaveOrUpdate(user);
-                return RedirectToAction("Index", "Home");
-            }
-            return null;            
-        }
-       
-        public ActionResult Author(int id)
-        {
-            User user = UserRepository.Get(u => u.Id == id).SingleOrDefault();
-            if (!user.Role.IsAdmin)
-            {
-                user.Role.IsAuthor = true;
-                Employee employee = new Employee();
-                employee.Email = user.Email;
-                employee.FirstName = user.UserName;
-                employee.HtmlBanner = string.Format(_authorTemplate, employee.Id, DefaulImg, user.UserName, user.Email);
-                Employee employeeSaved = EmployeeRepository.SaveOrUpdate(employee);
-                user.Employee = employeeSaved;
-                UserRepository.SaveOrUpdate(user);
-
-                return RedirectToAction("Index", "Store");
-            }
-            return null; 
-        }
-     
         //
         // GET: /Account/LogOff
 
@@ -116,21 +61,18 @@ namespace TolokaStudio.Controllers
             else if (CheckPassword(userdb.Password, model.Password))
             {
                 FormsAuthentication.SetAuthCookie(model.Email, false/* createPersistentCookie */);
-                userdb.Orders=null;
+                userdb.Orders = null;
                 UserRepository.SaveOrUpdate(userdb);
                 if (userdb.Role.IsAdmin)
                 {
                     return Json(DefaulAdminCbinet);
                 }
-                if (userdb.Role.IsAuthor)
-                {
-                    return Json(DefaulAuthorCbinet);                
-                }
-               
+                
+
             }
             return Json("\\");
         }
-       
+
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
