@@ -10,6 +10,7 @@ namespace Core.Data.Mappings
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Description);
+            Map(x => x.IsPublished);
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.ImagePath);
             HasMany(x => x.Products)

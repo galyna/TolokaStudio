@@ -8,11 +8,11 @@ using System.Web.Mvc;
 
 namespace TolokaStudio.Models
 {
-    public class EmployeeDetailsModel
+    public class DetailsModel
     {
         [Display(Name = "HtmlDetail", ResourceType = typeof(EmployeeCreate))]
         [AllowHtml]
         public string HtmlDetail { get; set; }
-        public int EmployeeId { get; set; }
+        public int Id { get; set; }
     }
 }

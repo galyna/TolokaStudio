@@ -27,7 +27,8 @@ namespace TolokaStudio.Models
 
         [Required(ErrorMessageResourceName = "Required_Image",
        ErrorMessageResourceType = typeof(Home))]
-        [HiddenInput(DisplayValue = false)]
+
+        [UIHint("ProfileImage")]
         public virtual string ImagePath { get; set; }
 
         [Required(ErrorMessageResourceName = "Required_Email",

@@ -14,28 +14,30 @@ namespace TolokaStudio.Controllers
 
     public class ProductController : Controller
     {
+        #region readonly and const
         private readonly IRepository<Store> StoreRepository;
-
         private readonly IRepository<Product> ProductsRepository;
         private readonly IRepository<Employee> EmployeeRepository;
         private readonly IRepository<User> UserRepository;
+
         private const string DefaulImgName = "Coffe.png";
         private const string DefaulImg = "/Content/img/imgThumbs/Fluor/" + DefaulImgName;
+        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/" + DefaulImgName;
+
         private const string DefaulImgBascet = "/Content/img/q/shopping_cart_1.gif";
         private const string DefaulImgBascetDelete = "/Content/img/q/delete.png";
         private const string DefaulImgBascetOrder = "/Content/img/q/order.png";
-        private const string DefaulImgUpload = "/Content/img/q/image_upload.png";
-        private const string DefaulImgDelete = "/Content/img/q/delete.png";
-        private const string DefaulImgAddProduct = "/Content/img/q/add.png";
-        private const string DefaulImgSave = "/Content/img/q/save.png";
-        private const string DefaulImgEdit = "/Content/img/q/edit.png";
-        private const string DefaulDetailImg = "/Content/img/imgFull/Fluor/" + DefaulImgName;
+        private const string DefaulImgEditDetails = "/Content/img/q/edit.png";
+
+        private const string DefaulImgUnpublish = "/Content/img/q/unpublish.png";
+        private const string DefaulImgPublish = "/Content/img/q/publish.png";
+
+
+        #region order
         private const string _productBenner = "<div class='template order{0}'>" +
                    " <div class='span8'>" +
                 " <div class='box_main_item'>" +
-            " <img class='orderBtn' title='Додати в кошик Назва'  alt='{0}'  src='" + DefaulImgBascet + "' />" +
-            " <img class='makeOrder'  title='Замовити Назва' alt='{0}' style='display:none;'  src='" + DefaulImgBascetOrder + "' />" +
-            " <img class='deleteBtn' alt='{0}'  style='display:none;' title='Видалити з кошика Назва' src='" + DefaulImgBascetDelete + "'/>" +
+            " <img class='orderBtn' title='Додати в кошик'  alt='{0}'  src='" + DefaulImgBascet + "' />" +
                   "  </div>" +
                    " <a href='/Product/Details?id={0}'>" +
                    " <div class='box_main_item'>" +
@@ -77,19 +79,23 @@ namespace TolokaStudio.Controllers
                   " </a>" +
                   "</div>" +
                   " </div>";
-
+        #endregion
+        #region edit
         private const string _productBennerTemplate = "<div class='template order{0}'>" +
                    " <div class='span8'>" +
                 " <div class='box_main_item'>" +
-             " <img class='uploadBtn' title='Завантажити зображення Назва'  alt='{0}'  src='" + DefaulImgUpload + "' />" +
-            " <img class='deleteBtn' src='" + DefaulImgDelete + "' alt='{0}'  title='Видалити товар Назва'/>" +
-            " <img class='editDetailsBtn' src='" + DefaulImgEdit + "' alt='{0}'  title='Редагувати Сторінку Назва'/>" +
+                  " <a href='/Product/Publish?Id={0}'>" +
+              "<img  src='" + DefaulImgPublish + "' alt='{0}'  title='Публікавати'/>" +
+               " </a>" +
+                " <a href='/Product/EditDetails?id={0}' >" +
+           " <img   title='Редагувати сторінку' alt='{0}'   src='" + DefaulImgEditDetails + "' />" +
+                " </a>" +
                   "  </div>" +
-                   " <a href='/Product/Details?id={0}'>" +
+                   " <a href='/Product/Edit?id={0}'>" +
                    " <div class='box_main_item'>" +
                    " <div class='box_main_item_img'>" +
                    "  <div class='box_main_item_img_bg'>" +
-                   "     <span>Детальніше</span>" +
+                   "     <span>Редагувати</span>" +
                    "  </div>" +
                     " <img src='{1}' />" +
                   " </div>" +
@@ -101,11 +107,36 @@ namespace TolokaStudio.Controllers
                   " </a>" +
                   "</div>" +
                   " </div>";
+        private const string _productBennerTemplatePublished = "<div class='template order{0}'>" +
+               " <div class='span8'>" +
+            " <div class='box_main_item'>" +
+              " <a href='/Product/Unpublish?Id={0}'>" +
+             "<img  src='" + DefaulImgUnpublish + "' alt='{0}' title='Не публікувати'/>" +
+               " </a>" +
+                 " <a href='/Product/EditDetails?id={0}' >" +
+           " <img   title='Редагувати сторінку' alt='{0}'   src='" + DefaulImgEditDetails + "' />" +
+                " </a>" +
+              "  </div>" +
+               " <a href='/Product/Edit?id={0}'>" +
+                   " <div class='box_main_item'>" +
+                   " <div class='box_main_item_img'>" +
+                   "  <div class='box_main_item_img_bg'>" +
+                   "     <span>Редагувати</span>" +
+                   "  </div>" +
+                    " <img src='{1}' />" +
+                  " </div>" +
+              " <div class='box_main_item_text'>" +
+              "   <h3>{2}</h3>" +
+              "     <span>{3}</span>" +
+              "  </div>" +
+              " </div>" +
+              " </a>" +
+              "</div>" +
+              " </div>";
+        #endregion
 
-        private const string _productDetailTemplate =
-             "<div class='span10'>" +
-       " <img src='{0}' /></div>" +
-                  " </div>";
+
+        #endregion
 
         public ProductController()
         {
@@ -115,6 +146,7 @@ namespace TolokaStudio.Controllers
             UserRepository = new Repository<User>();
         }
 
+        #region Index Details
         public ActionResult Index()
         {
             IList<Product> products = ProductsRepository.GetAll().ToList();
@@ -133,13 +165,15 @@ namespace TolokaStudio.Controllers
         }
         //
         // GET: /Product/Create/5
+        #endregion
 
+        #region Create Edit
         public ActionResult Create(int employeeId)
         {
             try
             {
               Product p=  CreateProduct(employeeId);
-                return Json("\\Product\\Edit?employeeId=" + p.Id, JsonRequestBehavior.DenyGet);
+              return RedirectToAction("Edit", new { Id = p.Id });
             }
             catch
             {
@@ -162,26 +196,12 @@ namespace TolokaStudio.Controllers
 
         }
 
-        private void CreateHtml(ref Product product)
-        {
-            var HtmlBanner = string.Format(_productBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
-            var HtmlBannerOrderedNot = string.Format(_productBenner, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
-            var HtmlBannerOrdered = string.Format(_productBennerOrder, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
-            var HtmlBannerEdit = string.Format(_productBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
-            product.HtmlBanner = Server.HtmlEncode(HtmlBanner);
-            product.HtmlBannerOrderedNot = Server.HtmlEncode(HtmlBannerOrderedNot);
-            product.HtmlBannerOrdered = Server.HtmlEncode(HtmlBannerOrdered);
-            product.HtmlBannerEdit = Server.HtmlEncode(HtmlBannerEdit);
-
-        }
-
-
-        public ActionResult Edit(int employeeId)
+        public ActionResult Edit(int Id)
         {
             User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
             if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
             {
-                ProductEditModel ProductEditModel = ProductToEditModel(employeeId);
+                ProductEditModel ProductEditModel = ProductToEditModel(Id);
                 return View(ProductEditModel);
             }
             return null;
@@ -201,7 +221,7 @@ namespace TolokaStudio.Controllers
                 {
                     Product product = EditModelToProduct(productEditModel);
                     ProductsRepository.SaveOrUpdate(product);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Edit", "Employee", new { id = product.Employee.Id });
                 }
                 catch
                 {
@@ -213,53 +233,67 @@ namespace TolokaStudio.Controllers
                 return View(productEditModel);
             }
         }
+        #endregion
 
-        private Product EditModelToProduct(ProductEditModel productEditModel)
+        #region EditDetails
+        public ActionResult EditDetails(int id)
         {
-            Product product = ProductsRepository.Get(s => s.Id.Equals(productEditModel.Id)).SingleOrDefault();
-            product.Name = productEditModel.Name;
-            product.Price = productEditModel.Price;
-            product.ImagePath = productEditModel.ImagePath;
-
-            CreateHtml(ref product);
-
-            return product;
-        }
-
-        private ProductEditModel ProductToEditModel(int id)
-        {
-            Product product = ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault();
-            CreateHtml(ref product);
-            ProductEditModel ProductEditModel = new ProductEditModel()
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
             {
-                ImagePath = product.ImagePath,
-                Name = product.Name,
-                Price = product.Price,
-                Id = id,
-                HtmlBannerEdit = product.HtmlBannerEdit,
-                HtmlDetail = product.HtmlDetail,
-                HtmlBanner = product.HtmlBanner
-            };
-            return ProductEditModel;
+                string html = HttpUtility.HtmlDecode(ProductsRepository.Get(s => s.Id == id).SingleOrDefault().HtmlDetail);
+                DetailsModel model = new DetailsModel();
+                model.Id = id;
+                model.HtmlDetail = html != null ? html : "";
+                return View(model);
+            }
+
+            return null;
         }
 
         //
-        // GET: /Product/Delete/5
+        // POST: /Employee/Edit/5
 
-        public ActionResult Delete(int id)
+        [HttpPost]
+        public ActionResult EditDetails(DetailsModel model)
+        {
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
+            {
+
+                try
+                {
+                    Product product = ProductsRepository.Get(s => s.Id.Equals(model.Id)).SingleOrDefault();
+                    product.HtmlDetail = Server.HtmlEncode(model.HtmlDetail);
+                    ProductsRepository.SaveOrUpdate(product);
+
+                    return RedirectToAction("Edit", "Product", new { Id = model.Id });
+                }
+                catch
+                {
+                    return View(model);
+                }
+            }
+
+            return null;
+        }
+        #endregion
+
+        #region Delete
+        public ActionResult Delete(int Id)
         {
 
             User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
             if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
             {
-                return View(ProductsRepository.Get(s => s.Id.Equals(id)).SingleOrDefault());
+                return View(ProductsRepository.Get(s => s.Id.Equals(Id)).SingleOrDefault());
             }
             return null;
         }
 
         //
         // POST: /Product/Delete/5
-
+     
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
@@ -278,8 +312,94 @@ namespace TolokaStudio.Controllers
             }
             return null;
         }
-        //
-        // GET: /Product/Edit/5
+        #endregion
+
+        #region Publish
+        public ActionResult Unpublish(int Id)
+        {
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
+            {
+                Product product = ProductsRepository.Get(s => s.Id == Id).SingleOrDefault();
+                product.IsPublished = false;
+                product.HtmlBannerEdit = Server.HtmlEncode(string.Format(_productBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн."));
+                ProductsRepository.SaveOrUpdate(product);
+                return RedirectToAction("Edit", "Employee", new { id = product.Employee.Id });
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Publish(int Id)
+        {
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
+            {
+                Product product = ProductsRepository.Get(s => s.Id == Id).SingleOrDefault();
+                product.IsPublished = true;
+                product.HtmlBannerEdit = Server.HtmlEncode(string.Format(_productBennerTemplatePublished, product.Id, product.ImagePath, product.Name, product.Price + " грн."));
+                ProductsRepository.SaveOrUpdate(product);
+                return RedirectToAction("Edit", "Employee", new { id = product.Employee.Id});
+            }
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region private
+        private Product EditModelToProduct(ProductEditModel productEditModel)
+        {
+            Product product = ProductsRepository.Get(s => s.Id.Equals(productEditModel.Id)).SingleOrDefault();
+            product.Name = productEditModel.Name;
+            product.Price = productEditModel.Price;
+            product.ImagePath = productEditModel.ImagePath;
+
+            CreateHtml(ref product);
+
+            return product;
+        }
+
+        private ProductEditModel ProductToEditModel(int Id)
+        {
+            Product product = ProductsRepository.Get(s => s.Id.Equals(Id)).SingleOrDefault();
+            CreateHtml(ref product);
+            ProductEditModel ProductEditModel = new ProductEditModel()
+            {
+                ImagePath = product.ImagePath,
+                Name = product.Name,
+                Price = product.Price,
+                Id = Id,
+                HtmlBannerEdit = product.HtmlBannerEdit,
+                HtmlDetail = product.HtmlDetail,
+                HtmlBanner = product.HtmlBanner,
+                
+            };
+            return ProductEditModel;
+        }
+        private void CreateHtml(ref Product product)
+        {
+            var HtmlBanner = string.Format(_productBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
+            var HtmlBannerOrderedNot = string.Format(_productBenner, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
+            var HtmlBannerOrdered = string.Format(_productBennerOrder, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
+            var HtmlBannerEdit = "";
+            if (product.IsPublished)
+            {
+                HtmlBannerEdit = string.Format(_productBennerTemplatePublished, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
+            }
+            else
+            {
+                HtmlBannerEdit = string.Format(_productBennerTemplate, product.Id, product.ImagePath, product.Name, product.Price + " грн.");
+            }
+
+            product.HtmlBanner = Server.HtmlEncode(HtmlBanner);
+            product.HtmlBannerOrderedNot = Server.HtmlEncode(HtmlBannerOrderedNot);
+            product.HtmlBannerOrdered = Server.HtmlEncode(HtmlBannerOrdered);
+            product.HtmlBannerEdit = Server.HtmlEncode(HtmlBannerEdit);
+
+
+        }
+        #endregion
+       
+       
     }
 }
 

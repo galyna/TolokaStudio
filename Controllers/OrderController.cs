@@ -67,7 +67,6 @@ namespace SumkaWeb.Controllers
                 Email = !string.IsNullOrEmpty(user.Email) ? user.Email : "galynavistovska@gmail.com",
                 User = user,
                 Product = product,
-                Employee = product.Employee,
                 Comments = DefaultComments
             };
 
@@ -93,13 +92,13 @@ namespace SumkaWeb.Controllers
             //SmtpServer.EnableSsl = true;
 
             mail.From = new MailAddress("order@tolokastudio.pp.ua");
-            mail.To.Add(order.Employee.Email);
-            mail.Subject = "Order from " + order.Email;
-            mail.Body = @"Your product " + order.Product.Name + " was ordered. Please, contact your customer."
-                + "\\r\\n Customer email: " + order.Email + " on " + order.ProcessDateTime;
+            mail.To.Add(order.Product.Employee.Email);
+            mail.Subject = "Замовлення від" + order.Email;
+            mail.Body = @"Ваш товаор " + order.Product.Name + " замовили."
+                + "Пошта замовника: " + order.Email + "Замовлення здійснена" + order.ProcessDateTime;
             if (order.Comments != DefaultComments)
             {
-                mail.Body = mail.Body + "Customer added Comments." + order.Comments;
+                mail.Body = mail.Body + "Замрвник додав коментар." + order.Comments;
             }
             SmtpServer.Send(mail);
         }
@@ -136,10 +135,10 @@ namespace SumkaWeb.Controllers
         private Order NottifyOnProcassOrder(Order order, User user)
         {
             order.ProcessDateTime = DateTime.Now.ToString();
-            order.Status = "Ordered";
+            order.OrderStatus = new OrderStatus() { IsInProgress = true };
             order = OrdersRepository.SaveOrUpdate(order);
             NotificateEmployee(order);
-            user.DeleteOrder(order);
+            user.Orders.Remove(order);
             user.OrdersHistory.Add(order);
             UserRepository.SaveOrUpdate(user);
             return order;

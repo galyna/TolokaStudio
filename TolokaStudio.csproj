@@ -222,8 +222,10 @@
     <Content Include="Content\img\q\edit.png" />
     <Content Include="Content\img\q\image_upload.png" />
     <Content Include="Content\img\q\order.png" />
+    <Content Include="Content\img\q\publish.png" />
     <Content Include="Content\img\q\save.png" />
     <Content Include="Content\img\q\shopping_cart_1.gif" />
+    <Content Include="Content\img\q\unpublish.png" />
     <Content Include="Content\js\admin.js" />
     <Content Include="Content\js\author.js" />
     <Content Include="Content\js\Buy.js" />
@@ -479,13 +481,13 @@
     <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Employee\Delete.cshtml" />
     <Content Include="Views\Order\Create.cshtml" />
-    <Content Include="Views\Product\web.config" />
     <Content Include="Views\Order\web.config" />
     <Content Include="Views\Employee\EditDetails.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="Views\Shared\_RegisterPartial.cshtml" />
     <Content Include="Views\Shared\_LogOn.cshtml" />
     <Content Include="Views\Order\OrderMaked.cshtml" />
+    <Content Include="Views\Product\EditDetails.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="Views\Bascet\Index.cshtml" />

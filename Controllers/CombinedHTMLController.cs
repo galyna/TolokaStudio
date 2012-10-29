@@ -164,110 +164,8 @@ namespace TolokaStudio.Controllers
 
         }
 
-        #region Templates ImageUpload
-        public ActionResult ImageUpload()
-        {
-            return PartialView(UpdateFolders(new CombinedHTMLImageUpload(), null));
-        }
-
-        [HttpPost, ActionName("ImageUpload")]
-        public ActionResult ImageUpload(string selectedFolderUrl, HttpPostedFileBase fileUpload)
-        {
-            var fileUploaded = (fileUpload != null && fileUpload.ContentLength > 0) ? true : false;
-            var viewModel = new CombinedHTMLImageUpload();
-            viewModel = UpdateFolders(viewModel, null);
-
-            try
-            {
-                if (string.IsNullOrEmpty(selectedFolderUrl))
-                {
-                    viewModel.Message = string.Format("Selected directory{0} not valid.", selectedFolderUrl);
-                    Console.WriteLine(viewModel.Message);
-                    return PartialView("ImageUpload", viewModel);
-                }
-                // Determine whether the directory exists.
-                if (!Directory.Exists(selectedFolderUrl))
-                {
-                    viewModel.Message = string.Format("Selected directory{0} does not exists.", selectedFolderUrl);
-                    Console.WriteLine(viewModel.Message);
-                    return PartialView("ImageUpload", viewModel);
-                }
-
-                if (!fileUploaded)
-                {
-                    viewModel.Message = string.Format("Upload failed.");
-                    Console.WriteLine(viewModel.Message);
-                    return PartialView("ImageUpload", viewModel);
-                }
-
-                string fileName = Path.GetFileName(fileUpload.FileName);
-
-                // Try to save image.
-                fileUpload.SaveAs(Path.Combine(selectedFolderUrl, fileName));
-                viewModel = UpdateFolders(viewModel, new DirectoryInfo(selectedFolderUrl).Name);
-                viewModel.Message = string.Format("Image {0} was succecfully uploaded.", fileName);
-            }
-            catch (Exception e)
-            {
-                viewModel.Message = string.Format("The process failed: {0}", e.ToString());
-                Console.WriteLine(viewModel.Message);
-                return PartialView("ImageUpload", viewModel);
-            }
-
-            return PartialView(viewModel);
-        }
-        #endregion
-
-        #region Templates CreateImageFolder
-        [HttpPost, ActionName("CreateImageFolder")]
-        public ActionResult CreateImageFolder(string folderName)
-        {
-            string path = Path.Combine(Server.MapPath("~" + _rootImagesFolderPath), folderName);
-            var viewModel = new CombinedHTMLImageUpload();
-            viewModel = UpdateFolders(viewModel, null);
-            try
-            {
-                // Determine whether the directory exists.
-                if (Directory.Exists(path))
-                {
-                    viewModel.Message = string.Format("The directory{0} exists already.", folderName);
-                    Console.WriteLine(viewModel.Message);
-                    return PartialView("ImageUpload", viewModel);
-                }
-
-                // Try to create the directory.
-                DirectoryInfo di = Directory.CreateDirectory(path);
-                viewModel.Message = string.Format("The directory{0} was created successfully at {1}.", folderName, Directory.GetCreationTime(path));
-                Console.WriteLine(viewModel.Message);
-
-            }
-            catch (Exception e)
-            {
-                viewModel.Message = string.Format("The process failed: {0}", e.ToString());
-                Console.WriteLine(viewModel.Message);
-                return PartialView("ImageUpload", viewModel);
-            }
-
-            viewModel = UpdateFolders(viewModel, folderName);
-
-            return PartialView("ImageUpload", viewModel);
-
-        }
-
-        private CombinedHTMLImageUpload UpdateFolders(CombinedHTMLImageUpload viewModel, string selected)
-        {
-            viewModel.Folders = GetImageFoldrs();
-            if (!string.IsNullOrEmpty(selected))
-            {
-                viewModel.SelectedFolder = viewModel.Folders.Where(x => x.Name == selected).Last();
-            }
-            else
-            {
-                viewModel.SelectedFolder = viewModel.Folders.Where(x => x.Name == _rootImagesFolder).Last();
-            }
-
-            return viewModel;
-        }
+      
+        
         #endregion
 
         #region Templates GetImageFoldrs
@@ -302,7 +200,6 @@ namespace TolokaStudio.Controllers
 
         #endregion
 
-        #endregion
 
 
         #region Templates Save

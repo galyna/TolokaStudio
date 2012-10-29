@@ -10,8 +10,9 @@ namespace Core.Data.Mappings
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Price);
-            References(x => x.Store).Cascade.Delete();
-            References(x => x.Employee).Cascade.Delete().Cascade.All(); 
+            Map(x => x.IsPublished);
+            References(x => x.Store);
+            References(x => x.Employee); 
             Map(x => x.HtmlBanner).CustomSqlType("nvarchar(max)");
             Map(x => x.HtmlDetail).CustomSqlType("ntext");
             Map(x => x.ImagePath);

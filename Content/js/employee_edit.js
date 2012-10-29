@@ -1,6 +1,6 @@
 ﻿
 var Employee = {
-
+   
     addProductInit: function () {
 
         var employee = {
@@ -26,26 +26,54 @@ var Employee = {
         });
     },
 
-    editInit: function () {
-        var employee = {
-           id: $(".editDetailsBtn")[0].alt
-        };
-       $(".editDetailsBtn").unbind("click");
-       $(".editDetailsBtn").click(function () {
-            $.ajax({
-                type: "Get",
-                url: "/Employee/EditDetails/",
-                data: employee,
+    addPublishing: function () {
+        if ($(".publishBtn").length>0) {
+            var employee = {
+                Id: $(".publishBtn")[0].alt
+            };
 
-                dataType: "json",
-                success: function (data) {
-                    window.location.reload(data);
-                },
-                failure: function () {
-                    window.location.reload(true);
-                }
+            $(".publishBtn").unbind("click");
+            $(".publishBtn").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Employee/Publish",
+                    data: employee,
+
+                    dataType: "json",
+                    success: function (data) {
+                        window.location.reload(true);
+                    },
+                    failure: function () {
+                        window.location.reload(true);
+                    }
+                });
+
             });
-        });
+        }
+
+        if ($(".unpublishBtn").length > 0) {
+            var employee = {
+                Id: $(".unpublishBtn")[0].alt
+            };
+
+            $(".unpublishBtn").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Employee/Unpublish",
+                    data: employee,
+
+                    dataType: "json",
+                    success: function (data) {
+                        window.location.reload(true);
+                    },
+                    failure: function () {
+                        window.location.reload(true);
+                    }
+                });
+
+            });
+        }
+      
     },
     init: function () {
         $("#FirstName").change(function () {
@@ -53,27 +81,21 @@ var Employee = {
             var last = $("#LastName").val();
             $(".box_main_item_text .firstname").html(first);
 
-            $(".deleteBtn").attr("title", "Видалити автора " + first + " " + last);
-            $(".authorUploadBtn").attr("title", "Завантажити аватарку " + first + " " + last);
             $(".addProduct").attr("title", "Додати продукт " + first + " " + last);
-            $(".editDetailsBtn").attr("title", "Редагувати сторінку " + first + " " + last);
 
         });
         $("#LastName").change(function () {
-            $(".box_main_item_text .lastName").html($("#LastName").val());
+            var first = $("#FirstName").val();
+            var last = $("#LastName").val();
+            $(".box_main_item_text .firstname").html(first);
+
+            $(".addProduct").attr("title", "Додати продукт " + first + " " + last);
         });
         $("#Email").change(function () {
             $(".box_main_item_text .email").html($("#Email").val());
         });
-
-
-        $(".box_main_item_img img").attr("src", $(this.contentDocument).find('#ImageUploaded').attr("src"));
-        $("#ImagePath").val($(this.contentDocument).find('#ImageUploaded').attr("src"));
-
-             
-      Employee.addProductInit();
-
-      Employee.editInit();
-
+            
+    //  Employee.addProductInit();
+     // Employee.addPublishing();
     }
 };

@@ -15,10 +15,7 @@ namespace Core.Data.Mappings
             Map(x => x.HtmlDetail).CustomSqlType("ntext");
             Map(x => x.ImagePath);
             Map(x => x.HtmlBannerEdit).CustomSqlType("nvarchar(max)");
-            HasMany(x => x.Products)
-                .Cascade.AllDeleteOrphan()
-                .Inverse();
-    
+            Map(x => x.IsPublished);
         }
     }
 }

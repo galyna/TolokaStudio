@@ -194,7 +194,31 @@ namespace TolokaStudio.Controllers
 
         }
 
+        public ActionResult UnPublish(int Id)
+        {
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin )
+            {
+                Store store = StoreRepository.Get(s => s.Id == Id).SingleOrDefault();
+                store.IsPublished = false;
+                StoreRepository.SaveOrUpdate(store);
+            }
 
+            return RedirectToAction("Index", "Store");
+        }
+        public ActionResult Publish(int Id)
+        {
+            User user = UserRepository.Get(u => u.UserName == User.Identity.Name).SingleOrDefault();
+            if (user != null && user.Role.IsAdmin || user.Role.IsAuthor)
+            {
+
+                Store store = StoreRepository.Get(s => s.Id == Id).SingleOrDefault();
+                store.IsPublished = true;
+                StoreRepository.SaveOrUpdate(store);
+            }
+
+            return RedirectToAction("Index", "Store");
+        }
 
         public ActionResult Delete(int id)
         {

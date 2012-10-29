@@ -17,10 +17,9 @@ namespace TolokaStudio.Models
         {
             this.Message="";
             this.SelectLabel = "Виберіть зображення для завантаження";
-            this.ImageUploaded = ""; ;
+            this.ImageUploaded = "/Content/img/_C3D9074.png"; 
         }
-        public IEnumerable<ImagesFolder> Folders { get; set; }
-        public ImagesFolder SelectedFolder { get; set; }
+   
         public string Message { get; set; }
         public string ImageUploaded { get; set; }
         public string SelectLabel { get; set; }

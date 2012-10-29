@@ -3,7 +3,7 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            if (item.HtmlBanner != null)
+            if (item.HtmlBanner != null && item.IsPublished)
             {
             @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.HtmlBanner))
             }

@@ -41,8 +41,9 @@ namespace Core.Data.Entities
         }
         public virtual Order DeleteOrder(Order order)
         {
-            Orders.Remove(order);
+     
             order.User = null;
+            Orders.Remove(order);
             return order;
         }
     }

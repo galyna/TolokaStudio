@@ -20,8 +20,8 @@ namespace TolokaStudio.Controllers
     {
         private readonly IRepository<User> UserRepository;
         private readonly IRepository<Employee> EmployeeRepository;
-        private const string DefaulAuthorCbinet = "\\Employee\\Edit";
-        private const string DefaulAdminCbinet = "\\Store\\Index";
+        private const string DefaulAuthorCabinet = "\\Employee\\Cabinet";
+        private const string DefaulAdminCabinet = "\\Store\\Index";
        
         public AccountController()
         {
@@ -55,7 +55,7 @@ namespace TolokaStudio.Controllers
                 {
                     user.Role.IsAdmin = true;
                     UserRepository.SaveOrUpdate(user);
-                    return Json(DefaulAdminCbinet);
+                    return Json(DefaulAdminCabinet);
                 }
             }
             else if (CheckPassword(userdb.Password, model.Password))
@@ -65,9 +65,12 @@ namespace TolokaStudio.Controllers
                 UserRepository.SaveOrUpdate(userdb);
                 if (userdb.Role.IsAdmin)
                 {
-                    return Json(DefaulAdminCbinet);
+                    return Json(DefaulAdminCabinet);
                 }
-                
+                if (userdb.Role.IsAuthor)
+                {
+                    return Json(DefaulAuthorCabinet);
+                }
 
             }
             return Json("\\");

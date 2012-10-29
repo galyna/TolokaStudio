@@ -100,6 +100,8 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\WebTemplate.cs" />
     <Compile Include="Mappings\EmployeeMap.cs" />
+    <Compile Include="Entities\OrderStatus.cs" />
+    <Compile Include="Mappings\OrderStatusMap.cs" />
     <Compile Include="Mappings\RoleMap.cs" />
     <Compile Include="Mappings\OrderMap.cs" />
     <Compile Include="Mappings\ProductMap.cs" />
