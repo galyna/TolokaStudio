@@ -484,6 +484,7 @@
     <Content Include="Views\CombinedHTML\web.config" />
     <Content Include="Views\Account\Users.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
+    <Content Include="Views\Account\VKTest.cshtml" />
     <None Include="Views\Store\Index.cshtml" />
     <Content Include="Views\web.config" />
   </ItemGroup>

@@ -245,6 +245,32 @@ namespace TolokaStudio.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult VKTest(string code = "", string access_token = "", string expires_in = "", string user_id = "", string error = "", string error_description = "")
+        {
+            VKAuthorization vk = new VKAuthorization();
+            vk.Test = "test viewBag item";
+            if (code != "")
+            {
+                vk.Code = code;
+                string VKAuthUrl = String.Format("https://oauth.vk.com/access_token?client_id=3204168&client_secret=Fjtxbc3pUBKGIEPt8mVY&code={0}&redirect_uri=http://tolokastudio.pp.ua/Account/VKTest", vk.Code);
+                return Redirect(VKAuthUrl);
+            }
+            else if (access_token != "")
+            {
+                vk.AccesToken = access_token;
+                vk.ExpiresIn = expires_in;
+                vk.UserId = user_id;
+                return View(vk);
+            }
+            else
+            {
+                vk.Error = error;
+                vk.ErrorDescription = error_description;
+                return View(vk);
+            }
+        }
+
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {

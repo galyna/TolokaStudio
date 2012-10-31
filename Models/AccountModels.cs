@@ -9,7 +9,16 @@ using ModelRes.Account;
 
 namespace TolokaStudio.Models
 {
-
+    public class VKAuthorization
+    {
+       public string Code { get; set; }
+       public string Test { get; set; }
+       public string AccesToken { get; set; }
+       public string ExpiresIn { get; set; }
+       public string UserId { get; set; }
+       public string Error { get; set; }
+       public string ErrorDescription { get; set; }
+    }
     public class ChangePasswordModel
     {
         [Required(ErrorMessageResourceName = "Required_current_password",
