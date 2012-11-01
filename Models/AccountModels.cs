@@ -64,4 +64,14 @@ namespace SumkaWeb.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
+
+    public class VKAuthorizationModel
+    {
+        public string Code { get; set; }
+        public string AccesToken { get; set; }
+        public string ExpiresIn { get; set; }
+        public string UserId { get; set; }
+        public string Error { get; set; }
+        public string ErrorDescription { get; set; }
+    }
 }

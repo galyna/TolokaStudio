@@ -162,6 +162,32 @@ namespace SumkaWeb.Controllers
             return View();
         }
 
+        public ActionResult VKAuthorization(string code="", string access_token="f", string expires_in="", string user_id="", string error="", string error_description="")
+        {
+            VKAuthorizationModel vk = new VKAuthorizationModel();
+            vk.AccesToken = access_token;
+            vk.Code = code;
+            vk.Error = error;
+            vk.ErrorDescription = error_description;
+            vk.ExpiresIn = expires_in;
+            vk.UserId = user_id;
+            if (vk.Code != "")
+            {
+                string VKAuthURL = String.Format("https://oauth.vk.com/access_token?client_id=3204168&client_secret=Fjtxbc3pUBKGIEPt8mVY&code={0}&redirect_uri=http://tolokastudio.pp.ua/Account/VKAuthorization&", code);
+                return Redirect(VKAuthURL);
+            }
+            else if (vk.AccesToken != "")
+            {
+                return View(vk);
+            }
+            else if (vk.Error != "")
+            {
+                return View(vk);
+            }
+            else
+                return View(vk);
+        }
+
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
